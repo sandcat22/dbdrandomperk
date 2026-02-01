@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>DbD Ultimate Roulette (V196 - Preloading)</title>
+    <title>DbD Ultimate Roulette (V197 - Perfect Loading)</title>
     <style>
         body {
             background-image: url('background.jpg'); 
@@ -12,6 +12,27 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             height: 100vh; margin: 0; overflow: hidden; transition: background-color 0.5s;
         }
+
+        /* 로딩 스크린 스타일 (최우선 순위) */
+        #loadingScreen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000000; z-index: 99999; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            color: white; transition: opacity 0.5s;
+        }
+        #loadingBarContainer {
+            width: 400px; height: 20px; background: #222; 
+            border: 2px solid #555; border-radius: 10px; margin-top: 20px; overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        }
+        #loadingBar { 
+            width: 0%; height: 100%; background: linear-gradient(90deg, #8b0000, #ff3333); 
+            transition: width 0.1s linear; 
+        }
+        #loadingText { margin-top: 10px; font-size: 18px; font-weight: bold; color: #ccc; }
+        #loadingDetail { margin-top: 5px; font-size: 12px; color: #666; }
+
+        /* 기존 스타일 */
         h1 { text-shadow: 0 0 15px currentColor; margin-bottom: 20px; font-style: italic; font-size: 60px; letter-spacing: 5px; cursor: pointer; transition: 0.3s; user-select: none; }
         h1:hover { transform: scale(1.05); }
         .container-box { display: none; gap: 35px; align-items: center; justify-content: center; height: 500px; }
@@ -56,20 +77,19 @@
         .speed-control { margin-top: 20px; display: flex; flex-direction: column; align-items: center; width: 200px; transition: opacity 0.3s; }
         #speedStatus { font-size: 20px; font-weight: bold; margin-bottom: 10px; text-shadow: 0 0 5px currentColor; }
         input[type=range] { width: 100%; cursor: pointer; transition: 0.3s; }
+        
         .watermark { position: fixed; bottom: 20px; right: 30px; color: rgba(255, 255, 255, 0.3); font-size: 16px; user-select: none; pointer-events: none; }
-
-        /* 로딩 화면 */
-        #loadingScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; }
-        #loadingBar { width: 300px; height: 10px; background: #333; border-radius: 5px; margin-top: 20px; overflow: hidden; }
-        #loadingProgress { width: 0%; height: 100%; background: #ff3333; transition: width 0.2s; }
     </style>
 </head>
 <body>
 
     <div id="loadingScreen">
-        <h1>LOADING RESOURCES...</h1>
-        <div id="loadingBar"><div id="loadingProgress"></div></div>
+        <h2 style="font-style:italic; letter-spacing:3px;">INITIALIZING...</h2>
+        <div id="loadingBarContainer">
+            <div id="loadingBar"></div>
+        </div>
         <div id="loadingText">0%</div>
+        <div id="loadingDetail">리소스 확인 중...</div>
     </div>
 
     <h1 id="headerTitle" onclick="toggleMode()">🩸 KILLER PERK 🩸</h1>
@@ -104,7 +124,7 @@
         </div>
     </div>
 
-    <button id="btnSpin" class="killer-btn" onclick="startSequence()" disabled>LOADING...</button>
+    <button id="btnSpin" class="killer-btn" onclick="startSequence()">START</button>
     
     <div class="speed-control" id="speedControlBox">
         <div id="speedStatus" style="color:#ff3333">보통</div>
@@ -355,7 +375,7 @@
         let isSpinning = false;
         const spinIntervals = {};
 
-        // 프리로딩 로직
+        // 프리로딩 로직 (완전 보장형)
         window.onload = function() {
             preloadAllImages();
         };
@@ -366,58 +386,74 @@
             const toLoad = [];
 
             // 1. 살인마 초상화
-            killers.forEach(k => toLoad.push(PATHS.PORTRAIT + k.id + '.webp'));
+            killers.forEach(k => toLoad.push({type: 'portrait', src: PATHS.PORTRAIT + k.id + '.webp'}));
             
             // 2. 퍽 이미지
-            killerPerkData.forEach(p => toLoad.push(PATHS.PERK_K + p.file));
-            survivorPerkData.forEach(p => toLoad.push(PATHS.PERK_S + p.file));
+            killerPerkData.forEach(p => toLoad.push({type: 'perk', src: PATHS.PERK_K + p.file}));
+            survivorPerkData.forEach(p => toLoad.push({type: 'perk', src: PATHS.PERK_S + p.file}));
 
             // 3. 애드온 (모든 살인마 순회)
             Object.keys(killerAddons).forEach(kId => {
                 killerAddons[kId].forEach(ad => {
                     let folder = kId === 'theFirst' ? 'theFirst' : kId; // 폴더명 예외 처리 필요시
-                    toLoad.push(PATHS.ADDON + folder + '/' + ad.file);
+                    toLoad.push({type: 'addon', src: PATHS.ADDON + folder + '/' + ad.file});
                 });
             });
 
             // 4. 배경 이미지
-            toLoad.push("perk_bg.png", "perk_bg_survivor.png", "background.jpg");
-            Object.values(rarityBgs).forEach(bg => toLoad.push(PATHS.ADDON_BG + bg));
+            toLoad.push({type: 'bg', src: "perk_bg.png"});
+            toLoad.push({type: 'bg', src: "perk_bg_survivor.png"});
+            toLoad.push({type: 'bg', src: "background.jpg"});
+            Object.values(rarityBgs).forEach(bg => toLoad.push({type: 'bg', src: PATHS.ADDON_BG + bg}));
 
             totalImages = toLoad.length;
+            
             if(totalImages === 0) {
-                document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('btnSpin').disabled = false;
-                document.getElementById('btnSpin').innerText = 'START';
+                endLoading();
                 return;
             }
 
-            toLoad.forEach(src => {
+            // 병렬 로딩 시작
+            toLoad.forEach(item => {
                 const img = new Image();
-                img.onload = () => { updateProgress(); };
-                img.onerror = () => { 
-                    console.warn("이미지 로드 실패 (파일명 확인 필요): " + src);
-                    updateProgress(); 
+                
+                img.onload = () => { 
+                    updateProgress(item.src, true); 
                 };
-                img.src = src;
+                
+                img.onerror = () => { 
+                    console.warn("이미지 로드 실패 (404): " + item.src);
+                    updateProgress(item.src, false); // 실패해도 진행은 시킴 (무한로딩 방지)
+                };
+                
+                img.src = item.src; // 로딩 트리거
             });
 
-            function updateProgress() {
+            function updateProgress(filename, success) {
                 loadedImages++;
                 const percent = Math.floor((loadedImages / totalImages) * 100);
-                document.getElementById('loadingProgress').style.width = percent + '%';
-                document.getElementById('loadingText').innerText = percent + '%';
+                
+                const bar = document.getElementById('loadingBar');
+                const txt = document.getElementById('loadingText');
+                const detail = document.getElementById('loadingDetail');
+
+                if(bar) bar.style.width = percent + '%';
+                if(txt) txt.innerText = percent + '%';
+                if(detail) detail.innerText = (success ? "로드됨: " : "실패(무시함): ") + filename.split('/').pop();
                 
                 if (loadedImages >= totalImages) {
-                    setTimeout(() => {
-                        document.getElementById('loadingScreen').style.display = 'none';
-                        document.getElementById('btnSpin').disabled = false;
-                        document.getElementById('btnSpin').innerText = 'START';
-                        
-                        // 자동 진단: 로드 실패한거 있으면 콘솔에 띄워줌
-                        console.log("=== 로딩 완료 ===");
-                    }, 500);
+                    setTimeout(endLoading, 500); // 100% 보여주고 0.5초 뒤 종료
                 }
+            }
+        }
+
+        function endLoading() {
+            const screen = document.getElementById('loadingScreen');
+            if(screen) {
+                screen.style.opacity = '0';
+                setTimeout(() => {
+                    screen.style.display = 'none';
+                }, 500);
             }
         }
 
