@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>DbD Ultimate Roulette (V197 - Perfect Loading)</title>
+    <title>DbD Ultimate Roulette (V198 - Diagnostic Mode)</title>
     <style>
         body {
             background-image: url('background.jpg'); 
@@ -13,30 +13,38 @@
             height: 100vh; margin: 0; overflow: hidden; transition: background-color 0.5s;
         }
 
-        /* 로딩 스크린 스타일 (최우선 순위) */
+        /* 로딩 및 에러 리포트 화면 */
         #loadingScreen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #000000; z-index: 99999; 
+            background: #111; z-index: 99999; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            color: white; transition: opacity 0.5s;
+            color: white; overflow-y: auto; /* 에러 많을 경우 스크롤 */
         }
         #loadingBarContainer {
             width: 400px; height: 20px; background: #222; 
             border: 2px solid #555; border-radius: 10px; margin-top: 20px; overflow: hidden;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
         }
         #loadingBar { 
             width: 0%; height: 100%; background: linear-gradient(90deg, #8b0000, #ff3333); 
             transition: width 0.1s linear; 
         }
         #loadingText { margin-top: 10px; font-size: 18px; font-weight: bold; color: #ccc; }
-        #loadingDetail { margin-top: 5px; font-size: 12px; color: #666; }
+        
+        /* 에러 리포트 박스 */
+        #errorReport {
+            display: none; flex-direction: column; align-items: center;
+            background: rgba(50, 0, 0, 0.9); border: 2px solid #ff3333;
+            padding: 30px; border-radius: 15px; max-height: 80%; width: 600px;
+            overflow-y: auto; text-align: left;
+        }
+        .error-item { color: #ffaaaa; font-size: 14px; margin-bottom: 5px; border-bottom: 1px solid #440000; padding: 5px; width: 100%; }
+        .success-btn { margin-top: 20px; padding: 10px 30px; background: #333; color: white; border: 1px solid #555; cursor: pointer; }
+        .success-btn:hover { background: #555; }
 
-        /* 기존 스타일 */
+        /* 기존 스타일 유지 */
         h1 { text-shadow: 0 0 15px currentColor; margin-bottom: 20px; font-style: italic; font-size: 60px; letter-spacing: 5px; cursor: pointer; transition: 0.3s; user-select: none; }
         h1:hover { transform: scale(1.05); }
         .container-box { display: none; gap: 35px; align-items: center; justify-content: center; height: 500px; }
-        
         .perk-card { width: 275px; height: 400px; background: linear-gradient(145deg, rgba(40,40,40,0.95), rgba(15,15,15,0.95)); border: 4px solid #555; border-radius: 18px; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: 0 12px 25px rgba(0,0,0,0.9); box-sizing: border-box; }
         .perk-bg { width: 210px; height: 210px; position: absolute; top: 35px; opacity: 0.7; display: none; z-index: 1; }
         .perk-img { width: 210px; height: 210px; position: absolute; top: 35px; z-index: 2; display: none; object-fit: contain; }
@@ -45,7 +53,6 @@
         .perk-card.spinning .perk-img, .perk-card.spinning .perk-bg { display: block; filter: blur(2px) grayscale(70%); }
         .perk-card.selected.killer_perk { border: 4px solid #ff3333; background: linear-gradient(180deg, rgba(80, 0, 0, 0.95) 0%, rgba(20, 0, 0, 1) 100%); box-shadow: 0 0 60px rgba(255, 51, 51, 0.8); }
         .perk-card.selected.survivor_perk { border: 4px solid #4da6ff; background: linear-gradient(180deg, rgba(0, 40, 80, 0.95) 0%, rgba(0, 10, 20, 1) 100%); box-shadow: 0 0 60px rgba(77, 166, 255, 0.8); }
-
         .killer-addon-container { background: linear-gradient(145deg, rgba(30,30,30,0.8), rgba(10,10,10,0.8)); padding: 30px 40px; border-radius: 30px; border: 4px solid #555; width: 1250px; box-sizing: border-box; }
         .left-panel { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 220px; flex-shrink: 0; }
         .random-option { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 10px; border: 1px solid #555; width: 100%; box-sizing: border-box; justify-content: center; }
@@ -53,43 +60,48 @@
         .random-option input[type="checkbox"] { width: 20px; height: 20px; accent-color: #E040FB; cursor: pointer; }
         select#killerSelect { width: 100%; height: 50px; background: rgba(20, 20, 20, 0.9); color: #ccc; border: 2px solid #555; border-radius: 10px; font-size: 18px; font-weight: bold; font-family: 'Malgun Gothic', sans-serif; padding-left: 10px; cursor: pointer; outline: none; transition: 0.3s; }
         select#killerSelect:hover { border-color: #E040FB; color: #fff; }
-
         .killer-img-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 300px; height: 300px; flex-shrink: 0; position: relative; }
         .main-killer-img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255, 51, 51, 0.5)); transition: 0.1s; }
         .main-killer-img.spinning { filter: blur(4px) grayscale(70%); transform: scale(0.95); opacity: 0.7; }
-        
         .addon-slot-container { display:flex; flex-direction:column; align-items:center; position: relative; flex-shrink: 0; width: 280px; }
         .addon-slot { width: 250px; height: 250px; border-radius: 20px; position: relative; display: flex; align-items: center; justify-content: center; background: #111; border: 3px solid #444; box-shadow: inset 0 0 30px #000; box-sizing: border-box; transition: all 0.3s ease-out; margin-bottom: 25px; }
         .addon-img { position: absolute; width: 200px; height: 200px; z-index: 10; display: none; }
         .addon-bg-img { position: absolute; z-index: 1; opacity: 0.8; width: 100%; height: 100%; border-radius: 17px; }
         .addon-name { font-size: 20px; font-weight: bold; text-align: center; color: #ccc; min-height: 50px; width: 100%; line-height: 1.3; margin-top: 15px; }
-
         .addon-slot.selected { border: 4px solid #E040FB; box-shadow: 0 0 50px rgba(224, 64, 251, 0.8); transform: scale(1.1); z-index: 100; background: #220022; }
         .addon-slot.selected + .addon-name { color: #E040FB; text-shadow: 0 0 10px #E040FB; }
         .error-active::after { content: "이미지\n없음"; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 0, 0, 0.6); color: #fff; font-weight: bold; font-size: 24px; display: flex; align-items: center; justify-content: center; white-space: pre; z-index: 20; border-radius: 17px; pointer-events: none; }
-
         button { margin-top: 30px; padding: 15px 80px; font-size: 30px; color: white; border-radius: 50px; cursor: pointer; font-weight: 900; transition: all 0.3s; border: 3px solid transparent; }
         button:disabled { background-color: #222 !important; border-color: #444 !important; color: #555 !important; cursor: not-allowed; box-shadow: none; }
         button.killer-btn { background-color: #8b0000; border-color: #ff3333; box-shadow: 0 0 20px rgba(139, 0, 0, 0.6); }
         button.survivor-btn { background-color: #004080; border-color: #4da6ff; box-shadow: 0 0 20px rgba(0, 64, 128, 0.6); }
         button.addon-btn { background-color: #5D1093; border-color: #E040FB; box-shadow: 0 0 20px rgba(140, 30, 180, 0.6); }
-
         .speed-control { margin-top: 20px; display: flex; flex-direction: column; align-items: center; width: 200px; transition: opacity 0.3s; }
         #speedStatus { font-size: 20px; font-weight: bold; margin-bottom: 10px; text-shadow: 0 0 5px currentColor; }
         input[type=range] { width: 100%; cursor: pointer; transition: 0.3s; }
-        
         .watermark { position: fixed; bottom: 20px; right: 30px; color: rgba(255, 255, 255, 0.3); font-size: 16px; user-select: none; pointer-events: none; }
     </style>
 </head>
 <body>
 
     <div id="loadingScreen">
-        <h2 style="font-style:italic; letter-spacing:3px;">INITIALIZING...</h2>
-        <div id="loadingBarContainer">
-            <div id="loadingBar"></div>
+        <div id="loadingContent" style="text-align:center;">
+            <h2 style="font-style:italic; letter-spacing:3px;">LOADING RESOURCES...</h2>
+            <div id="loadingBarContainer">
+                <div id="loadingBar"></div>
+            </div>
+            <div id="loadingText">0%</div>
         </div>
-        <div id="loadingText">0%</div>
-        <div id="loadingDetail">리소스 확인 중...</div>
+
+        <div id="errorReport">
+            <h3 style="color:#ff3333; margin-top:0;">⚠️ 다음 이미지들을 찾을 수 없습니다! ⚠️</h3>
+            <p style="font-size:14px; color:#ccc; margin-bottom:20px;">
+                GitHub는 대소문자를 구분합니다.<br>
+                아래 파일명과 똑같이(대소문자 포함) 폴더 내 파일 이름을 수정하세요.
+            </p>
+            <div id="errorList"></div>
+            <button class="success-btn" onclick="forceStart()">그래도 시작하기 (이미지 깨짐)</button>
+        </div>
     </div>
 
     <h1 id="headerTitle" onclick="toggleMode()">🩸 KILLER PERK 🩸</h1>
@@ -375,7 +387,7 @@
         let isSpinning = false;
         const spinIntervals = {};
 
-        // 프리로딩 로직 (완전 보장형)
+        // 프리로딩 및 에러 진단 로직
         window.onload = function() {
             preloadAllImages();
         };
@@ -384,6 +396,7 @@
             let totalImages = 0;
             let loadedImages = 0;
             const toLoad = [];
+            const failedList = []; // 실패한 파일 목록
 
             // 1. 살인마 초상화
             killers.forEach(k => toLoad.push({type: 'portrait', src: PATHS.PORTRAIT + k.id + '.webp'}));
@@ -395,7 +408,7 @@
             // 3. 애드온 (모든 살인마 순회)
             Object.keys(killerAddons).forEach(kId => {
                 killerAddons[kId].forEach(ad => {
-                    let folder = kId === 'theFirst' ? 'theFirst' : kId; // 폴더명 예외 처리 필요시
+                    let folder = kId === 'theFirst' ? 'theFirst' : kId; 
                     toLoad.push({type: 'addon', src: PATHS.ADDON + folder + '/' + ad.file});
                 });
             });
@@ -416,17 +429,12 @@
             // 병렬 로딩 시작
             toLoad.forEach(item => {
                 const img = new Image();
-                
-                img.onload = () => { 
-                    updateProgress(item.src, true); 
-                };
-                
+                img.onload = () => { updateProgress(item.src, true); };
                 img.onerror = () => { 
-                    console.warn("이미지 로드 실패 (404): " + item.src);
-                    updateProgress(item.src, false); // 실패해도 진행은 시킴 (무한로딩 방지)
+                    failedList.push(item.src); // 실패 목록에 추가
+                    updateProgress(item.src, false); 
                 };
-                
-                img.src = item.src; // 로딩 트리거
+                img.src = item.src;
             });
 
             function updateProgress(filename, success) {
@@ -435,16 +443,38 @@
                 
                 const bar = document.getElementById('loadingBar');
                 const txt = document.getElementById('loadingText');
-                const detail = document.getElementById('loadingDetail');
 
                 if(bar) bar.style.width = percent + '%';
                 if(txt) txt.innerText = percent + '%';
-                if(detail) detail.innerText = (success ? "로드됨: " : "실패(무시함): ") + filename.split('/').pop();
                 
                 if (loadedImages >= totalImages) {
-                    setTimeout(endLoading, 500); // 100% 보여주고 0.5초 뒤 종료
+                    if (failedList.length > 0) {
+                        // 에러가 있으면 리포트 표시
+                        showErrorReport(failedList);
+                    } else {
+                        // 성공하면 게임 시작
+                        setTimeout(endLoading, 500);
+                    }
                 }
             }
+        }
+
+        function showErrorReport(list) {
+            document.getElementById('loadingContent').style.display = 'none';
+            const reportBox = document.getElementById('errorReport');
+            const listContainer = document.getElementById('errorList');
+            reportBox.style.display = 'flex';
+            
+            list.forEach(src => {
+                const div = document.createElement('div');
+                div.className = 'error-item';
+                div.innerText = "❌ 실패: " + src; // 전체 경로 보여줌 (폴더 확인용)
+                listContainer.appendChild(div);
+            });
+        }
+
+        function forceStart() {
+            document.getElementById('loadingScreen').style.display = 'none';
         }
 
         function endLoading() {
