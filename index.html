@@ -12,7 +12,12 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             height: 100vh; margin: 0; overflow: hidden; transition: background-color 0.5s;
         }
-
+// 실패한 이미지 목록을 보여주는 진단 코드
+document.querySelectorAll('img').forEach(img => {
+    if(img.style.display === 'none' || img.naturalWidth === 0) {
+        if(img.src) console.log("%c실패한 이미지:", "color:red; font-weight:bold;", img.src.split('/').pop());
+    }
+});
         /* 제목 스타일 */
         h1 { 
             text-shadow: 0 0 15px currentColor; margin-bottom: 20px; 
