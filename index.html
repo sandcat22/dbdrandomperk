@@ -32,6 +32,7 @@
         #loadingBarContainer {
             width: 400px; height: 20px; background: #222; 
             border: 2px solid #555; border-radius: 10px; margin-top: 20px; overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
         }
         #loadingBar { 
             width: 0%; height: 100%; background: linear-gradient(90deg, #8b0000, #ff3333); 
@@ -39,7 +40,6 @@
         }
         #loadingText { margin-top: 10px; font-size: 18px; font-weight: bold; color: #ccc; }
         
-        /* 에러 리포트 박스 */
         #errorReport {
             display: none; flex-direction: column; align-items: center;
             background: rgba(50, 0, 0, 0.9); border: 2px solid #ff3333;
@@ -87,7 +87,14 @@
         .speed-control { margin-top: 20px; display: flex; flex-direction: column; align-items: center; width: 200px; transition: opacity 0.3s; }
         #speedStatus { font-size: 20px; font-weight: bold; margin-bottom: 10px; text-shadow: 0 0 5px currentColor; }
         input[type=range] { width: 100%; cursor: pointer; transition: 0.3s; }
-        .watermark { position: fixed; bottom: 20px; right: 30px; color: rgba(255, 255, 255, 0.3); font-size: 16px; user-select: none; pointer-events: none; }
+        
+        /* ✅ 워터마크 스타일 */
+        .watermark { 
+            position: fixed; bottom: 20px; right: 30px; 
+            color: rgba(255, 255, 255, 0.3); font-size: 14px; 
+            text-align: right; line-height: 1.5;
+            user-select: none; pointer-events: none; 
+        }
     </style>
 </head>
 <body>
@@ -150,7 +157,11 @@
         <input type="range" id="speedRange" min="0" max="3" value="2" step="1" oninput="updateSpeedText()">
     </div>
 
-    <div class="watermark">Made By SANDCATS</div>
+    <div class="watermark">
+        Made By SANDCATS<br>
+        (V203 - 권태영 Perk추가 수정)<br>
+        2026-04-03
+    </div>
 
     <script>
         const PATHS = { PORTRAIT: 'killer_portrait/', PERK_K: 'perk_killer/', PERK_S: 'perk_survivor/', ADDON: 'addons/', ADDON_BG: 'addon_bg/' };
@@ -218,6 +229,9 @@
         ];
 
         const survivorPerkData = [
+            { name: "몰입 상태", file: "flowState.webp", category: "권태영" },
+            { name: "우리만의 공간", file: "aPlaceForUs.webp", category: "권태영" },
+            { name: "5수 앞", file: "fiveMovesAhead.webp", category: "권태영" },
             { name: "바다 바다 붐", file: "badaBadaBoom.webp", category: "더스틴 핸더슨" },
             { name: "계획 변경", file: "changeOfPlan.webp", category: "더스틴 핸더슨" },
             { name: "팀워크: 풀 서킷", file: "teamworkFullCircuit.webp", category: "더스틴 핸더슨" },
@@ -403,16 +417,12 @@
             let totalImages = 0;
             let loadedImages = 0;
             const toLoad = [];
-            const failedList = []; // 실패한 파일 목록
+            const failedList = []; 
 
-            // 1. 살인마 초상화
             killers.forEach(k => toLoad.push({type: 'portrait', src: PATHS.PORTRAIT + k.id + '.webp'}));
-            
-            // 2. 퍽 이미지
             killerPerkData.forEach(p => toLoad.push({type: 'perk', src: PATHS.PERK_K + p.file}));
             survivorPerkData.forEach(p => toLoad.push({type: 'perk', src: PATHS.PERK_S + p.file}));
 
-            // 3. 애드온 (모든 살인마 순회)
             Object.keys(killerAddons).forEach(kId => {
                 killerAddons[kId].forEach(ad => {
                     let folder = kId === 'theFirst' ? 'theFirst' : kId; 
@@ -420,48 +430,31 @@
                 });
             });
 
-            // 4. 배경 이미지
             toLoad.push({type: 'bg', src: "perk_bg.png"});
             toLoad.push({type: 'bg', src: "perk_bg_survivor.png"});
             toLoad.push({type: 'bg', src: "background.jpg"});
             Object.values(rarityBgs).forEach(bg => toLoad.push({type: 'bg', src: PATHS.ADDON_BG + bg}));
 
             totalImages = toLoad.length;
-            
-            if(totalImages === 0) {
-                endLoading();
-                return;
-            }
+            if(totalImages === 0) { endLoading(); return; }
 
-            // 병렬 로딩 시작
             toLoad.forEach(item => {
                 const img = new Image();
                 img.onload = () => { updateProgress(item.src, true); };
-                img.onerror = () => { 
-                    failedList.push(item.src); // 실패 목록에 추가
-                    updateProgress(item.src, false); 
-                };
+                img.onerror = () => { failedList.push(item.src); updateProgress(item.src, false); };
                 img.src = item.src;
             });
 
             function updateProgress(filename, success) {
                 loadedImages++;
                 const percent = Math.floor((loadedImages / totalImages) * 100);
-                
                 const bar = document.getElementById('loadingBar');
                 const txt = document.getElementById('loadingText');
-
                 if(bar) bar.style.width = percent + '%';
                 if(txt) txt.innerText = percent + '%';
-                
                 if (loadedImages >= totalImages) {
-                    if (failedList.length > 0) {
-                        // 에러가 있으면 리포트 표시
-                        showErrorReport(failedList);
-                    } else {
-                        // 성공하면 게임 시작
-                        setTimeout(endLoading, 500);
-                    }
+                    if (failedList.length > 0) { showErrorReport(failedList); } 
+                    else { setTimeout(endLoading, 500); }
                 }
             }
         }
@@ -471,26 +464,20 @@
             const reportBox = document.getElementById('errorReport');
             const listContainer = document.getElementById('errorList');
             reportBox.style.display = 'flex';
-            
             list.forEach(src => {
                 const div = document.createElement('div');
                 div.className = 'error-item';
-                div.innerText = "❌ 실패: " + src; // 전체 경로 보여줌 (폴더 확인용)
+                div.innerText = "❌ 실패: " + src;
                 listContainer.appendChild(div);
             });
         }
 
-        function forceStart() {
-            document.getElementById('loadingScreen').style.display = 'none';
-        }
-
+        function forceStart() { document.getElementById('loadingScreen').style.display = 'none'; }
         function endLoading() {
             const screen = document.getElementById('loadingScreen');
             if(screen) {
                 screen.style.opacity = '0';
-                setTimeout(() => {
-                    screen.style.display = 'none';
-                }, 500);
+                setTimeout(() => { screen.style.display = 'none'; }, 500);
             }
         }
 
@@ -518,7 +505,6 @@
             const btn = document.getElementById('btnSpin');
             const slider = document.getElementById('speedRange');
             const status = document.getElementById('speedStatus');
-            const speedBox = document.getElementById('speedControlBox');
             if (currentMode === 'killer_addon') {
                 h1.innerText = "🟣 KILLER ADDON 🟣"; h1.style.color = "#E040FB";
                 btn.className = "addon-btn"; status.style.color = "#aaa";
@@ -552,23 +538,15 @@
             document.getElementById('mainKillerImg').style.display = 'block'; 
         }
 
-        function handleImgError(img) {
-            img.style.display = 'none'; 
-            img.parentElement.classList.add('error-active');
-        }
-
-        function handleImgLoad(img) {
-            img.parentElement.classList.remove('error-active');
-            img.style.display = 'block';
-        }
+        function handleImgError(img) { img.style.display = 'none'; img.parentElement.classList.add('error-active'); }
+        function handleImgLoad(img) { img.parentElement.classList.remove('error-active'); img.style.display = 'block'; }
 
         function renderKillerPicker() {
             const select = document.getElementById('killerSelect');
             select.innerHTML = "";
             killers.forEach(k => {
                 const opt = document.createElement('option');
-                opt.value = k.id;
-                opt.innerText = k.name;
+                opt.value = k.id; opt.innerText = k.name;
                 select.appendChild(opt);
             });
             select.value = selectedKillerId;
@@ -588,7 +566,6 @@
             if (isSpinning) return;
             isSpinning = true;
             document.getElementById('btnSpin').disabled = true;
-
             let activeData, path, type;
             let finalKillerId = selectedKillerId; 
 
@@ -616,14 +593,9 @@
             } else {
                 for(let i=1; i<=2; i++) {
                     const slot = document.getElementById(`slot${i}`);
-                    slot.classList.remove('selected');
-                    slot.classList.add('spinning');
-                    let spinData = killerAddons[selectedKillerId];
+                    slot.classList.remove('selected'); slot.classList.add('spinning');
+                    let spinData = killerAddons[selectedKillerId] || killerAddons['trapper'];
                     let spinPath = `${PATHS.ADDON}${selectedKillerId}/`;
-                    if(!spinData || spinData.length === 0) {
-                        spinData = killerAddons['trapper'];
-                        spinPath = `${PATHS.ADDON}trapper/`;
-                    }
                     spinAddon(i, spinData, spinPath); 
                 }
             }
@@ -642,16 +614,12 @@
                     }
                     activeData = killerAddons[finalKillerId];
                     path = `${PATHS.ADDON}${finalKillerId}/`;
-                    
                     if (!activeData || activeData.length === 0) {
                         for(let i=1; i<=2; i++) clearInterval(spinIntervals[`a${i}`]);
-                        resetSlots(); 
-                        alert(`'${killers.find(k=>k.id===finalKillerId).name}'의 데이터가 없습니다.`);
-                        finalize();
+                        resetSlots(); alert(`데이터가 없습니다.`); finalize();
                     } else {
                         const shuffled = [...activeData].sort(() => 0.5 - Math.random());
-                        stopAddon(1, shuffled[0], path);
-                        stopAddon(2, shuffled[1], path);
+                        stopAddon(1, shuffled[0], path); stopAddon(2, shuffled[1], path);
                         finalize();
                     }
                 }, 1000); 
@@ -669,8 +637,7 @@
                     const stopSequentially = () => {
                         stopPerk(currentIdx, shuffledPerks[currentIdx-1], path);
                         if (currentIdx === 4) { finalize(); return; }
-                        currentIdx++;
-                        setTimeout(stopSequentially, currentDelay);
+                        currentIdx++; setTimeout(stopSequentially, currentDelay);
                     };
                     setTimeout(stopSequentially, 1000);
                 }
@@ -681,8 +648,7 @@
              spinIntervals[`p${idx}`] = setInterval(() => {
                  const rnd = data[Math.floor(Math.random()*data.length)];
                  const img = document.getElementById(`img${idx}`);
-                 img.src = path + rnd.file;
-                 img.style.display = 'block'; 
+                 img.src = path + rnd.file; img.style.display = 'block'; 
                  document.getElementById(`bg${idx}`).style.display = 'block';
                  document.getElementById(`name${idx}`).innerText = rnd.name;
                  document.getElementById(`cat${idx}`).innerText = rnd.category;
@@ -691,24 +657,20 @@
         function stopPerk(idx, item, path) {
             clearInterval(spinIntervals[`p${idx}`]);
             const img = document.getElementById(`img${idx}`);
-            img.src = path + item.file;
-            img.style.display = 'block'; 
+            img.src = path + item.file; img.style.display = 'block'; 
             document.getElementById(`name${idx}`).innerText = item.name;
             document.getElementById(`cat${idx}`).innerText = item.category;
             const card = document.getElementById(`card${idx}`);
-            card.classList.remove('spinning');
-            card.classList.add('selected', currentMode);
+            card.classList.remove('spinning'); card.classList.add('selected', currentMode);
         }
 
         function spinAddon(idx, data, path) {
             spinIntervals[`a${idx}`] = setInterval(() => {
                 const rnd = data[Math.floor(Math.random()*data.length)];
                 const img = document.getElementById(`adImg${idx}`);
-                img.src = (path || `${PATHS.ADDON}trapper/`) + rnd.file;
-                img.style.display = 'block'; 
+                img.src = path + rnd.file; img.style.display = 'block'; 
                 const bg = document.getElementById(`adBg${idx}`);
-                bg.src = PATHS.ADDON_BG + rarityBgs[rnd.rarity];
-                bg.style.display = 'block';
+                bg.src = PATHS.ADDON_BG + rarityBgs[rnd.rarity]; bg.style.display = 'block';
                 document.getElementById(`adName${idx}`).innerText = rnd.name;
             }, 80);
         }
@@ -716,19 +678,14 @@
         function stopAddon(idx, item, path) {
             clearInterval(spinIntervals[`a${idx}`]);
             const img = document.getElementById(`adImg${idx}`);
-            img.src = path + item.file;
-            img.style.display = 'block';
+            img.src = path + item.file; img.style.display = 'block';
             document.getElementById(`adBg${idx}`).src = PATHS.ADDON_BG + rarityBgs[item.rarity];
             document.getElementById(`adName${idx}`).innerText = item.name;
             document.getElementById(`slot${idx}`).classList.remove('spinning');
             document.getElementById(`slot${idx}`).classList.add('selected');
         }
 
-        function finalize() {
-            isSpinning = false;
-            document.getElementById('btnSpin').disabled = false;
-        }
-
+        function finalize() { isSpinning = false; document.getElementById('btnSpin').disabled = false; }
         function updateSpeedText() {
             const val = document.getElementById('speedRange').value;
             const texts = ["동시", "빠름", "보통", "느림"];
