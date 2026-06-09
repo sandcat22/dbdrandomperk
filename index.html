@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>DbD Random Roulette (made by SANDCATS)</title>
     
-    <!-- ✅ 링크 미리보기 설정 (Open Graph) -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sandcat22.github.io/dbdrandomperk/">
     <meta property="og:title" content="DbD Random Roulette">
@@ -23,7 +22,6 @@
             height: 100vh; margin: 0; overflow: hidden; transition: background-color 0.5s;
         }
 
-        /* 로딩 및 에러 리포트 화면 */
         #loadingScreen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #111; z-index: 99999; 
@@ -89,15 +87,23 @@
         #speedStatus { font-size: 20px; font-weight: bold; margin-bottom: 10px; text-shadow: 0 0 5px currentColor; }
         input[type=range] { width: 100%; cursor: pointer; transition: 0.3s; }
         
+        /* ✅ 워터마크 스타일 */
         .watermark { 
             position: fixed; bottom: 20px; right: 30px; 
             color: rgba(255, 255, 255, 0.3); font-size: 14px; 
             text-align: right; line-height: 1.5;
             user-select: none; pointer-events: none; 
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
+
+    <div class="watermark">
+        Made By SANDCATS<br>
+        (V209 - Slasher Update, Icon Upscaling)<br>
+        2026-06-09
+    </div>
 
     <div id="loadingScreen">
         <div id="loadingContent" style="text-align:center;">
@@ -157,13 +163,6 @@
         <input type="range" id="speedRange" min="0" max="3" value="2" step="1" oninput="updateSpeedText()">
     </div>
 
-    <!-- ✅ 워터마크 영역 업데이트 -->
-    <div class="watermark">
-        Made By SANDCATS<br>
-        (V206 - Slasher Addons Added, Icon Upscaling)<br>
-        2026-06-07
-    </div>
-
     <script>
         const PATHS = { PORTRAIT: 'killer_portrait/', PERK_K: 'perk_killer/', PERK_S: 'perk_survivor/', ADDON: 'addons/', ADDON_BG: 'addon_bg/' };
         const rarityBgs = { "common": "bg_common.webp", "uncommon": "bg_uncommon.webp", "rare": "bg_rare.webp", "very_rare": "bg_very_rare.webp", "ultra_rare": "bg_ultra_rare.webp" };
@@ -185,6 +184,7 @@
             { name: "주술: 죽음에 대한 공포", file: "hexScaredToDeath.webp", category: "슬래셔" },
             { name: "침묵의 그림자", file: "silentShadow.webp", category: "슬래셔" },
             { name: "난동", file: "rampage.webp", category: "슬래셔" },
+            
             { name: "시간 여행", file: "turnBackTheClock.webp", category: "퍼스트" },
             { name: "비밀 프로젝트", file: "secretProject.webp", category: "퍼스트" },
             { name: "주술: 하이브 마인드", file: "hexHiveMind.webp", category: "퍼스트" },
@@ -236,6 +236,13 @@
             { name: "몰입 상태", file: "flowState.webp", category: "권태영" },
             { name: "우리만의 공간", file: "aPlaceForUs.webp", category: "권태영" },
             { name: "5수 앞", file: "fiveMovesAhead.webp", category: "권태영" },
+            { name: "기도: 거미줄치기", file: "invocationWeavingSpiders.webp", category: "세이블 와드" },
+            { name: "그림자의 힘", file: "strengthInShadows.webp", category: "세이블 와드" },
+            { name: "사악함", file: "wicked.webp", category: "세이블 와드" },
+            { name: "음유시인의 영감", file: "bardicInspiration.webp", category: "아스트리 야자르" },
+            { name: "반사된 환영", file: "mirroredIllusion.webp", category: "아스트리 야자르" },
+            { name: "고요한 시선", file: "stillSight.webp", category: "아스트리 야자르" },
+            
             { name: "바다 바다 붐", file: "badaBadaBoom.webp", category: "더스틴 핸더슨" },
             { name: "계획 변경", file: "changeOfPlan.webp", category: "더스틴 핸더슨" },
             { name: "팀워크: 풀 서킷", file: "teamworkFullCircuit.webp", category: "더스틴 핸더슨" },
@@ -267,7 +274,6 @@
             { name: "친선 경기", file: "friendlyCompetition.webp", category: "탈리타 리라" }, { name: "팀워크: 두 사람의 힘", file: "teamworkPowerOfTwo.webp", category: "탈리타 리라" }, { name: "제멋대로", file: "cutLoose.webp", category: "탈리타 리라" },
             { name: "블러드 러시", file: "bloodRush.webp", category: "헤나토 리라" }, { name: "팀워크: 단체 잠행", file: "teamworkCollectiveStealth.webp", category: "헤나토 리라" }, { name: "백그라운드 플레이어", file: "backgroundPlayer.webp", category: "헤나토 리라" },
             { name: "분쟁 조정자", file: "troubleshooter.webp", category: "가브리엘 소마" }, { name: "탄생의 목적", file: "madeForThis.webp", category: "가브리엘 소마" }, { name: "청소부", file: "scavenger.webp", category: "가브리엘 소마" },
-            { name: "기도: 거미줄치기", file: "invocationWeavingSpiders.webp", category: "세이블 와드" }, { name: "그림자의 힘", file: "strengthInShadows.webp", category: "세이블 와드" }, { name: "사악함", file: "wicked.webp", category: "세이블 와드" },
             { name: "기도: 신뢰할 수 없는 까마귀", file: "invocationTreacherousCrows.webp", category: "타우리 카인" }, { name: "돌연 중단", file: "cleanBreak.webp", category: "타우리 카인" }, { name: "부담 담당", file: "shoulderTheBurden.webp", category: "타우리 카인" },
             { name: "무해함", file: "doNoHarm.webp", category: "오레라 로즈" }, { name: "주의의무", file: "dutyOfCare.webp", category: "오레라 로즈" }, { name: "신속 대응", file: "rapidResponse.webp", category: "오레라 로즈" },
             { name: "도로 위에 삶", file: "roadLife.webp", category: "뷔 분야삭" }, { name: "하나-둘-셋-넷!", file: "oneTwoThreeFour.webp", category: "뷔 분야삭" }, { name: "고스트 노트", file: "ghostNotes.webp", category: "뷔 분야삭" },
@@ -286,12 +292,7 @@
             { name: "새것 보다 낫다", file: "betterThanNew.webp", category: "레베카 체임버스" }, { name: "안도감", file: "reassurance.webp", category: "레베카 체임버스" }, { name: "과집중", file: "hyperfocus.webp", category: "레베카 체임버스" },
             { name: "극작법", file: "dramaturgy.webp", category: "니콜라스 케이지" }, { name: "연기 파트너", file: "scenePartner.webp", category: "니콜라스 케이지" }, { name: "플롯 트위스트", file: "plotTwist.webp", category: "니콜라스 케이지" },
             { name: "럭키 스타", file: "luckyStar.webp", category: "엘런 리플리" }, { name: "화학물질 함정", file: "chemicalTrap.webp", category: "엘런 리플리" }, { name: "날렵함", file: "lightFooted.webp", category: "엘런 리플리" },
-            { name: "호재: 조명", file: "boonIllumination.webp", category: "앨런 웨이크" }, { name: "빛의 챔피언", file: "championOfLight.webp", category: "앨런 웨이크" }, { name: "마감일", file: "deadline.webp", category: "앨런 웨이크" },
-            { name: "반사된 환영", file: "mirroredIllusion.webp", category: "아스트리 야자르" }, { name: "음유시인의 영감", file: "bardicInspiration.webp", category: "아스트리 야자르" }, { name: "고요한 시선", file: "stillSight.webp", category: "아스트리 야자르" },
-            { name: "수완", file: "finesse.webp", category: "라라 크로프트" }, { name: "단련", file: "hardened.webp", category: "라라 크로프트" }, { name: "전문가", file: "specialist.webp", category: "라라 크로프트" },
-            { name: "벨몬드의 눈", file: "eyesOfBelmont.webp", category: "랄프 C 벨몬드" }, { name: "의기양양", file: "exultation.webp", category: "랄프 C 벨몬드" }, { name: "영광의 순간", file: "momentOfGlory.webp", category: "랄프 C 벨몬드" },
-            { name: "아포칼립스 독창성", file: "apocalypticIngenuity.webp", category: "릭 그라임스" }, { name: "날 잡아봐!", file: "comeAndGetMe.webp", category: "릭 그라임스" }, { name: "팀워크: 강해짐", file: "teamworkToughenUp.webp", category: "릭 그라임스" },
-            { name: "신념", file: "conviction.webp", category: "미숀 그라임스" }, { name: "최후의 저항", file: "lastStand.webp", category: "미숀 그라임스" }, { name: "팀워크: 패대기", file: "teamworkThrowDown.webp", category: "미숀 그라임스" }
+            { name: "호재: 조명", file: "boonIllumination.webp", category: "앨런 웨이크" }, { name: "빛의 챔피언", file: "championOfLight.webp", category: "앨런 웨이크" }, { name: "마감일", file: "deadline.webp", category: "앨런 웨이크" }
         ];
 
         const killerAddons = {
@@ -351,7 +352,7 @@
             "nightmare": [{ name: "정원용 갈퀴", file: "gardenRake.webp", rarity: "common" }, { name: "어린 아이가 그린 그림", file: "kidsDrawing.webp", rarity: "common" }, { name: "양모 셔츠", file: "woolShirt.webp", rarity: "common" }, { name: "양 그림 블럭", file: "sheepBlock.webp", rarity: "common" },{ name: "평범한 갈퀴", file: "prototypeClaws.webp", rarity: "uncommon" }, { name: "야외용 노끈", file: "outdoorRope.webp", rarity: "uncommon" }, { name: "넨시의 스케치", file: "nancysSketch.webp", rarity: "uncommon" }, { name: "초록색 드레스", file: "greenDress.webp", rarity: "uncommon" }, { name: "고양이 그림 블럭", file: "catBlock.webp", rarity: "uncommon" },{ name: "유니콘 그림 블럭", file: "unicornBlock.webp", rarity: "rare" }, { name: "도료 희석제", file: "paintThinner.webp", rarity: "rare" }, { name: "낸시의 걸작", file: "nancysMasterpiece.webp", rarity: "rare" }, { name: "줄넘기", file: "jumpRope.webp", rarity: "rare" }, { name: "하늘색 드레스", file: "blueDress.webp", rarity: "rare" },{ name: "약통", file: "pillBottle.webp", rarity: "very_rare" }, { name: "그네의 체인", file: "swingChains.webp", rarity: "very_rare" }, { name: "학급 단체 사진", file: "classPhoto.webp", rarity: "very_rare" }, { name: "Z 블럭", file: "zBlock.webp", rarity: "very_rare" },{ name: "빨간 물감 붓", file: "redPaintBrush.webp", rarity: "ultra_rare" }, { name: "검은 상자", file: "blackBox.webp", rarity: "ultra_rare" }],
             "pig": [{ name: "조각난 주사기", file: "shatteredSyringe.webp", rarity: "common" }, { name: "존의 진료 기록", file: "johnsMedicalFile.webp", rarity: "common" }, { name: "맞물리는 면도날", file: "interlockingRazor.webp", rarity: "common" }, { name: "전투용 끈", file: "combatStraps.webp", rarity: "common" },{ name: "작업장 기름", file: "workshopGrease.webp", rarity: "uncommon" }, { name: "다용도 칼날", file: "utilityBlades.webp", rarity: "uncommon" }, { name: "가시 철사줄", file: "razorWires.webp", rarity: "uncommon" }, { name: "유언장", file: "lastWill.webp", rarity: "uncommon" }, { name: "얼굴 마스크", file: "faceMask.webp", rarity: "uncommon" },{ name: "서서히 퍼지는 독", file: "slowReleaseToxin.webp", rarity: "rare" }, { name: "녹슨 부속품", file: "rustyAttachments.webp", rarity: "rare" }, { name: "두번째 규칙", file: "rulesSetNo2.webp", rarity: "rare" }, { name: "직쏘의 주석이 달린 도면", file: "jigsawsAnnotatedPlan.webp", rarity: "rare" }, { name: "기계부품 가방", file: "bagOfGears.webp", rarity: "rare" },{ name: "조작된 타이머", file: "tamperedTimer.webp", rarity: "very_rare" }, { name: "직쏘의 스케치", file: "jigsawsSketch.webp", rarity: "very_rare" }, { name: "부품 상자", file: "crateOfGears.webp", rarity: "very_rare" }, { name: "아만다의 비밀", file: "amandasSecret.webp", rarity: "very_rare" },{ name: "비디오 테이프", file: "videoTape.webp", rarity: "ultra_rare" }, { name: "아만다의 편지", file: "amandasLetter.webp", rarity: "ultra_rare" }],
             "clown": [{ name: "포르노 비디오", file: "vHSPorn.webp", rarity: "common" }, { name: "로빈의 깃털", file: "robinFeather.webp", rarity: "common" }, { name: "파티 병", file: "partyBottle.webp", rarity: "common" }, { name: "행사용 핑거리스 장갑", file: "fingerlessParadeGloves.webp", rarity: "common" },{ name: "두꺼운 코르크 마개", file: "thickCorkStopper.webp", rarity: "uncommon" }, { name: "끈적한 탄산음료 병", file: "stickySodaBottle.webp", rarity: "uncommon" }, { name: "찌르레기 깃털", file: "starlingFeather.webp", rarity: "uncommon" }, { name: "용매 주전자", file: "solventJug.webp", rarity: "uncommon" }, { name: "등유통", file: "keroseneCan.webp", rarity: "uncommon" },{ name: "황산 유리병", file: "sulphuricAcidVial.webp", rarity: "rare" }, { name: "암모니아수", file: "spiritofHartshorn.webp", rarity: "rare" }, { name: "악취를 풍기는 신발 안창", file: "smellyInnerSoles.webp", rarity: "rare" }, { name: "표백제 플라스크", file: "flaskOfBleach.webp", rarity: "rare" }, { name: "클로로폼이 든 병", file: "bottleOfChloroform.webp", rarity: "rare" },{ name: "화려한 화장용품 키트", file: "garishMakeUpKit.webp", rarity: "very_rare" }, { name: "에테르 15 VOL%", file: "ether15Vol.webp", rarity: "very_rare" }, { name: "담뱃갑", file: "cigarBox.webp", rarity: "very_rare" }, { name: "싸구려 진", file: "cheapGinBottle.webp", rarity: "very_rare" },{ name: "문신한 사내의 중지손가락", file: "tattoosMiddleFinger.webp", rarity: "ultra_rare" }, { name: "빨간 머리의 새끼손가락", file: "redheadsPinkyFinger.webp", rarity: "ultra_rare" }],
-            "spirit": [{ name: "조리", file: "zori.webp", rarity: "common" }, { name: "행복의 부적", file: "shiawaseAmulet.webp", rarity: "common" }, { name: "종이학", file: "origamiCrane.webp", rarity: "common" }, { name: "선물받은 대나무 빗", file: "giftedBambooComb.webp", rarity: "common" },{ name: "하얀 리본", file: "whiteHairRibbon.webp", rarity: "uncommon" }, { name: "린의 고장난 시계", file: "rinsBrokenWatch.webp", rarity: "uncommon" }, { name: "진흙투성이 스포츠 모자", file: "muddySportsDayCap.webp", rarity: "uncommon" }, { name: "행운의 부적", file: "kaiunTalisman.webp", rarity: "uncommon" }, { name: "향나무 분재", file: "juniperBonsai.webp", rarity: "uncommon" },{ name: "녹슨 플루트", file: "rustyFlute.webp", rarity: "rare" }, { name: "스파클라", file: "senkoHanabi.webp", rarity: "rare" }, { name: "카타나 츠바", file: "katanaTsuba.webp", rarity: "rare" }, { name: "둥근 부채", file: "uchiwai.webp", rarity: "rare" }, { name: "어머니의 안경", file: "mothersGlasses.webp", rarity: "rare" },{ name: "액막이 부적", file: "yakuyokeAmulet.webp", rarity: "very_rare" }, { name: "와키자시 칼집", file: "wakizashiSaya.webp", rarity: "very_rare" }, { name: "풍경", file: "furin.webp", rarity: "very_rare" }, { name: "마른 벚꽃", file: "driedCherryBlossom.webp", rarity: "very_rare" },{ name: "모녀 반지", file: "motherDaughterRing.webp", rarity: "ultra_rare" }, { name: "킨츠키 찻잔", file: "kintsugiTeacup.webp", rarity: "ultra_rare" }],
+            "spirit": [{ name: "조리", file: "zori.webp", rarity: "common" }, { name: "행복의 부적", file: "shiawaseAmulet.webp", rarity: "common" }, { name: "종이학", file: "origamiCrane.webp", rarity: "common" }, { name: "선물받은 대나무 빗", file: "giftedBambooComb.webp", rarity: "common" },{ name: "하얀 리본", file: "whiteHairRibbon.webp", rarity: "uncommon" }, { name: "린의 고장난 시계", file: "rinsBrokenWatch.webp", rarity: "uncommon" }, { name: "진흙투성이 스포츠 모자", file: "muddySportsDayCap.webp", rarity: "uncommon" }, { name: "행운의 부적", file: "kaiunTalisman.webp", rarity: "uncommon" },{ name: "녹슨 플루트", file: "rustyFlute.webp", rarity: "rare" }, { name: "스파클라", file: "senkoHanabi.webp", rarity: "rare" }, { name: "카타나 츠바", file: "katanaTsuba.webp", rarity: "rare" }, { name: "둥근 부채", file: "uchiwai.webp", rarity: "rare" }, { name: "어머니의 안경", file: "mothersGlasses.webp", rarity: "rare" },{ name: "액막이 부적", file: "yakuyokeAmulet.webp", rarity: "very_rare" }, { name: "와키자시 칼집", file: "wakizashiSaya.webp", rarity: "very_rare" }, { name: "풍경", file: "furin.webp", rarity: "very_rare" }, { name: "마른 벚꽃", file: "driedCherryBlossom.webp", rarity: "very_rare" },{ name: "모녀 반지", file: "motherDaughterRing.webp", rarity: "ultra_rare" }, { name: "킨츠키 찻잔", file: "kintsugiTeacup.webp", rarity: "ultra_rare" }],
             "legion": [{ name: "웃는 얼굴 핀", file: "smileyFacePin.webp", rarity: "common" }, { name: "흠집난 자", file: "scratchedRuler.webp", rarity: "common" }, { name: "못된 장난 목록", file: "mischiefList.webp", rarity: "common" }, { name: "우정 팔찌", file: "friendshipBracelet.webp", rarity: "common" },{ name: "잠깨는 약", file: "neverSleepPills.webp", rarity: "uncommon" }, { name: "벽화 스케치", file: "muralSketch.webp", rarity: "uncommon" }, { name: "줄리의 믹스 테이프", file: "juliesMixTape.webp", rarity: "uncommon" }, { name: "긁힌 자", file: "etchedRuler.webp", rarity: "uncommon" }, { name: "일그러진 웃는 얼굴 핀", file: "defacedSmileyPin.webp", rarity: "uncommon" },{ name: "군단의 핀", file: "theLegionPin.webp", rarity: "rare" }, { name: "수지의 믹스 테이프", file: "susiesMixTape.webp", rarity: "rare" }, { name: "도둑 맞은 스케치북", file: "stolenSketchBook.webp", rarity: "rare" }, { name: "스타일리시한 선글라스", file: "stylishSunglasses.webp", rarity: "rare" }, { name: "조이의 믹스 테이프", file: "joeysMixTape.webp", rarity: "rare" },{ name: "찔린 상처 연구", file: "stabWoundsStudy.webp", rarity: "very_rare" }, { name: "프랭크의 믹스 테이프", file: "franksMixTape.webp", rarity: "very_rare" }, { name: "더러운 칼날", file: "filthyBlade.webp", rarity: "very_rare" }, { name: "베프", file: "bFFs.webp", rarity: "very_rare" },{ name: "핏빛 단추", file: "iridescentButton.webp", rarity: "ultra_rare" }, { name: "연기나는 믹스 테이프", file: "fumingMixTape.webp", rarity: "ultra_rare" }],
             "plague": [{ name: "기도문 석판 조각", file: "prayerTabletFragment.webp", rarity: "common" }, { name: "유향", file: "olibanumIncense.webp", rarity: "common" }, { name: "석회석 인장", file: "limestoneSeal.webp", rarity: "common" }, { name: "치유 연고", file: "healingSalve.webp", rarity: "common" },{ name: "예방 목걸이", file: "prophylacticAmulet.webp", rarity: "uncommon" }, { name: "강력한 팅크", file: "potentTincture.webp", rarity: "uncommon" }, { name: "적철광 인장", file: "haematiteSeal.webp", rarity: "uncommon" }, { name: "구토제 물약", file: "emeticPotion.webp", rarity: "uncommon" }, { name: "축복받은 사과", file: "blessedApple.webp", rarity: "uncommon" },{ name: "마사지 오일", file: "rubbingOil.webp", rarity: "rare" }, { name: "감염된 구토제", file: "infectedEmetic.webp", rarity: "rare" }, { name: "향 연고", file: "incensedOintment.webp", rarity: "rare" }, { name: "퇴마 목걸이", file: "exorcismAmulet.webp", rarity: "rare" }, { name: "잿빛 사과", file: "ashenApple.webp", rarity: "rare" },{ name: "숭배의 석판", file: "worshipTablet.webp", rarity: "very_rare" }, { name: "끔찍한 구토제", file: "vileEmetic.webp", rarity: "very_rare" }, { name: "절단된 발가락", file: "severedToe.webp", rarity: "very_rare" }, { name: "광신자의 목걸이", file: "devoteesAmulet.webp", rarity: "very_rare" },{ name: "핏빛 인장", file: "iridescentSeal.webp", rarity: "ultra_rare" }, { name: "검은 향", file: "blackIncense.webp", rarity: "ultra_rare" }],
             "ghostface": [{ name: "헤드라인 기사 조각", file: "headlinesCutOuts.webp", rarity: "common" }, { name: "월아이즈 성냥갑", file: "walleyesMatchbook.webp", rarity: "common" }, { name: "싸구려 향수", file: "cheapCologne.webp", rarity: "common" }, { name: "필리", file: "philly.webp", rarity: "common" },{ name: "표식이 그려진 지도", file: "markedMap.webp", rarity: "uncommon" }, { name: "신치 스트랩", file: "reusableCinchStraps.webp", rarity: "uncommon" }, { name: "올슨의 주소록", file: "olsensAddressBook.webp", rarity: "uncommon" }, { name: "올슨의 수기", file: "olsensJournal.webp", rarity: "uncommon" }, { name: "망원 렌즈", file: "telephotoLens.webp", rarity: "uncommon" },{ name: "이빨자국이 난 펜", file: "chewedPen.webp", rarity: "rare" }, { name: "올슨의 지갑", file: "olsensWallet.webp", rarity: "rare" }, { name: "독한 향수", file: "lastingPerfume.webp", rarity: "rare" }, { name: "나이프 벨트 클립", file: "knifeBeltClip.webp", rarity: "rare" }, { name: "가죽 나이프 칼집", file: "leatherKnifeSheath.webp", rarity: "rare" },{ name: "허벅지에 차는 칼집", file: "dropLegKnifeSheath.webp", rarity: "very_rare" }, { name: "피해자의 세부 일정", file: "victimsDetailedRoutine.webp", rarity: "very_rare" }, { name: "운전 면허증", file: "driversLicense.webp", rarity: "very_rare" }, { name: "야간 투시용 단안경", file: "nightVisionMonocular.webp", rarity: "very_rare" },{ name: "야외 보안 카메라", file: "outdoorSecurityCamera.webp", rarity: "ultra_rare" }, { name: "테이프에 찍힌 고스트 페이스", file: "ghostFaceCaughtOnTape.webp", rarity: "ultra_rare" }],
@@ -625,7 +626,7 @@
                 }
             }
 
-            // ✅ 중복 퍽 방지를 위한 셔플 로직 적용
+            // 애드온 중복 방지 로직
             if (type === 'addon') {
                 setTimeout(() => {
                     if (document.getElementById('chkRandomKiller').checked) {
@@ -644,7 +645,6 @@
                         for(let i=1; i<=2; i++) clearInterval(spinIntervals[`a${i}`]);
                         resetSlots(); alert(`데이터가 없습니다.`); finalize();
                     } else {
-                        // 애드온 중복 방지 셔플
                         const shuffled = [...activeData].sort(() => Math.random() - 0.5);
                         stopAddon(1, shuffled[0], path); 
                         stopAddon(2, shuffled[1], path);
@@ -655,7 +655,7 @@
                 const speedVal = parseInt(document.getElementById('speedRange').value);
                 const currentDelay = [0, 600, 1300, 2600][speedVal];
                 
-                // 퍽 중복 방지 셔플
+                // 퍽 중복 방지 로직
                 const shuffledPerks = [...activeData].sort(() => Math.random() - 0.5);
                 
                 if (speedVal === 0) { 
