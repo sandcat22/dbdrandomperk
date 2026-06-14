@@ -25,15 +25,10 @@
         h1 { text-shadow: 0 0 15px currentColor; margin-bottom: 20px; font-style: italic; font-size: 60px; letter-spacing: 5px; cursor: pointer; transition: 0.3s; user-select: none; }
         h1:hover { transform: scale(1.05); }
         
-        /* ✅ V226 레이아웃 수정: 기본 display 스타일을 flex로 변경하고 정렬 붕괴 방지 */
         #perkWrapper { display: flex; align-items: center; justify-content: center; flex-direction: column; min-height: 500px; width: 100%; position: relative; }
         #perkContainer { display: flex; gap: 35px; align-items: center; justify-content: center; }
         
         .perk-card { width: 275px; height: 400px; background: linear-gradient(145deg, rgba(20,20,20,0.95), rgba(5,5,5,0.95)); border: 4px solid #333; border-radius: 12px; display: flex; flex-direction: column; align-items: center; position: relative; box-shadow: 0 12px 25px rgba(0,0,0,0.9); box-sizing: border-box; }
-        .perk-card.spinning .perk-img, .perk-card.spinning .perk-bg { display: block; filter: blur(2px) grayscale(70%); }
-        .perk-card.selected.killer_perk { border: 4px solid #ff1111; background: linear-gradient(180deg, rgba(60, 0, 0, 0.95) 0%, rgba(10, 0, 0, 1) 100%); box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 30px rgba(200, 0, 0, 0.5); }
-        .perk-card.selected.survivor_perk { border: 4px solid #1166ff; background: linear-gradient(180deg, rgba(0, 20, 60, 0.95) 0%, rgba(0, 5, 10, 1) 100%); box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 30px rgba(0, 100, 255, 0.5); }
-
         .perk-bg { width: 210px; height: 210px; position: absolute; top: 35px; opacity: 0.7; display: none; z-index: 1; }
         .perk-img { width: 210px; height: 210px; position: absolute; top: 35px; z-index: 2; display: none; object-fit: contain; }
         .perk-name { font-size: 24px; font-weight: bold; text-align: center; color: #ccc; margin-top: 260px; width: 100%; height: 70px; display: flex; align-items: center; justify-content: center; padding: 0 10px; line-height: 1.2; z-index: 3; text-shadow: 1px 1px 3px rgba(0,0,0,1); }
@@ -45,7 +40,12 @@
         .perk-card.selected.killer_perk .tier-icon-img { filter: drop-shadow(0 0 5px #ff3333) drop-shadow(0 0 15px #ff3333); }
         .perk-card.selected.survivor_perk .tier-icon-img { filter: drop-shadow(0 0 5px #4da6ff) drop-shadow(0 0 15px #4da6ff); }
 
+        .perk-card.spinning .perk-img, .perk-card.spinning .perk-bg { display: block; filter: blur(2px) grayscale(70%); }
+        .perk-card.selected.killer_perk { border: 4px solid #ff1111; background: linear-gradient(180deg, rgba(60, 0, 0, 0.95) 0%, rgba(10, 0, 0, 1) 100%); box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 30px rgba(200, 0, 0, 0.5); }
+        .perk-card.selected.survivor_perk { border: 4px solid #1166ff; background: linear-gradient(180deg, rgba(0, 20, 60, 0.95) 0%, rgba(0, 5, 10, 1) 100%); box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 30px rgba(0, 100, 255, 0.5); }
+        
         #rightPanel { position: absolute; right: 50px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; justify-content: center; width: 140px; }
+        
         .tier-filter-container { display: flex; flex-direction: column; gap: 8px; width: 100%; }
         .filter-title { font-size: 14px; font-weight: bold; color: #666; margin-bottom: 2px; text-align: center; text-shadow: 1px 1px 2px #000; letter-spacing: 1px; }
         
@@ -56,6 +56,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.5);
         }
         .tier-btn:hover { border-color: #444; color: #888; }
+        
         body.mode-killer .tier-btn.active { border-color: #8b0000; color: #ff3333; background: rgba(40, 0, 0, 0.7); box-shadow: inset 0 0 10px #000, 0 0 10px rgba(200, 0, 0, 0.3); text-shadow: 0 0 5px #ff0000; }
         body.mode-survivor .tier-btn.active { border-color: #003366; color: #4da6ff; background: rgba(0, 15, 40, 0.7); box-shadow: inset 0 0 10px #000, 0 0 10px rgba(0, 100, 255, 0.3); text-shadow: 0 0 5px #0088ff; }
 
@@ -66,12 +67,16 @@
         .avg-score.show.survivor-score { color: #4da6ff; text-shadow: 0 0 10px #0044aa, 0 0 20px #0088ff; }
 
         #addonWrapper { display: none; align-items: center; justify-content: center; min-height: 500px; width: 100%; position: relative; }
+        
         .killer-addon-container { background: linear-gradient(145deg, rgba(20,20,20,0.8), rgba(5,5,5,0.8)); padding: 25px 35px; border-radius: 20px; border: 4px solid #444; box-sizing: border-box; display: flex; gap: 30px; align-items: center; width: fit-content; }
+        
         .killer-img-container { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; width: 280px; height: 320px; flex-shrink: 0; position: relative; gap: 15px; }
         .main-killer-img { width: 100%; height: 260px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255, 51, 51, 0.4)); transition: 0.1s; }
         .main-killer-img.spinning { filter: blur(4px) grayscale(70%); transform: scale(0.95); opacity: 0.7; }
-        .killer-name-display { font-size: 22px; font-weight: 900; color: #E040FB; text-shadow: 0 0 10px #E040FB, 0 0 20px #E040FB; text-align: center; width: 100%; min-height: 30px; transition: 0.1s; }
         
+        .killer-name-display { font-size: 22px; font-weight: 900; color: #E040FB; text-shadow: 0 0 10px #E040FB, 0 0 20px #E040FB; text-align: center; width: 100%; min-height: 30px; transition: 0.1s; }
+        .main-killer-img.spinning ~ .killer-name-display { filter: blur(2px); opacity: 0.7; }
+
         .addon-slot-container { display:flex; flex-direction:column; align-items:center; position: relative; flex-shrink: 0; width: 280px; }
         .addon-slot { width: 250px; height: 250px; border-radius: 12px; position: relative; display: flex; align-items: center; justify-content: center; background: #0a0a0a; border: 3px solid #333; box-shadow: inset 0 0 30px #000; box-sizing: border-box; transition: all 0.3s ease-out; margin-bottom: 25px; }
         .addon-img { position: absolute; width: 200px; height: 200px; z-index: 10; display: none; }
@@ -80,11 +85,25 @@
         .addon-slot.selected { border: 4px solid #E040FB; box-shadow: inset 0 0 20px #000, 0 0 40px rgba(224, 64, 251, 0.5); background: #1a001a; }
         .addon-slot.selected + .addon-name { color: #E040FB; text-shadow: 0 0 10px #E040FB; }
 
-        .killer-list-panel { width: 580px; height: auto; background: rgba(10, 10, 10, 0.8); border: 2px solid #2a2a2a; border-radius: 12px; display: flex; flex-direction: column; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); box-sizing: border-box; }
-        .killer-scroll-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; overflow: visible; }
-        .killer-list-btn { background: rgba(20, 20, 20, 0.9); border: 1px solid #333; color: #888; padding: 10px 4px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; transition: 0.2s; text-align: center; font-family: 'Malgun Gothic', sans-serif; word-break: keep-all; line-height: 1.2; }
+        .killer-list-panel {
+            width: 520px; height: auto; background: rgba(10, 10, 10, 0.8); border: 2px solid #2a2a2a; border-radius: 12px; 
+            display: flex; flex-direction: column; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); box-sizing: border-box;
+        }
+        
+        .killer-scroll-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; overflow: visible; }
+
+        .killer-list-btn {
+            background: rgba(20, 20, 20, 0.9); border: 1px solid #333; color: #888;
+            padding: 8px 2px; border-radius: 6px; font-weight: bold; font-size: 13px;
+            cursor: pointer; transition: 0.2s; text-align: center; font-family: 'Malgun Gothic', sans-serif;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.5px;
+        }
         .killer-list-btn:hover { border-color: #E040FB; color: #fff; }
-        .killer-list-btn.active { border-color: #E040FB; color: #E040FB; background: rgba(224, 64, 251, 0.15); box-shadow: inset 0 0 8px rgba(224, 64, 251, 0.3); text-shadow: 0 0 5px #E040FB; }
+        .killer-list-btn.active {
+            border-color: #E040FB; color: #E040FB; background: rgba(224, 64, 251, 0.15);
+            box-shadow: inset 0 0 8px rgba(224, 64, 251, 0.3); text-shadow: 0 0 5px #E040FB;
+        }
+        
         .random-btn { display: flex; align-items: center; justify-content: center; gap: 8px; flex-shrink: 0; }
         .chk-box { display: inline-block; width: 14px; height: 14px; border: 2px solid #888; border-radius: 3px; transition: 0.2s; }
         .random-btn.active .chk-box { background: #E040FB; border-color: #E040FB; box-shadow: 0 0 8px #E040FB; }
@@ -113,7 +132,7 @@
         .close-modal { background: none; border: none; color: #888; font-size: 28px; cursor: pointer; line-height: 1; padding: 0; margin-top: -5px; transition: 0.2s; }
         .close-modal:hover { color: #fff; transform: scale(1.1); }
         
-        /* ✅ V226: 아이프레임 통합 다크테마 반전 스타일 피드백 반영 */
+        /* ✅ V228: iframe 반전 다크테마 반전 스타일 피드백 반영 */
         #notesIframe { width: 100%; flex: 1; border: none; background: #fff; filter: invert(0.92) hue-rotate(180deg); }
     </style>
 </head>
@@ -123,7 +142,7 @@
         <button class="update-notes-btn" onclick="openUpdateNotes()">UPDATE NOTES</button>
         <div class="watermark">
             Made By SANDCATS<br>
-            (V226 - Bug & Layout Ultimate Fix)<br>
+            (V228 - Tier Score & Data Fix)<br>
             2026-06-15
         </div>
     </div>
@@ -263,7 +282,27 @@
             { name: "소멸", file: "dissolution.webp", category: "드레지" }, { name: "드러난 어둠", file: "darknessRevealed.webp", category: "드레지" }, { name: "패혈성 손길", file: "septicTouch.webp", category: "드레지" },
             { name: "숨을 곳 없음", file: "nowhereToHide.webp", category: "기사" }, { name: "주술: 어둠을 마주하라", file: "hexFaceTheDarkness.webp", category: "기사" }, { name: "자만심", file: "hubris.webp", category: "기사" },
             { name: "강타!", file: "thwack.webp", category: "해골 상인" }, { name: "레버리지", file: "leverage.webp", category: "해골 상인" }, { name: "시작된 게임", file: "gameAfoot.webp", category: "해골 상인" },
-            { name: "유전학적 한계", file: "geneticLimits.webp", category: "특이점" }, { name: "강압 받은 망설임", file: "forcedHesitation.webp", category: "특이점" }, { name: "머신 러닝", file: "machineLearning.webp", category: "특이점" }
+            { name: "유전학적 한계", file: "geneticLimits.webp", category: "특이점" }, { name: "강압 받은 망설임", file: "forcedHesitation.webp", category: "특이점" }, { name: "머신 러닝", file: "machineLearning.webp", category: "특이점" },
+            { name: "해방", file: "unbound.webp", category: "미지의 존재" }, { name: "불의", file: "unforeseen.webp", category: "미지의 존재" }, { name: "대실패", file: "undone.webp", category: "미지의 존재" },
+            { name: "흔들리는 천둥", file: "allShakingThunder.webp", category: "조련사" }, { name: "재앙: 들쭉날쭉한 나침반", file: "scourgeHookJaggedCompass.webp", category: "조련사" }, { name: "인정사정없이", file: "noQuarter.webp", category: "조련사" },
+            { name: "굶주림", file: "ravenous.webp", category: "끄라스" }, { name: "방황하는 눈빛", file: "wanderingEye.webp", category: "끄라스" }, { name: "주술: 파멸의 서곡", file: "hexOvertureOfDoom.webp", category: "끄라스" },
+            { name: "가장 좋은 것은 마지막에", file: "saveTheBestForLast.webp", category: "쉐이프" }, { name: "먹이 농락", file: "playWithYourFood.webp", category: "쉐이프" }, { name: "꺼져 가는 빛", file: "dyingLight.webp", category: "쉐이프" },
+            { name: "때려눕히기", file: "knockOut.webp", category: "카니발" }, { name: "바비큐 & 칠리", file: "barbecueAndChilli.webp", category: "카니발" }, { name: "프랭클린의 죽음", file: "franklinsDemise.webp", category: "카니발" },
+            { name: "격분", file: "fireUp.webp", category: "나이트메어" }, { name: "나를 기억하나", file: "rememberMe.webp", category: "나이트메어" }, { name: "피의 교도관", file: "bloodWarden.webp", category: "나이트메어" },
+            { name: "재앙: 집행인의 손재주", file: "scourgeHookHangmansTrick.webp", category: "피그" }, { name: "감시", file: "surveillance.webp", category: "피그" }, { name: "선택하라", file: "makeYourChoice.webp", category: "피그" },
+            { name: "밝은 귀", file: "imAllEars.webp", category: "고스트페이스" }, { name: "전율의 기쁨", file: "thrillingTremors.webp", category: "고스트페이스" }, { name: "은밀한 추격", file: "furtiveChase.webp", category: "고스트페이스" },
+            { name: "서지", file: "surge.webp", category: "데모고르곤" }, { name: "마인드 브레이커", file: "mindbreaker.webp", category: "데모고르곤" }, { name: "잔혹한 속박", file: "cruelLimits.webp", category: "데모고르곤" },
+            { name: "강압 받은 속죄", file: "forcedPenance.webp", category: "처형자" }, { name: "고통의 흔적", file: "trailOfTorment.webp", category: "처형자" }, { name: "죽음 결속", file: "deathbound.webp", category: "처형자" },
+            { name: "치명적인 추적자", file: "lethalPursuer.webp", category: "네메시스" }, { name: "히스테리", file: "hysteria.webp", category: "네메시스" }, { name: "폭발", file: "eruption.webp", category: "네메시스" },
+            { name: "교착 상태", file: "deadlock.webp", category: "수도사" }, { name: "주술: 노리개", file: "hexPlaything.webp", category: "수도사" }, { name: "재앙: 고통의 선물", file: "scourgeHookGiftOfPain.webp", category: "수도사" },
+            { name: "재앙: 분노의 홍수", file: "scourgeHookFloodsOfRage.webp", category: "원령" }, { name: "소금물의 부름", file: "callOfBrine.webp", category: "원령" }, { name: "무자비한 태풍", file: "mercilessStorm.webp", category: "원령" },
+            { name: "우월한 신체", file: "superiorAnatomy.webp", category: "마스터마인드" }, { name: "깨어난 자각", file: "awakenedAwareness.webp", category: "마스터마인드" }, { name: "종착역", file: "terminus.webp", category: "마스터마인드" },
+            { name: "궁극의 무기", file: "ultimateWeapon.webp", category: "제노모프" }, { name: "빠른 잔혹함", file: "rapidBrutality.webp", category: "제노모프" }, { name: "에이리언의 직감", file: "alienInstinct.webp", category: "제노모프" },
+            { name: "주술: 같이 놀자", file: "hexTwoCanPlay.webp", category: "착한 아이" }, { name: "영원한 친구", file: "friendsTilTheEnd.webp", category: "착한 아이" }, { name: "건전지 포함", file: "batteriesIncluded.webp", category: "착한 아이" },
+            { name: "조율 엮기", file: "weaveAttunement.webp", category: "리치" }, { name: "힘없는 손길", file: "languidTouch.webp", category: "리치" }, { name: "어둠의 오만함", file: "dark Arrogance.webp", category: "리치" },
+            { name: "주술: 비참한 운명", file: "hexWretchedFate.webp", category: "어둠의 군주" }, { name: "인간의 탐욕", file: "humanGreed.webp", category: "어둠의 군주" }, { name: "권세", file: "dominance.webp", category: "어둠의 군주" },
+            { name: "주술: 비참함 그 자체", file: "hexNothingButMisery.webp", category: "구울" }, { name: "영결의 뒤얽힘", file: "foreverEntwined.webp", category: "구울" }, { name: "아무도 자유롭지 않다", file: "noneAreFree.webp", category: "구울" },
+            { name: "구인", file: "helpWanted.webp", category: "애니매트로닉스" }, { name: "유령 공포", file: "phantomFear.webp", category: "애니매트로닉스" }, { name: "통제불능", file: "haywire.webp", category: "애니매트로닉스" }
         ];
 
         const survivorPerkData = [
@@ -307,7 +346,7 @@
             { name: "뒤집기", file: "flipFlop.webp", category: "애슐리 제이 윌리엄스" }, { name: "재정비", file: "buckleUp.webp", category: "애슐리 제이 윌리엄스" }, { name: "남자의 패기", file: "mettleOfMan.webp", category: "애슐리 제이 윌리엄스" },
             { name: "베이시터", file: "babysitter.webp", category: "스티브 해링턴" }, { name: "동료애", file: "camaraderie.webp", category: "스티브 해링턴" }, { name: "새로운 활력", file: "secondWind.webp", category: "스티브 해링턴" },
             { name: "함께라면 더 좋지", file: "betterTogether.webp", category: "낸시 휠러" }, { name: "시선 고정", file: "fixated.webp", category: "낸시 휠러" }, { name: "내면의 힘", file: "innerStrength.webp", category: "낸시 휠러" },
-            { name: "소울 가드", file: "soulGuard.webp", category: "쉐릴 메이슨" }, { name: "피의 협정", file: "bloodPact.webp", category: "쉐릴 메이슨" }, { name: "억압된 동맹", file: "repressedAlliance.webp", category: "쉐릴 메이슨" },
+            { name: "소울 가드", file: "soulGuard.webp", category: "쉐릴 메이슨" }, { name: "피의 협정", file: "bloodPact.webp", category: "쉐릴 메이슨" }, { name: "억압된 동盟", file: "repressedAlliance.webp", category: "쉐릴 메이슨" },
             { name: "고통 참기", file: "biteTheBullet.webp", category: "레온 S. 케네디" }, { name: "섬광탄", file: "flashbang.webp", category: "레온 S. 케네디" }, { name: "신입의 패기", file: "rookieSpirit.webp", category: "레온 S. 케네디" },
             { name: "저항력", file: "counterforce.webp", category: "질 발렌타인" }, { name: "부활", file: "resurgence.webp", category: "질 발렌타인" }, { name: "폭풍형 지뢰", file: "blastMine.webp", category: "질 발렌타인" },
             { name: "보호자 지도", file: "parentalGuidance.webp", category: "요이치 아사카와" }, { name: "공감대 형성", file: "empathicConnection.webp", category: "요이치 아사카와" }, { name: "호재: 암흑 이론", file: "boonDarkTheory.webp", category: "요이치 아사카와" },
@@ -315,8 +354,7 @@
             { name: "새것 보다 낫다", file: "betterThanNew.webp", category: "레베카 체임버스" }, { name: "안도감", file: "reassurance.webp", category: "레베카 체임버스" }, { name: "과집중", file: "hyperfocus.webp", category: "레베카 체임버스" },
             { name: "극작법", file: "dramaturgy.webp", category: "니콜라스 케이지" }, { name: "연기 파트너", file: "scenePartner.webp", category: "니콜라스 케이지" }, { name: "플롯 트위스트", file: "plotTwist.webp", category: "니콜라스 케이지" },
             { name: "럭키 스타", file: "luckyStar.webp", category: "엘런 리플리" }, { name: "화학물질 함정", file: "chemicalTrap.webp", category: "엘런 리플리" }, { name: "날렵함", file: "lightFooted.webp", category: "엘런 리플리" },
-            { name: "호재: 조명", file: "boonIllumination.webp", category: "앨런 웨이크" }, { name: "빛의 챔피언", file: "championOfLight.webp", category: "앨런 웨이크" }, { name: "마감일", file: "deadline.webp", category: "앨런 웨이크" },
-            { name: "경량화", file: "lightweight.webp", category: "공용 퍽" }, { name: "데자뷰", file: "dejaVu.webp", category: "공용 퍽" }, { name: "동질감", file: "kindred.webp", category: "공용 퍽" }, { name: "등골이 오싹해", file: "spineChill.webp", category: "공용 퍽" }, { name: "미끈한 고기", file: "slipperyMeat.webp", category: "공용 퍽" }, { name: "불길한 예감", file: "premonition.webp", category: "공용 퍽" }, { name: "아무도 버려두지 않아", file: "noOneLeftBehind.webp", category: "공용 퍽" }, { name: "약탈자의 본능", file: "plunderersInstinct.webp", category: "공용 퍽" }, { name: "어두운 감각", file: "darkSense.webp", category: "공용 퍽" }, { name: "우린 해낼거야", file: "wellMakeIt.webp", category: "공용 퍽" }, { name: "이런 일이 일어나다니", file: "thisIsNotHappening.webp", category: "공용 퍽" }, { name: "작은 사냥감", file: "smallGame.webp", category: "공용 퍽" }, { name: "회복력", file: "resilience.webp", category: "공용 퍽" }, { name: "희망", file: "hope.webp", category: "공용 퍽" }
+            { name: "호재: 조명", file: "boonIllumination.webp", category: "앨런 웨이크" }, { name: "빛의 챔피언", file: "championOfLight.webp", category: "앨런 웨이크" }, { name: "마감일", file: "deadline.webp", category: "앨런 웨이크" }
         ];
 
         const killerTiers = {
@@ -331,7 +369,8 @@
             5: ["전력 질주", "아드레날린", "회복력", "기회의 창", "유대감", "죽기살기", "결정적인 일격", "비공개 조건", "데자뷰", "과집중", "안도감", "유연함", "5수 앞", "플롯 트위스트", "반사된 환영", "음유시인의 영감", "하나-둘-셋-넷!", "교란", "속임수"],
             4: ["날렵함", "불침번", "동질감", "우린 해낼거야", "극작법", "부활", "부담 감당", "베이시터", "내면의 힘", "빛의 챔피언", "탈출", "불굴", "균형잡힌 착지", "백그라운드 플레이어", "구조"],
             3: ["차분한 영혼", "정면충돌", "공감", "우리는 영원히 살거야", "남자의 패기", "기민함", "자기 증명", "식물학 지식", "자가 치료", "섬광탄", "화학물질 함정", "등골이 오싹해", "희망", "빠르고 조용하게", "블러드 러시", "리더", "호재: 치료의 순환", "어두운 감각"],
-            2: ["극복", "빌려온 시간", "아무도 버려두지 않아", "대 히트", "고요한 시선", "경량화", "약탈자의 본능", "작은 사냥감", "굳건한 의지", "노련함", "통찰력", "판돈 올리기", "기술자", "신경 쓰지 마", "나와 함께 춤을", "들끓는 화", "독학자", "부수기", "갱생 지도", "뒤틀림", "연대", "침착", "행운", "필요하다면 무엇이든", "오보", "국민을 위하여", "선견지명", "필사의 조치", "견고함", "판단", "힘찬 발버둥", "고속 승진", "자기 보호", "예지력", "호재: 그림자 미행", "교정 조치", "호재: 지수", "이너 포커스", "남은 출현", "지나친 열성", "잠재 에너지", "안개에 관해서", "빠른 포석", "친선 경기", "팀워크: 두 사람의 힘", "제멋대로", "팀워크: 단체 잠행", "분쟁 조정자", "탄생의 목적", "청소부", "돌연 중단", "무해함", "주의의무", "신속 대응", "도로 위에 삶", "고스트 노트", "집착의 대상", "홀로 남겨진 자", "정신 차려!", "약제학", "집념", "형사의 직감", "잠복 근무", "뒤집기", "재정비", "동료애", "새로운 활력", "함께라면 더 좋지", "시선 고정", "소울 가드", "피의 협정", "억압된 동맹", "고통 참기", "폭풍형 지뢰", "보호자 지도", "공감대 형성", "호재: 암흑 이론", "도청 장치", "반응성 치료", "낮은 관심", "새것 보다 낫다", "연기 파트너", "럭키 스타", "호재: 조명", "마감일", "몰입 상태", "우리만의 공간", "그림자의 힘", "사악함", "바다 바다 붐", "계획 변경", "팀워크: 풀 서킷", "뛰어난 지각력", "우리가 지켜보고 있다", "팀워크: 상냥한 사람", "불길한 예감", "세련된 회피", "신입의 패기", "저항력"]
+            2: ["극복", "빌려온 시간", "아무도 버려두지 않아", "대 히트", "고요한 시선", "경량화", "약탈자의 본능", "작은 사냥감", "굳건한 의지", "노련함", "통찰력", "판돈 올리기", "기술자", "신경 쓰지 마", "나와 함께 춤을", "들끓는 화", "독학자", "부수기", "갱생 지도", "뒤틀림", "연대", "침착", "행운", "필요하다면 무엇이든", "오보", "국민을 위하여", "선견지명", "필사의 조치", "견고함", "판단", "힘찬 발버둥", "고속 승진", "자기 보호", "예지력", "호재: 그림자 미행", "교정 조치", "호재: 지수", "이너 포커스", "남은 출현", "지나친 열성", "잠재 에너지", "안개에 관해서", "빠른 포석", "친선 경기", "팀워크: 두 사람의 힘", "제멋대로", "팀워크: 단체 잠행", "분쟁 조정자", "탄생의 목적", "청소부", "돌연 중단", "무해함", "주의의무", "신속 대응", "도로 위에 삶", "고스트 노트", "집착의 대상", "홀로 남겨진 자", "정신 차려!", "약제학", "집념", "형사의 직감", "잠복 근무", "뒤집기", "재정비", "동료애", "새로운 활력", "함께라면 더 좋지", "시선 고정", "소울 가드", "피의 협정", "억압된 동맹", "고통 참기", "폭풍형 지뢰", "보호자 지도", "공감대 형성", "호재: 암흑 이론", "도청 장치", "반응성 치료", "낮은 관심", "새것 보다 낫다", "연기 파트너", "럭키 스타", "호재: 조명", "마감일"],
+            1: ["기도: 거미줄치기", "기도: 신뢰할 수 없는 까마귀", "미끈한 고기", "이런 일이 일어나다니", "유일한 생존자", "공작원"]
         };
 
         function assignTiers(dataArray, tierDict) {
@@ -406,13 +445,16 @@
         
         let isRandomKiller = false;
         let selectedKillers = ['trapper'];
+        let spinTick = 0;
 
         window.addEventListener('DOMContentLoaded', () => {
-            for(let i=0; i<15; i++) {
-                if(killerPerkData[i]) new Image().src = PATHS.PERK_K + killerPerkData[i].file;
-                if(survivorPerkData[i]) new Image().src = PATHS.PERK_S + survivorPerkData[i].file;
-            }
-            killers.slice(0,10).forEach(k => new Image().src = PATHS.PORTRAIT + k.id + '.webp');
+            try {
+                for(let i=0; i<15; i++) {
+                    if(killerPerkData[i]) new Image().src = PATHS.PERK_K + killerPerkData[i].file;
+                    if(survivorPerkData[i]) new Image().src = PATHS.PERK_S + survivorPerkData[i].file;
+                }
+                killers.slice(0,10).forEach(k => new Image().src = PATHS.PORTRAIT + k.id + '.webp');
+            } catch(e) {}
         });
 
         function setTierFilter(val) {
@@ -454,12 +496,14 @@
                 h1.innerText = "🟣 KILLER ADDON 🟣"; h1.style.color = "#E040FB";
                 btn.className = "start-btn addon-btn"; status.style.color = "#aaa";
                 slider.disabled = true; status.innerText = "고정";
+                if(rightPanel) rightPanel.style.display = 'none'; 
             } else {
                 h1.innerText = currentMode === 'killer_perk' ? "🩸 KILLER PERK 🩸" : "🔹 SURVIVOR PERK 🔹";
                 h1.style.color = currentMode === 'killer_perk' ? "#ff3333" : "#4da6ff";
                 btn.className = currentMode === 'killer_perk' ? "start-btn killer-btn" : "start-btn survivor-btn";
                 status.style.color = currentMode === 'killer_perk' ? "#ff3333" : "#4da6ff";
                 slider.disabled = false; updateSpeedText();
+                if(rightPanel) rightPanel.style.display = 'flex'; 
                 document.querySelectorAll('.perk-bg').forEach(bg => bg.src = currentMode === 'killer_perk' ? "perk_bg.png" : "perk_bg_survivor.png");
             }
         }
@@ -578,8 +622,7 @@
         function getRandomPerks(data, filterVal) {
             if (filterVal === 'all') {
                 let tempArray = [...data];
-                shuffleArray(tempArray);
-                return tempArray.slice(0, 4);
+                return shuffleArray(tempArray).slice(0, 4);
             }
 
             let pools = { 1: [], 2: [], 3: [], 4: [], 5: [] };
@@ -607,7 +650,7 @@
                     
                     for(let t of selectedTiers) {
                         let pool = pools[t];
-                        if (pool.length === 0 || usedIndices[t].size >= pool.length) {
+                        if (!pool || pool.length === 0 || usedIndices[t].size >= pool.length) {
                             isValid = false; break;
                         }
                         let r;
@@ -620,11 +663,8 @@
             }
             
             let tempArray = [...data];
-            shuffleArray(tempArray);
-            return tempArray.slice(0, 4);
+            return shuffleArray(tempArray).slice(0, 4);
         }
-
-        let spinTick = 0;
 
         function startSequence() {
             if (isSpinning) return;
@@ -776,12 +816,14 @@
             document.getElementById(`slot${idx}`).classList.add('selected');
         }
 
+        /* ✅ V228: NaN 버그 수정을 위한 계산 식 보완 (Number 함수 활용) */
         function finalize() { 
             isSpinning = false; 
             document.getElementById('btnSpin').disabled = false; 
             
             if (currentMode !== 'killer_addon' && currentSpunPerks && currentSpunPerks.length === 4) {
-                let avg = (currentSpunPerks[0].tier + currentSpunPerks[1].tier + currentSpunPerks[2].tier + currentSpunPerks[3].tier) / 4;
+                // 각 티어를 명확히 숫자로 변환하여 계산
+                let avg = (Number(currentSpunPerks[0].tier) + Number(currentSpunPerks[1].tier) + Number(currentSpunPerks[2].tier) + Number(currentSpunPerks[3].tier)) / 4;
                 const scoreDisplay = document.getElementById('averageScoreDisplay');
                 scoreDisplay.innerText = avg.toFixed(2);
                 scoreDisplay.className = `avg-score show ${currentMode === 'killer_perk' ? 'killer-score' : 'survivor-score'}`;
@@ -796,8 +838,9 @@
 
         function openUpdateNotes() {
             document.getElementById('updateModalOverlay').classList.add('show');
-            // ✅ iframe 리로드 처리로 최신 캐시 미반영 이슈 방지
-            document.getElementById('notesIframe').contentWindow.location.reload(true);
+            try {
+                document.getElementById('notesIframe').contentWindow.location.reload(true);
+            } catch(e) {}
         }
 
         function closeUpdateNotes(event) {
@@ -814,10 +857,13 @@
             }
         });
 
-        // ✅ 초기 인터페이스 설정 및 강제 화면 렌더링
-        renderKillerPicker();
-        updateInterface();
-        document.getElementById('perkWrapper').style.display = 'flex'; 
+        try {
+            renderKillerPicker();
+            updateInterface();
+            document.getElementById('perkWrapper').style.display = 'flex'; 
+        } catch(e) {
+            console.error("UI 초기화 중 에러 발생:", e);
+        }
     </script>
 </body>
 </html>
