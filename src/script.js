@@ -192,9 +192,8 @@ const killerAddons = {
     "knight": [{ name: "낡은 타바드", file: "tatteredTabard.webp", rarity: "common" }, { name: "약탈된 벌꿀 술", file: "pillagedMead.webp", rarity: "common" }, { name: "영역의 지도", file: "mapoftheRealm.webp", rarity: "common" }, { name: "모래 덩어리", file: "grittyLump.webp", rarity: "common" },{ name: "버려진 칼날", file: "treatedBlade.webp", rarity: "uncommon" }, { name: "말린 말고기", file: "driedHorsemeat.webp", rarity: "uncommon" }, { name: "차가운 강철 수갑", file: "coldSteelManacles.webp", rarity: "uncommon" }, { name: "군대 동원", file: "callToArms.webp", rarity: "uncommon" }, { name: "큰 도끼의 도끼날", file: "battleAxeHead.webp", rarity: "uncommon" },{ name: "방범대원의 횃불", file: "townWatchsTorch.webp", rarity: "rare" }, { name: "철공의 집게", file: "ironworkersTongs.webp", rarity: "rare" }, { name: "죽음의 철가면", file: "grimIronMask.webp", rarity: "rare" }, { name: "날카로운 탈것", file: "sharpenedMount.webp", rarity: "rare" }, { name: "깨진 검자루", file: "brokenHilt.webp", rarity: "rare" },{ name: "교도소장의 차임", file: "jailersChimes.webp", rarity: "very_rare" }, { name: "치료용 찜질", file: "healingPoultice.webp", rarity: "very_rare" }, { name: "부싯돌과 강철", file: "flintandSteel.webp", rarity: "very_rare" }, { name: "대장장이의 망치", file: "blacksmithsHammer.webp", rarity: "very_rare" },{ name: "기사의 계약서", file: "knightsContract.webp", rarity: "ultra_rare" }, { name: "핏빛 단체 배너", file: "iridescentCompanyBanner.webp", rarity: "ultra_rare" }],
     "skullMerchant": [{ name: "초음파 덫 스피커", file: "ultrasonicTrapSpeaker.webp", rarity: "common" }, { name: "아디 발렌테 1권", file: "adiValenteIssue1.webp", rarity: "common" }, { name: "대전류 업그레이드", file: "highCurrentUpgrade.webp", rarity: "common" }, { name: "고성능의 투광 조명등", file: "highPowerFloodlight.webp", rarity: "common" },{ name: "적응형 조명", file: "adaptiveLightning.webp", rarity: "uncommon" }, { name: "저전력 모드", file: "lowPowerMode.webp", rarity: "uncommon" }, { name: "스테레오 원격 마이크", file: "stereoRemoteMic.webp", rarity: "uncommon" }, { name: "샷건 스피커", file: "shotgunSpeakers.webp", rarity: "uncommon" }, { name: "슈퍼차지", file: "supercharge.webp", rarity: "uncommon" },{ name: "중요 타겟팅 프로세서", file: "vitalTargetingProcessor.webp", rarity: "rare" }, { name: "적외선 업그레이드", file: "infraredUpgrade.webp", rarity: "rare" }, { name: "유리 가루", file: "powderedGlass.webp", rarity: "rare" }, { name: "느슨한 나사", file: "looseScrew.webp", rarity: "rare" }, { name: "갈색 잡음 발생기", file: "brownNoiseGenerator.webp", rarity: "rare" },{ name: "프로토타입 회전자", file: "prototypeRotor.webp", rarity: "very_rare" }, { name: "지리적 판독", file: "geographicalReadout.webp", rarity: "very_rare" }, { name: "무작위 섬광등", file: "randomisedStrobes.webp", rarity: "very_rare" }, { name: "고기능 움직임 예측기", file: "advancedMovementPrediction.webp", rarity: "very_rare" },{ name: "핏빛 미발행 원고", file: "iridescentUnpublishedManuscript.webp", rarity: "ultra_rare" }, { name: "방전된 배터리", file: "expiredBatteries.webp", rarity: "ultra_rare" }],
     "singularity": [{ name: "영양 가득한 슬러리", file: "nutritionalSlurry.webp", rarity: "common" }, { name: "진단 도구(수리용)", file: "diagnosticToolRepair.webp", rarity: "common" }, { name: "중수", file: "heavyWater.webp", rarity: "common" }, { name: "부숴진 보안 열쇠", file: "brokenSecurityKey.webp", rarity: "common" },{ name: "화장된 유골", file: "crematedRemains.webp", rarity: "uncommon" }, { name: "크리오젤", file: "cryoGel.webp", rarity: "uncommon" }, { name: "초음파 센서", file: "ultrasonicSensor.webp", rarity: "uncommon" }, { name: "어린아이의 야구 글러브", file: "kidsBallGlove.webp", rarity: "uncommon" }, { name: "안드로이드 팔", file: "androidArm.webp", rarity: "uncommon" },{ name: "텅빈 산소 탱크", file: "spentOxygenTank.webp", rarity: "rare" }, { name: "활선", file: "liveWires.webp", rarity: "rare" }, { name: "홀로그램 발전기", file: "hologramGenerator.webp", rarity: "rare" }, { name: "초자각 스프레이", file: "hyperawarenessSpray.webp", rarity: "rare" }, { name: "나노 기기 젤", file: "nanomachineGel.webp", rarity: "rare" },{ name: "외계 식물 섬유", file: "foreignPlantFibers.webp", rarity: "very_rare" }, { name: "진단 도구(건설용)", file: "diagnosticToolConstruction.webp", rarity: "very_rare" }, { name: "승조원 명단", file: "crewManifest.webp", rarity: "very_rare" }, { name: "소마의 가족 사진", file: "somaFamilyPhoto.webp", rarity: "very_rare" },{ name: "핏빛 크리스탈 파편", file: "iridescentCrystalShard.webp", rarity: "ultra_rare" }, { name: "거부된 요청 방식", file: "deniedRequestingForm.webp", rarity: "ultra_rare" }],
-    "xenomorph": [{ name: "오보모프", file: "ovomorph.webp", rarity: "common" }, { name: "시리얼 배급량", file: "cerealRations.webp", rarity: "common" }, { name: "물먹는 새", file: "drinkingBird.webp", rarity: "common" }, { name: "더블 디지털 시계", file: "ripleysWatch.webp", rarity: "common" },{ name: "야광봉", file: "lightWand.webp", rarity: "uncommon" }, { name: "애쉬의 내부", file: "ashsInnards.webp", rarity: "uncommon" }, { name: "승무원 수신기", file: "crewHeadset.webp", rarity: "uncommon" }, { name: "브렛의 모자", file: "brettsCap.webp", rarity: "uncommon" }, { name: "램버트의 별자리표", file: "lambertsStarMap.webp", rarity: "uncommon" },{ name: "파커의 머리띠", file: "parkersHeadband.webp", rarity: "rare" }, { name: "케인의 헬멧", file: "kanesHelmet.webp", rarity: "rare" },{ name: "작살 발사포", file: "harpoonGun.webp", rarity: "very_rare" }, { name: "자폭 장치 볼트", file: "selfDestructBolt.webp", rarity: "very_rare" }, { name: "기호학적 키보드", file: "semioticKeyboard.webp", rarity: "very_rare" }, { name: "고양이 이동장", file: "catCarrier.webp", rarity: "very_rare" },{ name: "핏빛 산성피", file: "acidicBlood.webp", rarity: "ultra_rare" }, { name: "막 만든 소몰이 막대", file: "improvisedCattleProd.webp", rarity: "ultra_rare" }],
-    "goodGuy": [
-        { name: "착한 아이 인형 상자", file: "goodGuyBox.webp", rarity: "common" }, { name: "작은 메스", file: "tinyScalpel.webp", rarity: "common" }, { name: "인형의 눈", file: "dollEyes.webp", rarity: "common" }, { name: "섬광등", file: "strobingLight.webp", rarity: "common" },
+    "xenomorph": [{ name: "오보모프", file: "ovomorph.webp", rarity: "common" }, { name: "시리얼 배급량", file: "cerealRations.webp", rarity: "common" }, { name: "물먹는 새", file: "drinkingBird.webp", rarity: "common" }, { name: "더블 디지털 시계", file: "ripleysWatch.webp", rarity: "common" },{ name: "야광봉", file: "lightWand.webp", rarity: "uncommon" }, { name: "애쉬의 내부", file: "ashsInnards.webp", rarity: "uncommon" }, { name: "승무원 수신기", file: "crewHeadset.webp", rarity: "uncommon" }, { name: "브렛의 모자", file: "brettsCap.webp", rarity: "uncommon" }, { name: "램버트의 별자리표", file: "lambertsStarMap.webp", rarity: "uncommon" },{ name: "파커의 머리띠", file: "parkersHeadband.webp", rarity: "rare" }, { name: "케인의 헬멧", file: "kanesHelmet.webp", rarity: "rare" }, { name: "제노모프 허물", file: "moultedSkin.webp", rarity: "rare" },{ name: "작살 발사포", file: "harpoonGun.webp", rarity: "very_rare" }, { name: "자폭 장치 볼트", file: "selfDestructBolt.webp", rarity: "very_rare" }, { name: "기호학적 키보드", file: "semioticKeyboard.webp", rarity: "very_rare" }, { name: "고양이 이동장", file: "catCarrier.webp", rarity: "very_rare" },{ name: "핏빛 산성피", file: "acidicBlood.webp", rarity: "ultra_rare" }, { name: "막 만든 소몰이 막대", file: "improvisedCattleProd.webp", rarity: "ultra_rare" }],
+    "goodGuy": [{ name: "착한 아이 인형 상자", file: "goodGuyBox.webp", rarity: "common" }, { name: "작은 메스", file: "tinyScalpel.webp", rarity: "common" }, { name: "인형의 눈", file: "dollEyes.webp", rarity: "common" }, { name: "섬광등", file: "strobingLight.webp", rarity: "common" },
         { name: "헤어스프레이와 양초", file: "hairSprayCandle.webp", rarity: "uncommon" }, { name: "줄넘기", file: "jumpRope.webp", rarity: "uncommon" }, { name: "조각용 전기 나이프", file: "electricCarvingKnife.webp", rarity: "uncommon" }, { name: "전동 드릴", file: "powerDrill.webp", rarity: "uncommon" }, { name: "자동 드라이버", file: "automaticScrewdriver.webp", rarity: "uncommon" },
         { name: "휴대용 TV", file: "portableTV.webp", rarity: "rare" }, { name: "쥐약", file: "ratPoison.webp", rarity: "rare" }, { name: "야드 자", file: "yardstick.webp", rarity: "rare" }, { name: "실크 베개", file: "silkPillow.webp", rarity: "rare" }, { name: "러닝화", file: "runningShoes.webp", rarity: "rare" },
         { name: "비닐 봉지", file: "plasticBag.webp", rarity: "very_rare" }, { name: "못 더미", file: "pileofNails.webp", rarity: "very_rare" }, { name: "면도칼", file: "straightRazor.webp", rarity: "very_rare" }, { name: "거울 조각", file: "mirrorShards.webp", rarity: "very_rare" },
@@ -251,6 +250,9 @@ const killerAddons = {
     ]
 };
 
+// ==========================================
+// ✅ V237 로직 최적화: 컨베이어 벨트 스핀 로직
+// ==========================================
 const UI = {};
 let currentMode = 'killer_perk'; 
 let isSpinning = false;
@@ -259,7 +261,6 @@ let currentSpunPerks = [];
 let spinIntervals = {}; 
 let isRandomKiller = false;
 let selectedKillers = ['trapper'];
-let spinTick = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
     UI.h1 = document.getElementById('headerTitle');
@@ -282,7 +283,6 @@ window.addEventListener('DOMContentLoaded', () => {
         UI.perkWrapper.style.display = 'flex'; 
     } catch(e) {}
 
-    // 페이지 로드 1초 후 전체 프리로드 (기존 방식 유지 - 캐싱 도움용)
     setTimeout(() => {
         const allImgs = [
             ...killerPerkData.map(p => PATHS.PERK_K + p.file),
@@ -290,7 +290,8 @@ window.addEventListener('DOMContentLoaded', () => {
             ...killers.map(k => PATHS.PORTRAIT + k.id + '.webp')
         ];
         allImgs.forEach(src => {
-            new Image().src = src;
+            const img = new Image();
+            img.src = src;
         });
     }, 1000); 
 });
@@ -493,7 +494,6 @@ function startSequence() {
         clearInterval(spinIntervals[key]);
     }
     spinIntervals = {};
-    spinTick = 0;
 
     isSpinning = true;
     UI.btnSpin.disabled = true;
@@ -513,15 +513,20 @@ function startSequence() {
         let shuffledPerks = getRandomPerks(activeData, currentTierFilter);
         currentSpunPerks = shuffledPerks;
 
-        // V236 퍽 일루전: 최종 4개 + 더미 10개만 골라서 강제 프리로드
-        let dummyPool = [];
-        for(let i=0; i<10; i++) dummyPool.push(activeData[Math.floor(Math.random() * activeData.length)]);
-        [...dummyPool, ...shuffledPerks].forEach(p => { new Image().src = path + p.file; });
+        // V237: 풍부한 스핀 풀(약 30개) 생성 및 완벽한 셔플 (컨베이어 벨트용)
+        let tempActive = shuffleArray([...activeData]);
+        let spinPool = tempActive.filter(p => !shuffledPerks.includes(p)).slice(0, 26);
+        spinPool.push(...shuffledPerks);
+        spinPool = shuffleArray(spinPool); // 최종 30장 셔플 완료
+
+        // 강제 프리로드
+        spinPool.forEach(p => { new Image().src = path + p.file; });
 
         for(let i=1; i<=4; i++) {
             const card = document.getElementById(`card${i}`);
             card.classList.add('spinning');
-            spinPerk(i, dummyPool, path); // 전체가 아닌 더미풀만 고속 회전
+            // 슬롯마다 시작 위치를 다르게(엇박자) 주어 리얼리티 극대화
+            spinPerk(i, spinPool, path, i * 7); 
         }
 
         if (speedVal === 0) { 
@@ -539,7 +544,7 @@ function startSequence() {
             setTimeout(stopSequentially, 1000);
         }
     } else {
-        // V236 애드온 일루전 최적화 로직
+        // V237: 애드온 컨베이어 벨트 로직
         if (isRandomKiller && selectedKillers.length > 0) {
             finalKillerId = selectedKillers[Math.floor(Math.random() * selectedKillers.length)];
         } else {
@@ -550,53 +555,54 @@ function startSequence() {
         let folderId = finalKillerId === 'theFirst' ? 'theFirst' : finalKillerId;
         path = `${PATHS.ADDON}${folderId}/`;
 
-        let shuffled = [];
+        let finalAddons = [];
         if (activeData && activeData.length > 0) {
-            shuffled = [...activeData];
-            shuffleArray(shuffled);
+            finalAddons = shuffleArray([...activeData]).slice(0, 2);
         }
 
-        // 1. 눈속임용 더미 데이터 8개 추출 (다중 선택인 경우 섞어서 추출)
-        let sourceForDummies = [];
+        // 스핀에 쓸 풍부한 데이터 모으기 (다중 선택시 짬뽕)
+        let dummySource = [];
         if (isRandomKiller && selectedKillers.length > 0) {
             selectedKillers.forEach(kId => {
                 let kPath = `${PATHS.ADDON}${kId === 'theFirst' ? 'theFirst' : kId}/`;
-                if (killerAddons[kId]) killerAddons[kId].forEach(ad => sourceForDummies.push({ ...ad, tempPath: kPath }));
+                if (killerAddons[kId]) {
+                    killerAddons[kId].forEach(ad => dummySource.push({ ...ad, tempPath: kPath }));
+                }
             });
         } else {
-            if(activeData) sourceForDummies = activeData.map(ad => ({ ...ad, tempPath: path }));
+            if(activeData) dummySource = activeData.map(ad => ({ ...ad, tempPath: path }));
         }
 
-        let dummyPool = [];
-        for(let i=0; i<8; i++) {
-            if(sourceForDummies.length > 0) dummyPool.push(sourceForDummies[Math.floor(Math.random() * sourceForDummies.length)]);
-        }
+        // 중복 제거 및 풍성한 풀(최대 30개) 조성
+        dummySource = shuffleArray(dummySource);
+        let spinPool = dummySource.slice(0, 28);
+        
+        if(finalAddons[0] && !spinPool.some(ad => ad.name === finalAddons[0].name)) spinPool.push({...finalAddons[0], tempPath: path});
+        if(finalAddons[1] && !spinPool.some(ad => ad.name === finalAddons[1].name)) spinPool.push({...finalAddons[1], tempPath: path});
+        spinPool = shuffleArray(spinPool);
 
-        // 2. 최종 결과물 2개를 더미 풀에 합류
-        if(shuffled[0]) dummyPool.push({...shuffled[0], tempPath: path});
-        if(shuffled[1]) dummyPool.push({...shuffled[1], tempPath: path});
-
-        // 3. 0.001초 강제 프리로드 (렉 제로화)
-        dummyPool.forEach(ad => {
+        // 강제 프리로드
+        spinPool.forEach(ad => {
             new Image().src = ad.tempPath + ad.file;
             new Image().src = PATHS.ADDON_BG + rarityBgs[ad.rarity];
         });
 
         if (isRandomKiller && selectedKillers.length > 0) {
-            selectedKillers.forEach(id => new Image().src = `${PATHS.PORTRAIT}${id}.webp`); // 초상화 프리로드
+            let killerSpinTick = 0;
             UI.mainKillerImg.classList.add('spinning');
             spinIntervals['killer'] = setInterval(() => {
-                const tempId = selectedKillers[Math.floor(Math.random() * selectedKillers.length)];
+                killerSpinTick++;
+                const tempId = selectedKillers[killerSpinTick % selectedKillers.length];
                 UI.mainKillerImg.src = `${PATHS.PORTRAIT}${tempId}.webp`;
                 UI.mainKillerName.innerText = killerNameMap[tempId];
-            }, 60); // 초상화 속도 향상
+            }, 60); 
         }
 
-        // 4. 더미 10개만 가지고 40ms 초고속 스핀 시작!
         for(let i=1; i<=2; i++) {
             const slot = document.getElementById(`slot${i}`);
             slot.classList.add('spinning');
-            spinAddon(i, dummyPool); 
+            // 슬롯 엇박자 스핀
+            spinAddon(i, spinPool, i * 11); 
         }
 
         setTimeout(() => {
@@ -613,26 +619,27 @@ function startSequence() {
                 for(let i=1; i<=2; i++) clearInterval(spinIntervals[`a${i}`]);
                 resetSlots(); alert(`데이터가 없습니다.`); finalize();
             } else {
-                stopAddon(1, shuffled[0], path); 
-                stopAddon(2, shuffled[1], path);
+                stopAddon(1, finalAddons[0], path); 
+                stopAddon(2, finalAddons[1], path);
                 finalize();
             }
         }, 1000); 
     }
 }
 
-// 스핀 간격 40ms로 2배 단축 (압도적 부드러움)
-function spinPerk(idx, dummyPool, path) {
-     spinIntervals[`p${idx}`] = setInterval(() => {
-         spinTick++;
-         const rnd = dummyPool[spinTick % dummyPool.length]; 
-         if(!rnd) return;
-         const img = document.getElementById(`img${idx}`);
-         img.src = path + rnd.file; img.style.display = 'block'; 
-         document.getElementById(`bg${idx}`).style.display = 'block';
-         document.getElementById(`name${idx}`).innerText = rnd.name;
-         document.getElementById(`cat${idx}`).innerText = rnd.category;
-     }, 40);
+// V237 핵심: Math.random() 대신 배열을 순서대로 읽는 컨베이어 벨트 방식
+function spinPerk(idx, pool, path, offsetTick) {
+    let localTick = offsetTick;
+    spinIntervals[`p${idx}`] = setInterval(() => {
+        localTick++;
+        const item = pool[localTick % pool.length]; 
+        if(!item) return;
+        const img = document.getElementById(`img${idx}`);
+        img.src = path + item.file; img.style.display = 'block'; 
+        document.getElementById(`bg${idx}`).style.display = 'block';
+        document.getElementById(`name${idx}`).innerText = item.name;
+        document.getElementById(`cat${idx}`).innerText = item.category;
+    }, 50); // 50ms 속도로 부드럽고 시인성 좋게
 }
 
 function stopPerk(idx, item, path) {
@@ -654,17 +661,18 @@ function stopPerk(idx, item, path) {
     tierBox.style.display = 'block';
 }
 
-function spinAddon(idx, dummyPool) {
+function spinAddon(idx, pool, offsetTick) {
+    let localTick = offsetTick;
     spinIntervals[`a${idx}`] = setInterval(() => {
-        spinTick++;
-        const rnd = dummyPool[spinTick % dummyPool.length];
-        if(!rnd) return;
+        localTick++;
+        const item = pool[localTick % pool.length];
+        if(!item) return;
         const img = document.getElementById(`adImg${idx}`);
-        img.src = rnd.tempPath + rnd.file; img.style.display = 'block'; 
+        img.src = item.tempPath + item.file; img.style.display = 'block'; 
         const bg = document.getElementById(`adBg${idx}`);
-        bg.src = PATHS.ADDON_BG + rarityBgs[rnd.rarity]; bg.style.display = 'block';
-        document.getElementById(`adName${idx}`).innerText = rnd.name;
-    }, 40);
+        bg.src = PATHS.ADDON_BG + rarityBgs[item.rarity]; bg.style.display = 'block';
+        document.getElementById(`adName${idx}`).innerText = item.name;
+    }, 60); // 60ms 속도
 }
 
 function stopAddon(idx, item, path) {
