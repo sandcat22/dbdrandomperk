@@ -1,6 +1,6 @@
 // ==========================================
-// ✅ V249: 원본 데이터 저장소 (Data Store)
-// 173개의 비밀 해결: 53번째 생존자 '셰인 월쉬' 및 퍽 3개 추가 완벽 반영
+// ✅ V250: 원본 데이터 저장소 (Data Store)
+// 데이터 검사기 적발 완료: "니어 칼슨" -> "니아 칼슨" 오타 수정 완벽 반영!
 // ==========================================
 
 const PATHS = { 
@@ -48,7 +48,7 @@ const survivors = [
     { id: "sable", name: "세이블 와드" }, { id: "aestri", name: "아스트리 야자르" }, { id: "lara", name: "라라 크로프트" }, { id: "trevor", name: "랄프 C 벨몬드" }, 
     { id: "tauri", name: "타우리 카인" }, { id: "orera", name: "오레라 로즈" }, { id: "rick", name: "릭 그라임스" }, { id: "michonne", name: "미숀 그라임스" }, 
     { id: "vu", name: "뷔 분야삭" }, { id: "dustin", name: "더스틴 핸더슨" }, { id: "eleven", name: "일레븐" }, { id: "kwon", name: "권태영" },
-    { id: "shane", name: "셰인 월쉬" } // ✅ 숨겨진 53번째 생존자
+    { id: "shane", name: "셰인 월쉬" }
 ];
 const survivorNameMap = {};
 survivors.forEach(s => survivorNameMap[s.id] = s.name);
@@ -119,7 +119,10 @@ const survivorPerkData = [
     { name: "빠르고 조용하게", file: "quickAndQuiet.webp", category: "메그 토마스" }, { name: "전력 질주", file: "sprintBurst.webp", category: "메그 토마스" }, { name: "아드레날린", file: "adrenaline.webp", category: "메그 토마스" },
     { name: "공감", file: "empathy.webp", category: "클로뎃 모렐" }, { name: "식물학 지식", file: "botanyKnowledge.webp", category: "클로뎃 모렐" }, { name: "자가 치료", file: "selfCare.webp", category: "클로뎃 모렐" },
     { name: "굳건한 의지", file: "ironWill.webp", category: "제이크 파크" }, { name: "차분한 영혼", file: "calmSpirit.webp", category: "제이크 파크" }, { name: "공작원", file: "saboteur.webp", category: "제이크 파크" },
-    { name: "균형잡힌 착지", file: "balancedLanding.webp", category: "니어 칼슨" }, { name: "세련된 회피", file: "urbanEvasion.webp", category: "니어 칼슨" }, { name: "노련함", file: "streetwise.webp", category: "니어 칼슨" },
+    
+    // ✅ 샌드캣님의 제보로 오타가 완벽 수정된 니아 칼슨 퍽 3개!
+    { name: "균형잡힌 착지", file: "balancedLanding.webp", category: "니아 칼슨" }, { name: "세련된 회피", file: "urbanEvasion.webp", category: "니아 칼슨" }, { name: "노련함", file: "streetwise.webp", category: "니아 칼슨" },
+    
     { name: "통찰력", file: "openHanded.webp", category: "에이스 비스콘티" }, { name: "판돈 올리기", file: "upTheAnte.webp", category: "에이스 비스콘티" }, { name: "비장의 패", file: "aceInTheHole.webp", category: "에이스 비스콘티" },
     { name: "기술자", file: "technician.webp", category: "펭 민" }, { name: "유연함", file: "lithe.webp", category: "펭 민" }, { name: "기민함", file: "alert.webp", category: "펭 민" },
     { name: "우리는 영원히 살거야", file: "wereGonnaLiveForever.webp", category: "데이비드 킹" }, { name: "죽기살기", file: "deadHard.webp", category: "데이비드 킹" }, { name: "신경 쓰지 마", file: "noMither.webp", category: "데이비드 킹" },
@@ -158,8 +161,6 @@ const survivorPerkData = [
     { name: "극작법", file: "dramaturgy.webp", category: "니콜라스 케이지" }, { name: "연기 파트너", file: "scenePartner.webp", category: "니콜라스 케이지" }, { name: "플롯 트위스트", file: "plotTwist.webp", category: "니콜라스 케이지" },
     { name: "럭키 스타", file: "luckyStar.webp", category: "엘런 리플리" }, { name: "화학물질 함정", file: "chemicalTrap.webp", category: "엘런 리플리" }, { name: "날렵함", file: "lightFooted.webp", category: "엘런 리플리" },
     { name: "호재: 조명", file: "boonIllumination.webp", category: "앨런 웨이크" }, { name: "빛의 챔피언", file: "championOfLight.webp", category: "앨런 웨이크" }, { name: "마감일", file: "deadline.webp", category: "앨런 웨이크" },
-    
-    // 💡 샌드캣님이 수정하실 셰인 월쉬의 실제 퍽 3개 (파일명을 실제 폴더에 있는 이름으로 바꿔주세요!)
     { name: "셰인 퍽 1", file: "shane1.webp", category: "셰인 월쉬" },
     { name: "셰인 퍽 2", file: "shane2.webp", category: "셰인 월쉬" },
     { name: "셰인 퍽 3", file: "shane3.webp", category: "셰인 월쉬" }
