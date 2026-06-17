@@ -414,6 +414,12 @@ const App = {
                     this.spinAddon(i, this.state.spinPools[`a${i}`], i * 7); 
                 }
 
+                // 💡 단일 살인마 선택 시 스핀 시간 단축 (1200ms -> 700ms, 약 3/5 수준)
+                let addonSpinDuration = 1200;
+                if (!this.state.isRandomKiller || this.state.selectedKillers.length <= 1) {
+                    addonSpinDuration = 700;
+                }
+
                 setTimeout(() => {
                     if (this.state.isRandomKiller && this.state.selectedKillers.length > 0) {
                         clearInterval(this.state.spinIntervals['killer']);
@@ -427,7 +433,7 @@ const App = {
                     this.stopAddon(1, shuffled[0], path); 
                     this.stopAddon(2, shuffled[1], path);
                     this.finalizeSpin();
-                }, 1200); 
+                }, addonSpinDuration); 
             }
         } catch (e) {
             console.error("🚨 시퀀스 실행 중 치명적 에러 발생:", e);
@@ -520,6 +526,7 @@ const App = {
         let errorLogs = [];
         let totalAddons = 0;
         
+        // 1. 살인마 애드온 누락 및 개수 검사
         killers.forEach(k => {
             const addons = killerAddons[k.id];
             if (!addons) errorLogs.push(`[${k.name}] 애드온 누락`);
@@ -529,9 +536,16 @@ const App = {
             }
         });
 
-        const validCategories = [...Object.values(killerNameMap), "공용 퍽"];
+        // 2. 살인마 퍽 카테고리(오타) 검사
+        const validKillerCategories = [...Object.values(killerNameMap), "공용 퍽"];
         killerPerkData.forEach(p => {
-            if (!validCategories.includes(p.category)) errorLogs.push(`[${p.name}] 카테고리명(${p.category}) 오타`);
+            if (!validKillerCategories.includes(p.category)) errorLogs.push(`[킬러 퍽: ${p.name}] 카테고리명(${p.category}) 오타`);
+        });
+
+        // 3. 생존자 퍽 카테고리(오타) 검사 (✨ 신규 추가)
+        const validSurvivorCategories = [...Object.values(survivorNameMap), "공용 퍽"];
+        survivorPerkData.forEach(p => {
+            if (!validSurvivorCategories.includes(p.category)) errorLogs.push(`[생존자 퍽: ${p.name}] 카테고리명(${p.category}) 오타`);
         });
 
         const infoArea = document.querySelector('.bottom-info-area');
@@ -540,7 +554,8 @@ const App = {
             dataDash.style.fontSize = '11px';
             dataDash.style.color = 'rgba(255,255,255,0.3)';
             dataDash.style.marginTop = '5px';
-            dataDash.innerText = `K:${killers.length} | KP:${killerPerkData.length} | SP:${survivorPerkData.length} | AD:${totalAddons}`;
+            // ✨ 생존자 총 인원수(S)도 대시보드에 함께 표시하도록 수정
+            dataDash.innerText = `K:${killers.length} | S:${survivors.length} | KP:${killerPerkData.length} | SP:${survivorPerkData.length} | AD:${totalAddons}`;
             infoArea.appendChild(dataDash);
             
             if (errorLogs.length > 0) {
