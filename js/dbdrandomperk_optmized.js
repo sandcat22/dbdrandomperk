@@ -1,5 +1,5 @@
 // ==========================================
-// ✅ V251: Ultimate Optimized Edition (버튼 먹통 완벽 해결 & 속도업 반영)
+// ✅ V252: Zero-Lag Ultimate Edition (완벽한 무반동/무렉 스핀 엔진 탑재)
 // ==========================================
 
 // 1. 초기 데이터 매핑
@@ -36,12 +36,44 @@ const animationContext = {
     currentItems: {}
 };
 
+// 💡 스핀 전용 풀 (렉 원천 차단용)
+let currentSpinPools = {}; 
+
 let isRandomKiller = false;
 let selectedKillers = ['trapper'];
 let spinTick = 0;
 
 // ==========================================
-// 3. UI 업데이트 및 토글 함수 (HTML 바인딩)
+// 🚀 모든 이미지 백그라운드 스텔스 로딩 (렉 완전 제거)
+// ==========================================
+function preloadImagesSequentially() {
+    if(typeof PATHS === 'undefined') return;
+    const allImgs = [];
+    
+    if (typeof killerPerkData !== 'undefined') killerPerkData.forEach(p => allImgs.push(PATHS.PERK_K + p.file));
+    if (typeof survivorPerkData !== 'undefined') survivorPerkData.forEach(p => allImgs.push(PATHS.PERK_S + p.file));
+    if (typeof killers !== 'undefined') killers.forEach(k => allImgs.push(PATHS.PORTRAIT + k.id + '.webp'));
+    
+    if (typeof killerAddons !== 'undefined') {
+        Object.keys(killerAddons).forEach(k => {
+            let fId = k === 'theFirst' ? 'theFirst' : k;
+            killerAddons[k].forEach(ad => allImgs.push(`${PATHS.ADDON}${fId}/${ad.file}`));
+        });
+    }
+
+    let index = 0;
+    function loadNext() {
+        if (index >= allImgs.length) return;
+        const img = new Image();
+        img.src = allImgs[index];
+        index++;
+        setTimeout(loadNext, 15); // 0.015초 간격으로 사용자 모르게 백그라운드 다운로드
+    }
+    loadNext();
+}
+
+// ==========================================
+// 3. UI 업데이트 및 토글 함수
 // ==========================================
 window.toggleMode = function() {
     if (isSpinning) return;
@@ -259,7 +291,7 @@ window.selectKiller = function(id) {
 };
 
 // ==========================================
-// 5. 로직 및 애니메이션 엔진 (rAF 기반)
+// 5. 로직 및 애니메이션 엔진
 // ==========================================
 function shuffleArray(array) {
     if (!array) return [];
@@ -319,80 +351,42 @@ function getRandomPerks(data, filterVal) {
     return shuffleArray(tempArray).slice(0, 4);
 }
 
+// ✨ 무반동 애니메이션 엔진
 function loopAnimation(timestamp) {
     animationContext.activeIds.forEach(id => {
         if (!animationContext.lastTimes[id]) animationContext.lastTimes[id] = timestamp;
         
-        if (timestamp - animationContext.lastTimes[id] >= 45) { // 45ms 간격 부드러운 스핀
+        // 45ms 마다 매우 부드럽고 가볍게 업데이트 (DOM 변경 최소화)
+        if (timestamp - animationContext.lastTimes[id] >= 45) { 
             animationContext.lastTimes[id] = timestamp;
             spinTick++;
 
-            if (id.startsWith('p')) {
-                const idx = id.slice(1);
-                const data = currentMode === 'killer_perk' ? killerPerkData : survivorPerkData;
-                const path = currentMode === 'killer_perk' ? PATHS.PERK_K : PATHS.PERK_S;
-                
-                if (data && data.length > 0) {
-                    const rnd = data[spinTick % data.length];
-                    if (rnd && animationContext.currentItems[id] !== rnd.file) {
-                        animationContext.currentItems[id] = rnd.file;
-                        
-                        const img = document.getElementById(`img${idx}`);
-                        const bg = document.getElementById(`bg${idx}`);
-                        const name = document.getElementById(`name${idx}`);
-                        const cat = document.getElementById(`cat${idx}`);
+            const pool = currentSpinPools[id];
+            if (!pool || pool.length === 0) return;
 
-                        if (img) { img.src = path + rnd.file; img.style.display = 'block'; }
-                        if (bg) bg.style.display = 'block';
-                        if (name) name.innerText = rnd.name;
-                        if (cat) cat.innerText = rnd.category;
-                    }
-                }
-            } else if (id.startsWith('a')) {
-                const idx = id.slice(1);
-                
-                // 💡 버그 픽스: 트래퍼가 아닌 선택된 살인마 풀에서 랜덤으로 돌아가게 수정
-                let spinData = [];
-                let fId = 'trapper';
-                if (isRandomKiller && selectedKillers.length > 0) {
-                    let tempK = selectedKillers[Math.floor(Math.random() * selectedKillers.length)];
-                    spinData = typeof killerAddons !== 'undefined' ? (killerAddons[tempK] || []) : [];
-                    fId = tempK === 'theFirst' ? 'theFirst' : tempK;
-                } else {
-                    let tempK = selectedKillers[0] || 'trapper';
-                    spinData = typeof killerAddons !== 'undefined' ? (killerAddons[tempK] || []) : [];
-                    fId = tempK === 'theFirst' ? 'theFirst' : tempK;
-                }
-                
-                let spinPath = typeof PATHS !== 'undefined' ? `${PATHS.ADDON}${fId}/` : '';
-                
-                if (spinData && spinData.length > 0) {
-                    const rnd = spinData[spinTick % spinData.length];
-                    if (rnd && animationContext.currentItems[id] !== rnd.file) {
-                        animationContext.currentItems[id] = rnd.file;
-
-                        const img = document.getElementById(`adImg${idx}`);
-                        const bg = document.getElementById(`adBg${idx}`);
-                        const name = document.getElementById(`adName${idx}`);
-
-                        if (img) { img.src = spinPath + rnd.file; img.style.display = 'block'; }
-                        if (bg && typeof PATHS !== 'undefined' && typeof rarityBgs !== 'undefined') {
-                            bg.src = PATHS.ADDON_BG + rarityBgs[rnd.rarity]; 
-                            bg.style.display = 'block';
-                        }
-                        if (name) name.innerText = rnd.name;
-                    }
-                }
-            } else if (id === 'killer') {
-                const tempId = selectedKillers[Math.floor(Math.random() * selectedKillers.length)];
+            if (id === 'killer') {
+                const tempId = pool[spinTick % pool.length];
                 if (animationContext.currentItems[id] !== tempId) {
                     animationContext.currentItems[id] = tempId;
-                    
-                    const killerImg = document.getElementById('mainKillerImg');
-                    const killerName = document.getElementById('mainKillerName');
-                    
-                    if (killerImg && typeof PATHS !== 'undefined') killerImg.src = `${PATHS.PORTRAIT}${tempId}.webp`;
-                    if (killerName) killerName.innerText = killerNameMap[tempId] || '';
+                    document.getElementById('mainKillerImg').src = `${PATHS.PORTRAIT}${tempId}.webp`;
+                    document.getElementById('mainKillerName').innerText = killerNameMap[tempId] || '';
+                }
+            } else {
+                const rnd = pool[spinTick % pool.length];
+                if (animationContext.currentItems[id] !== rnd.fullPath) {
+                    animationContext.currentItems[id] = rnd.fullPath;
+
+                    if (id.startsWith('p')) {
+                        const idx = id.slice(1);
+                        document.getElementById(`img${idx}`).src = rnd.fullPath;
+                        document.getElementById(`name${idx}`).innerText = rnd.name;
+                        document.getElementById(`cat${idx}`).innerText = rnd.category;
+                    } else if (id.startsWith('a')) {
+                        const idx = id.slice(1);
+                        document.getElementById(`adImg${idx}`).src = rnd.fullPath;
+                        document.getElementById(`adBg${idx}`).src = PATHS.ADDON_BG + rarityBgs[rnd.rarity];
+                        document.getElementById(`adName${idx}`).innerText = rnd.name;
+                    }
                 }
             }
         }
@@ -417,6 +411,9 @@ function stopRAF(id) {
     delete animationContext.currentItems[id];
 }
 
+// ==========================================
+// 🚀 렉 원천 차단 시퀀스 시작
+// ==========================================
 window.startSequence = function() {
     if (isSpinning) return;
     isSpinning = true;
@@ -424,50 +421,85 @@ window.startSequence = function() {
     const spinBtn = document.getElementById('btnSpin');
     if (spinBtn) spinBtn.disabled = true;
     
-    let activeData, path, type;
-    let finalKillerId; 
+    resetSlots(); // UI 클리어
 
-    if (currentMode === 'killer_perk') { 
-        activeData = typeof killerPerkData !== 'undefined' ? killerPerkData : []; 
-        path = typeof PATHS !== 'undefined' ? PATHS.PERK_K : ''; 
-        type = 'perk'; 
-    } else if (currentMode === 'survivor_perk') { 
-        activeData = typeof survivorPerkData !== 'undefined' ? survivorPerkData : []; 
-        path = typeof PATHS !== 'undefined' ? PATHS.PERK_S : ''; 
-        type = 'perk'; 
-    } else { 
-        type = 'addon'; 
+    // 1단계: 버튼을 누르자마자 0.001초만에 멈춤 없이 무조건 애니메이션부터 강제 실행!
+    if (currentMode === 'killer_perk' || currentMode === 'survivor_perk') {
+        const activeData = currentMode === 'killer_perk' ? killerPerkData : survivorPerkData;
+        const basePath = currentMode === 'killer_perk' ? PATHS.PERK_K : PATHS.PERK_S;
+
+        for (let i = 1; i <= 4; i++) {
+            let pool = shuffleArray([...activeData]).slice(0, 15);
+            currentSpinPools[`p${i}`] = pool.map(p => ({ ...p, fullPath: basePath + p.file }));
+
+            // 렉 방지를 위해 미리 block 처리
+            document.getElementById(`img${i}`).style.display = 'block';
+            document.getElementById(`bg${i}`).style.display = 'block';
+            document.getElementById(`card${i}`).classList.add('spinning');
+            startRAF(`p${i}`);
+        }
+    } else {
+        // 애드온 모드
+        let mixedAddons = [];
+        if (isRandomKiller && selectedKillers.length > 0) {
+            selectedKillers.forEach(kId => {
+                const kData = killerAddons[kId] || [];
+                let fId = kId === 'theFirst' ? 'theFirst' : kId;
+                kData.forEach(ad => mixedAddons.push({ ...ad, fullPath: `${PATHS.ADDON}${fId}/${ad.file}` }));
+            });
+        } else {
+            const kId = selectedKillers[0] || 'trapper';
+            const kData = killerAddons[kId] || [];
+            let fId = kId === 'theFirst' ? 'theFirst' : kId;
+            kData.forEach(ad => mixedAddons.push({ ...ad, fullPath: `${PATHS.ADDON}${fId}/${ad.file}` }));
+        }
+
+        for (let i = 1; i <= 2; i++) {
+            let pool = shuffleArray([...mixedAddons]).slice(0, 15);
+            currentSpinPools[`a${i}`] = pool;
+
+            document.getElementById(`adImg${i}`).style.display = 'block';
+            document.getElementById(`adBg${i}`).style.display = 'block';
+            document.getElementById(`slot${i}`).classList.add('spinning');
+            startRAF(`a${i}`);
+        }
+
+        if (isRandomKiller && selectedKillers.length > 0) {
+            currentSpinPools['killer'] = selectedKillers;
+            document.getElementById('mainKillerImg').classList.add('spinning');
+            startRAF('killer');
+        }
     }
 
-    resetSlots(); 
+    // 2단계: 스핀이 부드럽게 돌아가기 시작한 직후에 몰래 무거운 결과값 계산 진행
+    setTimeout(() => {
+        executeLogic();
+    }, 50); // 0.05초 대기 (이 사이에 브라우저가 화면을 그립니다)
+};
 
-    if (type === 'perk') {
+// 메인 계산 및 정지 스케줄러
+function executeLogic() {
+    if (currentMode === 'killer_perk' || currentMode === 'survivor_perk') {
+        const activeData = currentMode === 'killer_perk' ? killerPerkData : survivorPerkData;
+        const basePath = currentMode === 'killer_perk' ? PATHS.PERK_K : PATHS.PERK_S;
+
         const speedRangeEl = document.getElementById('speedRange');
         const speedVal = speedRangeEl ? parseInt(speedRangeEl.value) : 2;
         const currentDelay = [0, 600, 1300, 2600][speedVal];
-        
+
+        // 무거운 연산 실행!
         let shuffledPerks = getRandomPerks(activeData, currentTierFilter);
         currentSpunPerks = shuffledPerks;
 
-        shuffledPerks.forEach(p => {
-            if (p) new Image().src = path + p.file;
-        });
-
-        for (let i = 1; i <= 4; i++) {
-            const card = document.getElementById(`card${i}`);
-            if (card) card.classList.add('spinning');
-            startRAF(`p${i}`);
-        }
-
         if (speedVal === 0) { 
             setTimeout(() => {
-                for (let i = 1; i <= 4; i++) stopPerk(i, shuffledPerks[i - 1], path);
+                for (let i = 1; i <= 4; i++) stopPerk(i, shuffledPerks[i - 1], basePath);
                 finalize();
             }, 500);
         } else { 
             let currentIdx = 1;
             const stopSequentially = () => {
-                stopPerk(currentIdx, shuffledPerks[currentIdx - 1], path);
+                stopPerk(currentIdx, shuffledPerks[currentIdx - 1], basePath);
                 if (currentIdx === 4) { 
                     finalize(); 
                     return; 
@@ -478,42 +510,24 @@ window.startSequence = function() {
             setTimeout(stopSequentially, 1000);
         }
     } else {
-        // 애드온 모드
+        // 애드온 모드 연산
+        let finalKillerId;
         if (isRandomKiller && selectedKillers.length > 0) {
             finalKillerId = selectedKillers[Math.floor(Math.random() * selectedKillers.length)];
         } else {
             finalKillerId = selectedKillers[0] || 'trapper';
         }
         
-        if (typeof PATHS !== 'undefined') {
-            new Image().src = `${PATHS.PORTRAIT}${finalKillerId}.webp`;
-        }
-
-        activeData = (typeof killerAddons !== 'undefined' && killerAddons[finalKillerId]) ? killerAddons[finalKillerId] : [];
+        let activeAddonData = (typeof killerAddons !== 'undefined' && killerAddons[finalKillerId]) ? killerAddons[finalKillerId] : [];
         let folderId = finalKillerId === 'theFirst' ? 'theFirst' : finalKillerId;
-        path = typeof PATHS !== 'undefined' ? `${PATHS.ADDON}${folderId}/` : '';
+        let basePath = typeof PATHS !== 'undefined' ? `${PATHS.ADDON}${folderId}/` : '';
 
         let shuffled = [];
-        if (activeData && activeData.length > 0) {
-            shuffled = [...activeData];
+        if (activeAddonData && activeAddonData.length > 0) {
+            shuffled = [...activeAddonData];
             shuffleArray(shuffled);
-            if (shuffled[0]) new Image().src = path + shuffled[0].file;
-            if (shuffled[1]) new Image().src = path + shuffled[1].file;
         }
 
-        if (isRandomKiller && selectedKillers.length > 0) {
-            const killerImg = document.getElementById('mainKillerImg');
-            if (killerImg) killerImg.classList.add('spinning');
-            startRAF('killer');
-        }
-
-        for (let i = 1; i <= 2; i++) {
-            const slot = document.getElementById(`slot${i}`);
-            if (slot) slot.classList.add('spinning');
-            startRAF(`a${i}`);
-        }
-
-        // 💡 단일 살인마 선택 시 스핀 속도 대폭 단축 (1200ms -> 700ms)
         let spinDuration = (isRandomKiller && selectedKillers.length > 1) ? 1200 : 700;
 
         setTimeout(() => {
@@ -531,19 +545,19 @@ window.startSequence = function() {
                 if (killerName) killerName.innerText = killerNameMap[finalKillerId] || '';
             }
 
-            if (!activeData || activeData.length === 0) {
+            if (!activeAddonData || activeAddonData.length === 0) {
                 for (let i = 1; i <= 2; i++) stopRAF(`a${i}`);
                 resetSlots(); 
                 alert(`데이터가 없습니다.`); 
                 finalize();
             } else {
-                stopAddon(1, shuffled[0], path); 
-                stopAddon(2, shuffled[1], path);
+                stopAddon(1, shuffled[0], basePath); 
+                stopAddon(2, shuffled[1], basePath);
                 finalize();
             }
         }, spinDuration); 
     }
-};
+}
 
 function stopPerk(idx, item, path) {
     stopRAF(`p${idx}`);
@@ -634,7 +648,6 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// 💡 샌드캣님의 요청사항: 데이터 상태 표시기 추가
 function validateData() {
     let kCount = typeof killers !== 'undefined' ? killers.length : 0;
     let sCount = typeof survivors !== 'undefined' ? survivors.length : 0;
@@ -651,18 +664,32 @@ function validateData() {
         dataDash.style.fontSize = '11px';
         dataDash.style.color = 'rgba(255,255,255,0.3)';
         dataDash.style.marginTop = '5px';
-        // 텍스트 깨짐 방지를 위해 백틱 안에 직접 입력합니다.
         dataDash.innerText = "K:" + kCount + " | S:" + sCount + " | KP:" + kpCount + " | SP:" + spCount + " | AD:" + adCount;
         infoArea.appendChild(dataDash);
     }
 }
 
-// 초기화 시작 (안전성 보장)
+// ==========================================
+// 🚀 초기화
+// ==========================================
 window.addEventListener('DOMContentLoaded', () => {
     try {
         renderKillerPicker();
         updateInterface();
-        validateData(); // V251 데이터 무결성 검증기 활성화
+        validateData(); 
+
+        // 눈에 보이는 기본 뼈대 이미지들만 빠르게 즉시 로딩
+        if (typeof PATHS !== 'undefined') {
+            for (let i = 0; i < 15; i++) {
+                if (typeof killerPerkData !== 'undefined' && killerPerkData[i]) new Image().src = PATHS.PERK_K + killerPerkData[i].file;
+                if (typeof survivorPerkData !== 'undefined' && survivorPerkData[i]) new Image().src = PATHS.PERK_S + survivorPerkData[i].file;
+            }
+            if (typeof killers !== 'undefined') killers.slice(0, 10).forEach(k => new Image().src = PATHS.PORTRAIT + k.id + '.webp');
+        }
+
+        // 사용자가 페이지를 보는 동안 1000개의 이미지를 사용자 몰래 조용히 다운로드!
+        setTimeout(preloadImagesSequentially, 500);
+
     } catch (e) {
         console.error("UI 초기화 중 에러 발생:", e);
     }
