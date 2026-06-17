@@ -12,32 +12,33 @@
     <meta property="og:image:width" content="800">
     <meta property="og:image:height" content="400">
 
-    <!-- ✅ 디자인(CSS) 파일 연결 -->
+    <!-- ✅ src 폴더의 디자인(CSS) 파일 연결 -->
     <link rel="stylesheet" href="src/style.css">
 </head>
 <body class="mode-killer">
 
     <div class="bottom-info-area">
-        <button id="btnUpdateNotes" class="update-notes-btn">UPDATE NOTES</button>
+        <button id="btnUpdateNotes" class="update-notes-btn" onclick="openUpdateNotes()">UPDATE NOTES</button>
         <div class="watermark">
             Made By SANDCATS<br>
-            (V245 - Step 1: Pure HTML)<br>
+            (V246 - Explicit HTML)<br>
             2026-06-17
         </div>
     </div>
 
-    <!-- ✅ 모달창 및 업데이트 노트 연결 -->
-    <div class="modal-overlay" id="updateModalOverlay">
-        <div class="modal-content">
+    <!-- ✅ 모달창 및 업데이트 노트 -->
+    <div class="modal-overlay" id="updateModalOverlay" onclick="closeUpdateNotes(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <div class="modal-title">UPDATE NOTES</div>
-                <button class="close-modal" id="btnCloseModal">&times;</button>
+                <button class="close-modal" id="btnCloseModal" onclick="closeUpdateNotes()">&times;</button>
             </div>
             <iframe id="notesIframe" src="src/updatenotes.txt"></iframe>
         </div>
     </div>
 
-    <h1 id="headerTitle">🩸 KILLER PERK 🩸</h1>
+    <!-- ✅ 타이틀 (클릭 시 모드 변경) -->
+    <h1 id="headerTitle" onclick="toggleMode()">🩸 KILLER PERK 🩸</h1>
 
     <div id="perkWrapper">
         <div id="perkContainer">
@@ -66,11 +67,11 @@
         <div id="rightPanel">
             <div class="tier-filter-container">
                 <div class="filter-title">티어 필터</div>
-                <button class="tier-btn active" id="btnFilter_all" data-filter="all">ALL 랜덤</button>
-                <button class="tier-btn" id="btnFilter_4" data-filter="4">4점대 퍽</button>
-                <button class="tier-btn" id="btnFilter_3" data-filter="3">3점대 퍽</button>
-                <button class="tier-btn" id="btnFilter_2" data-filter="2">2점대 퍽</button>
-                <button class="tier-btn" id="btnFilter_1" data-filter="1">1점대 퍽</button>
+                <button class="tier-btn active" id="btnFilter_all" onclick="setTierFilter('all')">ALL 랜덤</button>
+                <button class="tier-btn" id="btnFilter_4" onclick="setTierFilter('4')">4점대 퍽</button>
+                <button class="tier-btn" id="btnFilter_3" onclick="setTierFilter('3')">3점대 퍽</button>
+                <button class="tier-btn" id="btnFilter_2" onclick="setTierFilter('2')">2점대 퍽</button>
+                <button class="tier-btn" id="btnFilter_1" onclick="setTierFilter('1')">1점대 퍽</button>
             </div>
             
             <div class="score-container">
@@ -101,24 +102,27 @@
             
             <div id="addonRightPanel" class="killer-list-panel">
                 <div style="display:flex; gap: 10px; margin-bottom: 12px;">
-                    <button id="btnRandomKiller" class="killer-list-btn random-btn" style="flex:2; margin:0; font-size: 15px; padding: 10px;">
+                    <button id="btnRandomKiller" class="killer-list-btn random-btn" style="flex:2; margin:0; font-size: 15px; padding: 10px;" onclick="toggleRandomKiller()">
                         <span class="chk-box"></span> 다중 선택
                     </button>
-                    <button id="btnSelectAllKillers" class="killer-list-btn" style="flex:1; padding: 10px; margin:0; font-size: 15px;">ALL</button>
+                    <button id="btnSelectAllKillers" class="killer-list-btn" style="flex:1; padding: 10px; margin:0; font-size: 15px;" onclick="selectAllKillers()">ALL</button>
                 </div>
+                <!-- 킬러 리스트가 생성될 곳 -->
                 <div id="killerListContainer" class="killer-scroll-list"></div>
             </div>
         </div>
     </div>
 
-    <button id="btnSpin" class="start-btn killer-btn">START</button>
+    <!-- ✅ 스핀 버튼 (명시적 onclick 추가) -->
+    <button id="btnSpin" class="start-btn killer-btn" onclick="startSequence()">START</button>
     
     <div class="speed-control" id="speedControlBox">
         <div id="speedStatus" style="color:#ff3333">보통</div>
-        <input type="range" id="speedRange" min="0" max="3" value="2" step="1">
+        <!-- ✅ 슬라이더 (명시적 oninput 추가) -->
+        <input type="range" id="speedRange" min="0" max="3" value="2" step="1" oninput="updateSpeedText(this.value)">
     </div>
 
-    <!-- ✅ 데이터(JS)와 기능(JS) 파일 연결 -->
+    <!-- ✅ 순서 주의: 무조건 data.js -> script.js 순서로 로드되어야 합니다. -->
     <script src="src/data.js"></script>
     <script src="src/script.js"></script>
 </body>

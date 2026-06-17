@@ -1,6 +1,6 @@
 // ==========================================
 // ✅ V246: 순수 로직 및 완벽한 이벤트 바인딩
-// HTML에서 onclick을 완전히 제거하고 JS에서 통제합니다.
+// HTML과 완벽하게 호환되며 멈춤 현상(프리징)을 방지합니다.
 // ==========================================
 
 const App = {
@@ -22,9 +22,8 @@ const App = {
             // 1. 티어 점수 자동 할당 (데이터 파일에서 불러온 값에 티어 세팅)
             this.assignTiersToData();
             
-            // 2. 화면 요소 찾기 및 버튼에 생명력(이벤트) 불어넣기
+            // 2. 화면 요소 찾기
             this.cacheDOM();
-            this.bindEvents();
             
             // 3. 살인마 리스트 화면에 그리기
             this.renderKillerPicker();
@@ -72,62 +71,6 @@ const App = {
         this.ui.mainKillerName = document.getElementById('mainKillerName');
         this.ui.killerListContainer = document.getElementById('killerListContainer');
         this.ui.modalOverlay = document.getElementById('updateModalOverlay');
-    },
-
-    // 💡 HTML의 onclick 대신 자바스크립트가 직접 버튼들을 감시합니다.
-    bindEvents() {
-        // 타이틀 모드 변경
-        this.ui.h1.addEventListener('click', () => this.toggleMode());
-        
-        // START 버튼
-        this.ui.btnSpin.addEventListener('click', () => this.startSequence());
-
-        // 속도 슬라이더
-        if (this.ui.speedRange) {
-            this.ui.speedRange.addEventListener('input', (e) => this.updateSpeedText(e.target.value));
-        }
-
-        // 업데이트 노트 모달
-        const btnUpdateNotes = document.getElementById('btnUpdateNotes');
-        if (btnUpdateNotes) btnUpdateNotes.addEventListener('click', () => this.openUpdateNotes());
-        
-        const btnCloseModal = document.getElementById('btnCloseModal');
-        if (btnCloseModal) btnCloseModal.addEventListener('click', () => this.closeUpdateNotes());
-        
-        if (this.ui.modalOverlay) {
-            this.ui.modalOverlay.addEventListener('click', (e) => {
-                if (e.target.id === 'updateModalOverlay') this.closeUpdateNotes();
-            });
-        }
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape" && this.ui.modalOverlay.classList.contains('show')) {
-                this.closeUpdateNotes();
-            }
-        });
-
-        // 티어 필터 버튼들
-        document.querySelectorAll('.tier-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.setTierFilter(e.target.dataset.filter);
-            });
-        });
-
-        // 살인마 선택 컨테이너 (이벤트 위임 기법 적용: 버튼이 새로 생겨도 다 감지함)
-        if (this.ui.killerListContainer) {
-            this.ui.killerListContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('killer-item-btn')) {
-                    const id = e.target.id.replace('kbtn_', '');
-                    this.selectKiller(id);
-                }
-            });
-        }
-
-        // 애드온 우측 패널 버튼들
-        const btnRandomKiller = document.getElementById('btnRandomKiller');
-        if (btnRandomKiller) btnRandomKiller.addEventListener('click', () => this.toggleRandomKiller());
-
-        const btnSelectAllKillers = document.getElementById('btnSelectAllKillers');
-        if (btnSelectAllKillers) btnSelectAllKillers.addEventListener('click', () => this.selectAllKillers());
     },
 
     preloadImagesSequentially(delay = 20) {
@@ -187,7 +130,7 @@ const App = {
             this.ui.h1.style.color = this.state.currentMode === 'killer_perk' ? "#ff3333" : "#4da6ff";
             this.ui.btnSpin.className = this.state.currentMode === 'killer_perk' ? "start-btn killer-btn" : "start-btn survivor-btn";
             this.ui.speedStatus.style.color = this.state.currentMode === 'killer_perk' ? "#ff3333" : "#4da6ff";
-            this.ui.speedRange.disabled = false; this.updateSpeedText(this.ui.speedRange.value);
+            this.ui.speedRange.disabled = false; this.updateSpeedText(this.ui.speedRange ? this.ui.speedRange.value : "2");
             if(this.ui.rightPanel) this.ui.rightPanel.style.display = 'flex';
             
             document.querySelectorAll('.perk-bg').forEach(bg => {
@@ -239,6 +182,8 @@ const App = {
             btn.className = 'killer-list-btn killer-item-btn';
             btn.id = 'kbtn_' + k.id;
             btn.innerText = k.name;
+            // 리스트에서 직접 클릭 시 동작하도록 바인딩
+            btn.onclick = () => this.selectKiller(k.id);
             this.ui.killerListContainer.appendChild(btn);
         });
         const initId = this.state.selectedKillers[0] || 'trapper';
@@ -314,7 +259,6 @@ const App = {
     },
 
     buildSpinPool(sourceData, size) {
-        // 💡 프리징 완벽 차단 로직
         if (!sourceData || sourceData.length === 0) return [];
         let pool = [];
         let temp = [...sourceData];
@@ -384,7 +328,7 @@ const App = {
             this.state.spinIntervals = {};
 
             this.state.isSpinning = true;
-            this.ui.btnSpin.disabled = true;
+            if(this.ui.btnSpin) this.ui.btnSpin.disabled = true;
             this.resetSlots(); 
 
             let activeData, path, type;
@@ -393,7 +337,7 @@ const App = {
             else { type = 'addon'; }
 
             if (type === 'perk') {
-                const speedVal = parseInt(this.ui.speedRange.value);
+                const speedVal = parseInt(this.ui.speedRange ? this.ui.speedRange.value : 2);
                 const currentDelay = [0, 600, 1300, 2600][speedVal];
                 
                 this.state.currentSpunPerks = this.getRandomPerks(activeData, this.state.tierFilter);
@@ -425,7 +369,6 @@ const App = {
 
                 activeData = killerAddons[finalKillerId] || [];
                 
-                // 💡 애드온 데이터가 아예 비어있으면 즉시 중단(프리징 방지)
                 if (activeData.length === 0) {
                     alert(`🚨 [${killerNameMap[finalKillerId]}] 의 애드온 데이터가 비어있습니다!`);
                     this.finalizeSpin();
@@ -559,12 +502,14 @@ const App = {
 
     finalizeSpin() {
         this.state.isSpinning = false; 
-        this.ui.btnSpin.disabled = false; 
+        if(this.ui.btnSpin) this.ui.btnSpin.disabled = false; 
         
         if (this.state.currentMode !== 'killer_addon' && this.state.currentSpunPerks.length === 4) {
             let avg = this.state.currentSpunPerks.reduce((sum, p) => sum + Number(p.tier || 3), 0) / 4;
-            this.ui.scoreDisplay.innerText = avg.toFixed(2);
-            this.ui.scoreDisplay.className = `avg-score show ${this.state.currentMode === 'killer_perk' ? 'killer-score' : 'survivor-score'}`;
+            if(this.ui.scoreDisplay) {
+                this.ui.scoreDisplay.innerText = avg.toFixed(2);
+                this.ui.scoreDisplay.className = `avg-score show ${this.state.currentMode === 'killer_perk' ? 'killer-score' : 'survivor-score'}`;
+            }
         }
     },
 
@@ -612,6 +557,18 @@ const App = {
         }
     }
 };
+
+// ==========================================
+// 전역 바인딩 (index.html의 onclick에서 호출)
+// ==========================================
+window.toggleMode = () => App.toggleMode();
+window.startSequence = () => App.startSequence();
+window.selectAllKillers = () => App.selectAllKillers();
+window.toggleRandomKiller = () => App.toggleRandomKiller();
+window.setTierFilter = (val) => App.setTierFilter(val);
+window.updateSpeedText = (val) => App.updateSpeedText(val);
+window.openUpdateNotes = () => App.openUpdateNotes();
+window.closeUpdateNotes = (event) => App.closeUpdateNotes(event);
 
 // 앱 시동!
 window.addEventListener('DOMContentLoaded', () => App.init());
