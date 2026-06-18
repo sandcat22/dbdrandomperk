@@ -11,36 +11,32 @@
     <meta property="og:image" content="https://sandcat22.github.io/dbdrandomperk/images/perk_bg.png">
     <meta property="og:image:width" content="800">
     <meta property="og:image:height" content="400">
-
-    <!-- ✅ 친구분의 폴더 구조(css/) 완벽 반영 -->
+    
+    <!-- CSS 연결 -->
     <link rel="stylesheet" type="text/css" href="css/dbdrandomperk.css" />
 </head>
 <body class="mode-killer">
 
     <div class="bottom-info-area">
-        <button class="update-notes-btn" onclick="window.openUpdateNotes()">UPDATE NOTES</button>
+        <button class="update-notes-btn" id="btnUpdateNotes">UPDATE NOTES</button>
         <div class="watermark">
             Made By SANDCATS<br>
-            <!-- 💡 샌드캣님 요청 반영: 깔끔하고 전문적인 느낌의 단어로 변경 -->
-            (V251 - Performance Optimized)<br>
+            (V253 - Performance Optimized)<br>
             2026-06-18
         </div>
     </div>
 
-    <!-- ✅ 업데이트 노트 모달창 -->
-    <div class="modal-overlay" id="updateModalOverlay" onclick="window.closeUpdateNotes(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-overlay" id="updateModalOverlay">
+        <div class="modal-content" id="updateModalContent">
             <div class="modal-header">
                 <div class="modal-title">UPDATE NOTES</div>
-                <button class="close-modal" id="btnCloseModal" onclick="window.closeUpdateNotes()">&times;</button>
+                <button class="close-modal" id="btnCloseModal">&times;</button>
             </div>
-            <!-- iframe으로 텍스트 파일 부드럽게 로드 -->
             <iframe id="notesIframe" src="updatenotes.txt"></iframe>
         </div>
     </div>
 
-    <!-- ✅ 타이틀 (클릭 시 모드 변경) -->
-    <h1 id="headerTitle" onclick="window.toggleMode()">🩸 KILLER PERK 🩸</h1>
+    <h1 id="headerTitle">🩸 KILLER PERK 🩸</h1>
 
     <div id="perkWrapper">
         <div id="perkContainer">
@@ -67,13 +63,13 @@
         </div>
         
         <div id="rightPanel">
-            <div class="tier-filter-container">
+            <div class="tier-filter-container" id="tierFilterContainer">
                 <div class="filter-title">티어 필터</div>
-                <button class="tier-btn active" id="btnFilter_all" onclick="window.setTierFilter('all')">ALL 랜덤</button>
-                <button class="tier-btn" id="btnFilter_4" onclick="window.setTierFilter('4')">4점대 퍽</button>
-                <button class="tier-btn" id="btnFilter_3" onclick="window.setTierFilter('3')">3점대 퍽</button>
-                <button class="tier-btn" id="btnFilter_2" onclick="window.setTierFilter('2')">2점대 퍽</button>
-                <button class="tier-btn" id="btnFilter_1" onclick="window.setTierFilter('1')">1점대 퍽</button>
+                <button class="tier-btn active" id="btnFilter_all" data-tier="all">ALL 랜덤</button>
+                <button class="tier-btn" id="btnFilter_4" data-tier="4">4점대 퍽</button>
+                <button class="tier-btn" id="btnFilter_3" data-tier="3">3점대 퍽</button>
+                <button class="tier-btn" id="btnFilter_2" data-tier="2">2점대 퍽</button>
+                <button class="tier-btn" id="btnFilter_1" data-tier="1">1점대 퍽</button>
             </div>
             
             <div class="score-container">
@@ -104,28 +100,25 @@
             
             <div id="addonRightPanel" class="killer-list-panel">
                 <div style="display:flex; gap: 10px; margin-bottom: 12px;">
-                    <button id="btnRandomKiller" class="killer-list-btn random-btn" style="flex:2; margin:0; font-size: 15px; padding: 10px;" onclick="window.toggleRandomKiller()">
+                    <button id="btnRandomKiller" class="killer-list-btn random-btn" style="flex:2; margin:0; font-size: 15px; padding: 10px;">
                         <span class="chk-box"></span> 다중 선택
                     </button>
-                    <button id="btnSelectAllKillers" class="killer-list-btn" style="flex:1; padding: 10px; margin:0; font-size: 15px;" onclick="window.selectAllKillers()">ALL</button>
+                    <button id="btnSelectAllKillers" class="killer-list-btn" style="flex:1; padding: 10px; margin:0; font-size: 15px;">ALL</button>
                 </div>
-                <!-- 킬러 리스트가 생성될 곳 -->
                 <div id="killerListContainer" class="killer-scroll-list"></div>
             </div>
         </div>
     </div>
 
-    <!-- ✅ 스핀 버튼 -->
-    <button id="btnSpin" class="start-btn killer-btn" onclick="window.startSequence()">START</button>
+    <button id="btnSpin" class="start-btn killer-btn">START</button>
     
     <div class="speed-control" id="speedControlBox">
         <div id="speedStatus" style="color:#ff3333">보통</div>
-        <!-- ✅ 속도 조절 슬라이더 -->
-        <input type="range" id="speedRange" min="0" max="3" value="2" step="1" oninput="window.updateSpeedText()">
+        <input type="range" id="speedRange" min="0" max="3" value="2" step="1">
     </div>
-
-    <!-- ✅ 친구분의 폴더 구조(js/) 완벽 반영 및 최신 로직 파일들 로드 -->
+    
+    <!-- JS 연결 (순서 중요) -->
     <script src="js/library.js"></script>
-    <script src="js/dbdrandomperk_optmized.js"></script>
+    <script src="js/dbdrandomperk.js"></script>
 </body>
 </html>
