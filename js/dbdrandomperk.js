@@ -1,7 +1,6 @@
 /**
  * Dead by Daylight Random Perk/Addon Generator
  * Optimized for High-Performance Rendering & Zero GC Fluctuation
- * V254 - Auto Image Error Catch & Data Validator Restored
  */
 
 // ============================================================================
@@ -436,7 +435,7 @@ function stopRAF(slotId) {
 }
 
 // ============================================================================
-// 7. 메인 룰렛 제어 시퀀스 (Zero Lag)
+// 7. 메인 룰렛 제어 시퀀스
 // ============================================================================
 function startSequence() {
     if (isSpinning) return;
@@ -635,15 +634,27 @@ function updateSpeedText() {
 }
 
 // ============================================================================
-// 8. 모달 제어 및 🔥에러 매니저 탑재 (깨진 이미지 방어)
+// 8. 모달 제어 및 에러 매니저 (iframe 제거 & fetch 적용)
 // ============================================================================
+// ✅ iframe 버리고 자바스크립트로 텍스트를 바로 가져와서 CSS가 먹히게 만듦
 function openUpdateNotes() {
     const modal = DOM.get('updateModalOverlay');
     if (modal) modal.classList.add('show');
-    try {
-        const iframe = DOM.get('notesIframe');
-        if (iframe) iframe.contentWindow.location.reload(true);
-    } catch (e) {}
+    
+    const modalBody = DOM.get('updateModalBody');
+    if (modalBody) {
+        fetch('updatenotes.txt?v=' + new Date().getTime()) // 캐시 방지
+            .then(response => {
+                if (!response.ok) throw new Error();
+                return response.text();
+            })
+            .then(text => {
+                modalBody.textContent = text;
+            })
+            .catch(() => {
+                modalBody.textContent = "업데이트 노트를 불러올 수 없습니다.\n(updatenotes.txt 파일이 폴더에 있는지 확인해주세요.)";
+            });
+    }
 }
 
 function closeUpdateNotes(event) {
@@ -662,7 +673,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// ✅ 에러 통합 매니저 (깨진 파일 발생 시 즉각 우측 하단 버튼 생성)
+// ✅ 에러 통합 매니저 (깨진 파일 발생 시 강제 숨김 없이 엑스박스 노출 + 버튼 생성)
 const ErrorManager = {
     logs: new Set(),
     addError(msg) {
@@ -677,7 +688,7 @@ const ErrorManager = {
             btn = document.createElement('button');
             btn.id = 'dataErrorBtn';
             btn.innerHTML = '🚨 DATA ERROR';
-            btn.style.cssText = 'background: #ff3333; color: white; border: none; padding: 5px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px; font-size: 11px; animation: blink 1s infinite;';
+            btn.style.cssText = 'background: #ff3333; color: white; border: none; padding: 5px; border-radius: 4px; font-weight: bold; cursor: margin-top: 5px; font-size: 11px; animation: blink 1s infinite;';
             btn.onclick = () => alert("🚨 발견된 오류 내역 🚨\n\n" + Array.from(this.logs).join('\n'));
             infoArea.appendChild(btn);
             
@@ -733,7 +744,7 @@ function validateData() {
         infoArea.appendChild(dataDash);
     }
     
-    ErrorManager.renderButton(); // 카테고리 오타나 누락이 있으면 버튼 팝업
+    ErrorManager.renderButton(); 
 }
 
 // 진입점 초기화 실행
@@ -758,16 +769,15 @@ try {
 }
 
 // ============================================================================
-// 9. 동적 DOM 이벤트 핸들링 허브 (깨진 이미지 방어 로직 추가)
+// 9. 동적 DOM 이벤트 핸들링 허브 
 // ============================================================================
 window.addEventListener('DOMContentLoaded', () => {
     
-    // 🔥 에러 발생 시 강제로 숨기지 않고 엑스박스를 그대로 노출하여 문제를 직관적으로 확인하게 합니다.
+    // 🔥 에러 발생 시 강제로 숨기지 않고 노출하여 문제 인지
     document.querySelectorAll('img').forEach(img => {
         img.addEventListener('error', function() {
-            // this.style.display = 'none'; <- 이 줄을 삭제하여 에러 이미지를 숨기지 않습니다.
-            if (this.src && this.src.includes('/images/')) {
-                const filename = decodeURIComponent(this.src.split('/').pop());
+            if (this.src) {
+                const filename = decodeURIComponent(this.src.substring(this.src.lastIndexOf('/') + 1));
                 if (filename && filename !== 'null' && filename !== 'undefined') {
                     ErrorManager.addError(`이미지 파일 누락: ${filename}`);
                 }
