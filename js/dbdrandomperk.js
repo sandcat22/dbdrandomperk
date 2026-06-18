@@ -1,6 +1,7 @@
 /**
  * Dead by Daylight Random Perk/Addon Generator
  * Optimized for High-Performance Rendering & Zero GC Fluctuation
+ * V254 - Zero Lag + Transparent Error Manager + JS Update Notes
  */
 
 // ============================================================================
@@ -435,7 +436,7 @@ function stopRAF(slotId) {
 }
 
 // ============================================================================
-// 7. 메인 룰렛 제어 시퀀스
+// 7. 메인 룰렛 제어 시퀀스 (Zero Lag)
 // ============================================================================
 function startSequence() {
     if (isSpinning) return;
@@ -634,26 +635,20 @@ function updateSpeedText() {
 }
 
 // ============================================================================
-// 8. 모달 제어 및 에러 매니저 (iframe 제거 & fetch 적용)
+// 8. 모달 제어 및 🔥에러 매니저 탑재 (엑스박스 유지 + 에러 버튼 팝업)
 // ============================================================================
-// ✅ iframe 버리고 자바스크립트로 텍스트를 바로 가져와서 CSS가 먹히게 만듦
 function openUpdateNotes() {
     const modal = DOM.get('updateModalOverlay');
     if (modal) modal.classList.add('show');
     
+    // iframe 대신 텍스트를 즉시 주입하는 로직으로 변경
     const modalBody = DOM.get('updateModalBody');
     if (modalBody) {
-        fetch('updatenotes.txt?v=' + new Date().getTime()) // 캐시 방지
-            .then(response => {
-                if (!response.ok) throw new Error();
-                return response.text();
-            })
-            .then(text => {
-                modalBody.textContent = text;
-            })
-            .catch(() => {
-                modalBody.textContent = "업데이트 노트를 불러올 수 없습니다.\n(updatenotes.txt 파일이 폴더에 있는지 확인해주세요.)";
-            });
+        if (typeof updateNotesText !== 'undefined') {
+            modalBody.innerText = updateNotesText;
+        } else {
+            modalBody.innerText = "업데이트 노트를 불러올 수 없습니다.\n(js/updatenotes.js 파일이 연결되지 않았습니다.)";
+        }
     }
 }
 
@@ -673,7 +668,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// ✅ 에러 통합 매니저 (깨진 파일 발생 시 강제 숨김 없이 엑스박스 노출 + 버튼 생성)
+// ✅ 에러 통합 매니저 (깨진 파일 발생 시 즉각 우측 하단 버튼 생성)
 const ErrorManager = {
     logs: new Set(),
     addError(msg) {
@@ -688,7 +683,7 @@ const ErrorManager = {
             btn = document.createElement('button');
             btn.id = 'dataErrorBtn';
             btn.innerHTML = '🚨 DATA ERROR';
-            btn.style.cssText = 'background: #ff3333; color: white; border: none; padding: 5px; border-radius: 4px; font-weight: bold; cursor: margin-top: 5px; font-size: 11px; animation: blink 1s infinite;';
+            btn.style.cssText = 'background: #ff3333; color: white; border: none; padding: 5px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px; font-size: 11px; animation: blink 1s infinite;';
             btn.onclick = () => alert("🚨 발견된 오류 내역 🚨\n\n" + Array.from(this.logs).join('\n'));
             infoArea.appendChild(btn);
             
@@ -744,7 +739,7 @@ function validateData() {
         infoArea.appendChild(dataDash);
     }
     
-    ErrorManager.renderButton(); 
+    ErrorManager.renderButton(); // 카테고리 오타나 누락이 있으면 즉시 팝업
 }
 
 // 진입점 초기화 실행
@@ -769,14 +764,15 @@ try {
 }
 
 // ============================================================================
-// 9. 동적 DOM 이벤트 핸들링 허브 
+// 9. 동적 DOM 이벤트 핸들링 허브
 // ============================================================================
 window.addEventListener('DOMContentLoaded', () => {
     
-    // 🔥 에러 발생 시 강제로 숨기지 않고 노출하여 문제 인지
+    // 🔥 에러 발생 시 엑스박스는 가리지 않고 화면에 그대로 노출시키며, 누락 파일 로깅 수행
     document.querySelectorAll('img').forEach(img => {
         img.addEventListener('error', function() {
             if (this.src) {
+                // 경로에서 순수 파일명만 정확히 추출
                 const filename = decodeURIComponent(this.src.substring(this.src.lastIndexOf('/') + 1));
                 if (filename && filename !== 'null' && filename !== 'undefined') {
                     ErrorManager.addError(`이미지 파일 누락: ${filename}`);
