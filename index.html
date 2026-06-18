@@ -12,7 +12,6 @@
     <meta property="og:image:width" content="800">
     <meta property="og:image:height" content="400">
     
-    <!-- CSS 연결 -->
     <link rel="stylesheet" type="text/css" href="css/dbdrandomperk.css" />
 </head>
 <body class="mode-killer">
@@ -21,18 +20,19 @@
         <button class="update-notes-btn" id="btnUpdateNotes">UPDATE NOTES</button>
         <div class="watermark">
             Made By SANDCATS<br>
-            (V253 - Performance Optimized)<br>
+            (V254 - Fully Optimized)<br>
             2026-06-18
         </div>
     </div>
 
+    <!-- ✅ iframe을 버리고 텍스트가 들어갈 예쁜 모달 박스로 교체 -->
     <div class="modal-overlay" id="updateModalOverlay">
         <div class="modal-content" id="updateModalContent">
             <div class="modal-header">
                 <div class="modal-title">UPDATE NOTES</div>
                 <button class="close-modal" id="btnCloseModal">&times;</button>
             </div>
-            <iframe id="notesIframe" src="updatenotes.txt"></iframe>
+            <div class="modal-body" id="updateModalBody">노트 불러오는 중...</div>
         </div>
     </div>
 
@@ -117,7 +117,6 @@
         <input type="range" id="speedRange" min="0" max="3" value="2" step="1">
     </div>
     
-    <!-- JS 연결 (순서 중요) -->
     <script src="js/library.js"></script>
     <script src="js/dbdrandomperk.js"></script>
 </body>
