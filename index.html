@@ -12,7 +12,8 @@
     <meta property="og:image:width" content="800">
     <meta property="og:image:height" content="400">
     
-    <link rel="stylesheet" type="text/css" href="css/dbdrandomperk.css" />
+    <!-- 🔥 브라우저 캐시 강제 우회 (?v=260 추가) -->
+    <link rel="stylesheet" type="text/css" href="css/dbdrandomperk.css?v=260" />
 </head>
 <body class="mode-killer">
 
@@ -20,18 +21,21 @@
         <button class="update-notes-btn" id="btnUpdateNotes">UPDATE NOTES</button>
         <div class="watermark">
             Made By SANDCATS<br>
-            (V255 - Perk Lock System)<br>
-            2026-06-18
+            (V260 - Perk Lock System)<br>
+            2026-06-19
         </div>
     </div>
 
+    <!-- 업데이트 노트 모달 -->
     <div class="modal-overlay" id="updateModalOverlay">
         <div class="modal-content" id="updateModalContent">
             <div class="modal-header">
                 <div class="modal-title">UPDATE NOTES</div>
                 <button class="close-modal" id="btnCloseModal">&times;</button>
             </div>
-            <div class="modal-body" id="updateModalBody">노트 불러오는 중...</div>
+            <div class="modal-body" id="updateModalBody">
+                노트 불러오는 중...
+            </div>
         </div>
     </div>
 
@@ -39,26 +43,30 @@
 
     <div id="perkWrapper">
         <div id="perkContainer">
+            <!-- 카드 1 -->
             <div class="perk-card" id="card1">
-                <div class="lock-btn" id="lock1" onclick="toggleLock(1)" title="이 퍽 고정하기">🔓</div>
+                <img src="images/bamboozle.webp" class="lock-btn" id="lock1" onclick="toggleLock(1)">
                 <img src="images/perk_bg.png" class="perk-bg" id="bg1"><img src="" class="perk-img" id="img1">
                 <div class="perk-name" id="name1"></div><div class="perk-category" id="cat1"></div>
                 <div class="tier-icon-container" id="tierBox1"><img src="" id="tierImg1" class="tier-icon-img"></div>
             </div>
+            <!-- 카드 2 -->
             <div class="perk-card" id="card2">
-                <div class="lock-btn" id="lock2" onclick="toggleLock(2)" title="이 퍽 고정하기">🔓</div>
+                <img src="images/bamboozle.webp" class="lock-btn" id="lock2" onclick="toggleLock(2)">
                 <img src="images/perk_bg.png" class="perk-bg" id="bg2"><img src="" class="perk-img" id="img2">
                 <div class="perk-name" id="name2"></div><div class="perk-category" id="cat2"></div>
                 <div class="tier-icon-container" id="tierBox2"><img src="" id="tierImg2" class="tier-icon-img"></div>
             </div>
+            <!-- 카드 3 -->
             <div class="perk-card" id="card3">
-                <div class="lock-btn" id="lock3" onclick="toggleLock(3)" title="이 퍽 고정하기">🔓</div>
+                <img src="images/bamboozle.webp" class="lock-btn" id="lock3" onclick="toggleLock(3)">
                 <img src="images/perk_bg.png" class="perk-bg" id="bg3"><img src="" class="perk-img" id="img3">
                 <div class="perk-name" id="name3"></div><div class="perk-category" id="cat3"></div>
                 <div class="tier-icon-container" id="tierBox3"><img src="" id="tierImg3" class="tier-icon-img"></div>
             </div>
+            <!-- 카드 4 -->
             <div class="perk-card" id="card4">
-                <div class="lock-btn" id="lock4" onclick="toggleLock(4)" title="이 퍽 고정하기">🔓</div>
+                <img src="images/bamboozle.webp" class="lock-btn" id="lock4" onclick="toggleLock(4)">
                 <img src="images/perk_bg.png" class="perk-bg" id="bg4"><img src="" class="perk-img" id="img4">
                 <div class="perk-name" id="name4"></div><div class="perk-category" id="cat4"></div>
                 <div class="tier-icon-container" id="tierBox4"><img src="" id="tierImg4" class="tier-icon-img"></div>
@@ -120,8 +128,9 @@
         <input type="range" id="speedRange" min="0" max="3" value="2" step="1">
     </div>
     
-    <script src="js/library.js"></script>
-    <script src="js/updatenotes.js"></script>
-    <script src="js/dbdrandomperk.js"></script>
+    <!-- 🔥 브라우저 캐시 강제 우회 (?v=260 추가) -->
+    <script src="js/library.js?v=260"></script>
+    <script src="js/updatenotes.js?v=260"></script>
+    <script src="js/dbdrandomperk.js?v=260"></script>
 </body>
 </html>

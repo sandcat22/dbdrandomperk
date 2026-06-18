@@ -102,14 +102,12 @@ window.toggleLock = function(idx) {
     if (!currentSpunPerks[idx - 1]) return; // 빈 슬롯은 고정 불가
     
     const card = DOM.get(`card${idx}`);
-    const lockBtn = DOM.get(`lock${idx}`);
     
+    // CSS 클래스만 넣고 빼면 디자인(흑백/컬러)이 자동 적용됨
     if (card.classList.contains('locked')) {
         card.classList.remove('locked');
-        lockBtn.innerText = '🔓';
     } else {
         card.classList.add('locked');
-        lockBtn.innerText = '🔒';
     }
 };
 
@@ -194,8 +192,6 @@ function resetSlots(forceAll = false) {
         for (let i = 1; i <= 4; i++) {
             const card = DOM.get(`card${i}`);
             if (card) card.classList.remove('locked');
-            const lockBtn = DOM.get(`lock${i}`);
-            if (lockBtn) lockBtn.innerText = '🔓';
         }
     }
     
