@@ -1,5 +1,6 @@
+/* ✅ V254: 전체 스타일 시트 (고해상도 자동 스케일링 포함) */
 body {
-    background-image: url('../images/background.jpg'); 
+    background-image: url('../images/background.jpg');
     background-size: cover; background-position: center; background-repeat: no-repeat;
     background-color: rgba(0, 0, 0, 0.85); background-blend-mode: overlay;
     color: #ffffff; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
@@ -71,7 +72,7 @@ body.mode-survivor .tier-btn.active { border-color: #003366; color: #4da6ff; bac
 .addon-slot.selected + .addon-name { color: #E040FB; text-shadow: 0 0 10px #E040FB; }
 
 .killer-list-panel {
-    width: 580px; height: auto; background: rgba(10, 10, 10, 0.8); border: 2px solid #2a2a2a; border-radius: 12px; 
+    width: 580px; height: auto; background: rgba(10, 10, 10, 0.8); border: 2px solid #2a2a2a; border-radius: 12px;
     display: flex; flex-direction: column; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); box-sizing: border-box;
 }
 
@@ -123,4 +124,14 @@ input[type=range] { width: 100%; cursor: pointer; transition: 0.3s; }
 .modal-body::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
 .modal-body::-webkit-scrollbar-thumb:hover { background: #8e24aa; }
 #notesIframe { width: 100%; flex: 1; border: none; background: #fff; filter: invert(0.92) hue-rotate(180deg); }
+
+/* ==========================================
+🚀 고해상도(2K, 4K) 자동 확대 (1920x1080 기준)
+========================================== */
+@media (min-width: 2500px) {
+    body { zoom: 1.33; } /* 2K(QHD) 모니터에서는 1.33배 확대 */
+}
+@media (min-width: 3800px) {
+    body { zoom: 2; }    /* 4K(UHD) 모니터에서는 2배 확대 */
+}
 ```
