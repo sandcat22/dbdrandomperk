@@ -1,7 +1,7 @@
 /**
  * Dead by Daylight Random Perk/Addon Generator
  * Optimized for High-Performance Rendering & Zero GC Fluctuation
- * V253 - Zero Lag Async Math & Data Validator Merged
+ * V254 - Auto Image Error Catch & Data Validator Restored
  */
 
 // ============================================================================
@@ -436,7 +436,7 @@ function stopRAF(slotId) {
 }
 
 // ============================================================================
-// 7. 메인 룰렛 제어 시퀀스 (🔥 Zero Lag 비동기 엔진)
+// 7. 메인 룰렛 제어 시퀀스 (Zero Lag)
 // ============================================================================
 function startSequence() {
     if (isSpinning) return;
@@ -466,14 +466,12 @@ function startSequence() {
         const speedVal = speedRangeEl ? parseInt(speedRangeEl.value) : 2;
         const currentDelay = [0, 600, 1300, 2600][speedVal];
         
-        // 1. 렉 방지: 티어 계산을 기다리지 말고 애니메이션부터 즉시 송출!
         for (let i = 1; i <= 4; i++) {
             const card = DOM.get(`card${i}`);
             if (card) card.classList.add('spinning');
             startRAF(`p${i}`, 'perk', i);
         }
 
-        // 2. 애니메이션 구동 후 10ms 뒤 백그라운드에서 계산 비동기 처리
         setTimeout(() => {
             let shuffledPerks = getRandomPerks(activeData, currentTierFilter);
             currentSpunPerks = shuffledPerks;
@@ -503,10 +501,8 @@ function startSequence() {
         }, 10);
 
     } else {
-        // ADDON 모드 시퀀스
         let finalKillerId;
         
-        // 1. 계산 전 애니메이션 즉시 송출!
         if (isRandomKiller && selectedKillers.length > 0) {
             const killerImg = DOM.get('mainKillerImg');
             if (killerImg) killerImg.classList.add('spinning');
@@ -519,7 +515,6 @@ function startSequence() {
             startRAF(`a${i}`, 'addon', i);
         }
 
-        // 2. 결과 계산 뒤로 미루기
         setTimeout(() => {
             finalKillerId = isRandomKiller && selectedKillers.length > 0 
                 ? selectedKillers[Math.floor(Math.random() * selectedKillers.length)]
@@ -541,7 +536,6 @@ function startSequence() {
                 if (shuffled[1]) new Image().src = path + shuffled[1].file;
             }
 
-            // 단일 살인마 선택 시 700ms 쾌속 스핀 유지
             let spinDuration = (isRandomKiller && selectedKillers.length > 1) ? 1200 : 700;
 
             setTimeout(() => {
@@ -641,7 +635,7 @@ function updateSpeedText() {
 }
 
 // ============================================================================
-// 8. 모달 제어 및 데이터 검사기 탑재
+// 8. 모달 제어 및 🔥에러 매니저 탑재 (깨진 이미지 방어)
 // ============================================================================
 function openUpdateNotes() {
     const modal = DOM.get('updateModalOverlay');
@@ -649,9 +643,7 @@ function openUpdateNotes() {
     try {
         const iframe = DOM.get('notesIframe');
         if (iframe) iframe.contentWindow.location.reload(true);
-    } catch (e) {
-        console.error("업데이트 노트 프레임 리로드 실패:", e);
-    }
+    } catch (e) {}
 }
 
 function closeUpdateNotes(event) {
@@ -670,14 +662,65 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+// ✅ 에러 통합 매니저 (깨진 파일 발생 시 즉각 우측 하단 버튼 생성)
+const ErrorManager = {
+    logs: new Set(),
+    addError(msg) {
+        this.logs.add(msg);
+        this.renderButton();
+    },
+    renderButton() {
+        const infoArea = document.querySelector('.bottom-info-area');
+        if (!infoArea) return;
+        let btn = document.getElementById('dataErrorBtn');
+        if (this.logs.size > 0 && !btn) {
+            btn = document.createElement('button');
+            btn.id = 'dataErrorBtn';
+            btn.innerHTML = '🚨 DATA ERROR';
+            btn.style.cssText = 'background: #ff3333; color: white; border: none; padding: 5px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px; font-size: 11px; animation: blink 1s infinite;';
+            btn.onclick = () => alert("🚨 발견된 오류 내역 🚨\n\n" + Array.from(this.logs).join('\n'));
+            infoArea.appendChild(btn);
+            
+            if (!document.getElementById('blinkStyle')) {
+                const style = document.createElement('style');
+                style.id = 'blinkStyle';
+                style.innerHTML = `@keyframes blink { 50% { opacity: 0.5; } }`;
+                document.head.appendChild(style);
+            }
+        }
+    }
+};
+
 function validateData() {
     let kCount = typeof killers !== 'undefined' ? killers.length : 0;
     let sCount = typeof survivors !== 'undefined' ? survivors.length : 0;
     let kpCount = typeof killerPerkData !== 'undefined' ? killerPerkData.length : 0;
     let spCount = typeof survivorPerkData !== 'undefined' ? survivorPerkData.length : 0;
     let adCount = 0;
+    
     if (typeof killerAddons !== 'undefined') {
-        for (let k in killerAddons) adCount += killerAddons[k].length;
+        killers.forEach(k => {
+            const addons = killerAddons[k.id];
+            if (!addons) ErrorManager.addError(`[${k.name}] 애드온 누락`);
+            else {
+                adCount += addons.length;
+                if (addons.length !== 20) ErrorManager.addError(`[${k.name}] 애드온 개수 불일치(${addons.length}개)`);
+            }
+        });
+    }
+
+    const validKillerCategories = [...Object.values(killerNameMap), "공용 퍽"];
+    if (typeof killerPerkData !== 'undefined') {
+        killerPerkData.forEach(p => {
+            if (!validKillerCategories.includes(p.category)) ErrorManager.addError(`[킬러 퍽: ${p.name}] 카테고리명(${p.category}) 오타`);
+        });
+    }
+
+    const validSurvivorCategories = [...Object.values(survivorNameMap), "공용 퍽"];
+    if (typeof survivorPerkData !== 'undefined') {
+        survivorPerkData.forEach(p => {
+            if (!validSurvivorCategories.includes(p.category)) ErrorManager.addError(`[생존자 퍽: ${p.name}] 카테고리명(${p.category}) 오타`);
+        });
     }
 
     const infoArea = document.querySelector('.bottom-info-area');
@@ -686,9 +729,11 @@ function validateData() {
         dataDash.style.fontSize = '11px';
         dataDash.style.color = 'rgba(255,255,255,0.3)';
         dataDash.style.marginTop = '5px';
-        dataDash.innerText = "K:" + kCount + " | S:" + sCount + " | KP:" + kpCount + " | SP:" + spCount + " | AD:" + adCount;
+        dataDash.innerText = `K:${kCount} | S:${sCount} | KP:${kpCount} | SP:${spCount} | AD:${adCount}`;
         infoArea.appendChild(dataDash);
     }
+    
+    ErrorManager.renderButton(); // 카테고리 오타나 누락이 있으면 버튼 팝업
 }
 
 // 진입점 초기화 실행
@@ -713,9 +758,23 @@ try {
 }
 
 // ============================================================================
-// 9. 동적 DOM 이벤트 핸들링 허브
+// 9. 동적 DOM 이벤트 핸들링 허브 (깨진 이미지 방어 로직 추가)
 // ============================================================================
 window.addEventListener('DOMContentLoaded', () => {
+    
+    // 🔥 에러 발생 시 강제로 숨기지 않고 엑스박스를 그대로 노출하여 문제를 직관적으로 확인하게 합니다.
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', function() {
+            // this.style.display = 'none'; <- 이 줄을 삭제하여 에러 이미지를 숨기지 않습니다.
+            if (this.src && this.src.includes('/images/')) {
+                const filename = decodeURIComponent(this.src.split('/').pop());
+                if (filename && filename !== 'null' && filename !== 'undefined') {
+                    ErrorManager.addError(`이미지 파일 누락: ${filename}`);
+                }
+            }
+        });
+    });
+
     const headerTitle = DOM.get('headerTitle');
     if (headerTitle) headerTitle.addEventListener('click', toggleMode);
 
