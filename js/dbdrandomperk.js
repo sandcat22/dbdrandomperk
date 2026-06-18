@@ -1,7 +1,7 @@
 /**
  * Dead by Daylight Random Perk/Addon Generator
- * Optimized for High-Performance Rendering & Zero GC Fluctuation
- * V254 - Zero Lag + Transparent Error Manager + JS Update Notes
+ * Optimized for High-Performance Rendering
+ * V255 - Perk Lock (Pinning) System Added
  */
 
 // ============================================================================
@@ -52,7 +52,8 @@ const DOM = {
             cat: this.get(`cat${idx}`),
             card: this.get(`card${idx}`),
             tierBox: this.get(`tierBox${idx}`),
-            tierImg: this.get(`tierImg${idx}`)
+            tierImg: this.get(`tierImg${idx}`),
+            lockBtn: this.get(`lock${idx}`)
         };
     },
     getAddonElements(idx) {
@@ -94,6 +95,24 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// 🔥 신규: 자물쇠 토글 기능
+window.toggleLock = function(idx) {
+    if (isSpinning) return;
+    if (currentMode === 'killer_addon') return; 
+    if (!currentSpunPerks[idx - 1]) return; // 빈 슬롯은 고정 불가
+    
+    const card = DOM.get(`card${idx}`);
+    const lockBtn = DOM.get(`lock${idx}`);
+    
+    if (card.classList.contains('locked')) {
+        card.classList.remove('locked');
+        lockBtn.innerText = '🔓';
+    } else {
+        card.classList.add('locked');
+        lockBtn.innerText = '🔒';
+    }
+};
+
 function setTierFilter(val) {
     if (isSpinning) return;
     currentTierFilter = val;
@@ -122,7 +141,7 @@ function toggleMode() {
         if (wrapperA) wrapperA.style.display = 'none';
     }
     updateInterface();
-    resetSlots();
+    resetSlots(true); // 모드 변경 시에는 모든 자물쇠 강제 초기화
 }
 
 function updateInterface() {
@@ -158,26 +177,41 @@ function updateInterface() {
     }
 }
 
-function resetSlots() {
+// 🔥 수정: 자물쇠가 걸린 카드는 지우지 않도록 방어
+function resetSlots(forceAll = false) {
     const scoreDisplay = DOM.get('averageScoreDisplay');
     if (scoreDisplay) {
         scoreDisplay.innerText = '-';
         scoreDisplay.className = 'avg-score';
     }
-    currentSpunPerks = [];
     
     animationContext.activeSlots.clear();
     animationContext.lastTimes = {};
     animationContext.currentItems = {};
     
+    if (forceAll) {
+        currentSpunPerks = [];
+        for (let i = 1; i <= 4; i++) {
+            const card = DOM.get(`card${i}`);
+            if (card) card.classList.remove('locked');
+            const lockBtn = DOM.get(`lock${i}`);
+            if (lockBtn) lockBtn.innerText = '🔓';
+        }
+    }
+    
     for (let i = 1; i <= 4; i++) {
-        const el = DOM.getPerkElements(i);
-        if (el.img) el.img.style.display = 'none';
-        if (el.bg) el.bg.style.display = 'none';
-        if (el.name) el.name.innerText = '';
-        if (el.cat) el.cat.innerText = '';
-        if (el.card) el.card.className = 'perk-card';
-        if (el.tierBox) el.tierBox.style.display = 'none';
+        const card = DOM.get(`card${i}`);
+        const isLocked = !forceAll && card && card.classList.contains('locked');
+        
+        if (!isLocked) {
+            const el = DOM.getPerkElements(i);
+            if (el.img) el.img.style.display = 'none';
+            if (el.bg) el.bg.style.display = 'none';
+            if (el.name) el.name.innerText = '';
+            if (el.cat) el.cat.innerText = '';
+            if (el.tierBox) el.tierBox.style.display = 'none';
+            if (el.card) el.card.classList.remove('selected', 'killer_perk', 'survivor_perk', 'spinning');
+        }
     }
     
     for (let i = 1; i <= 2; i++) {
@@ -191,12 +225,13 @@ function resetSlots() {
         }
     }
     
-    const killerImg = DOM.get('mainKillerImg');
-    if (killerImg) killerImg.classList.remove('spinning');
-    
-    const kName = DOM.get('mainKillerName');
-    if (kName && selectedKillers.length > 0) {
-        kName.innerText = killerNameMap[selectedKillers[0]] || '';
+    if (forceAll) {
+        const killerImg = DOM.get('mainKillerImg');
+        if (killerImg) killerImg.classList.remove('spinning');
+        const kName = DOM.get('mainKillerName');
+        if (kName && selectedKillers.length > 0) {
+            kName.innerText = killerNameMap[selectedKillers[0]] || '';
+        }
     }
 }
 
@@ -290,7 +325,7 @@ function selectKiller(id) {
         
         const killerName = DOM.get('mainKillerName');
         if (killerName) killerName.innerText = killerNameMap[id] || '';
-        resetSlots();
+        resetSlots(true);
     }
 }
 
@@ -303,14 +338,17 @@ function shuffleArray(array) {
     return array;
 }
 
-function getRandomPerks(data, filterVal) {
-    if (!data || data.length === 0) return [];
+// 🔥 수정: 필요한 만큼만 뽑고, 이미 뽑힌 퍽은 제외하는 알고리즘
+function getRandomPerks(data, filterVal, needed = 4, excludeNames = []) {
+    let availableData = data.filter(p => !excludeNames.includes(p.name));
+    if (!availableData || availableData.length === 0) return [];
+    
     if (filterVal === 'all') {
-        return shuffleArray([...data]).slice(0, 4);
+        return shuffleArray([...availableData]).slice(0, needed);
     }
 
     const pools = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-    data.forEach(p => { if (pools[p.tier]) pools[p.tier].push(p); });
+    availableData.forEach(p => { if (pools[p.tier]) pools[p.tier].push(p); });
 
     let minSum = 0, maxSum = 20, targetTiers = [];
     if (filterVal === '4') { minSum = 16; maxSum = 20; targetTiers = [3, 4, 4, 5, 5]; }
@@ -338,10 +376,10 @@ function getRandomPerks(data, filterVal) {
                 usedIndices[t].add(r);
                 combo.push(pool[r]);
             }
-            if (isValid) return combo;
+            if (isValid) return combo.slice(0, needed);
         }
     }
-    return shuffleArray([...data]).slice(0, 4);
+    return shuffleArray([...availableData]).slice(0, needed);
 }
 
 // ============================================================================
@@ -436,7 +474,7 @@ function stopRAF(slotId) {
 }
 
 // ============================================================================
-// 7. 메인 룰렛 제어 시퀀스 (Zero Lag)
+// 7. 메인 룰렛 제어 시퀀스 (🔥자물쇠 시스템 완벽 연동)
 // ============================================================================
 function startSequence() {
     if (isSpinning) return;
@@ -459,41 +497,73 @@ function startSequence() {
         type = 'addon'; 
     }
 
-    resetSlots(); 
+    resetSlots(false); // false를 전달하여 자물쇠가 걸린 슬롯은 보존함
 
     if (type === 'perk') {
         const speedRangeEl = DOM.get('speedRange');
         const speedVal = speedRangeEl ? parseInt(speedRangeEl.value) : 2;
         const currentDelay = [0, 600, 1300, 2600][speedVal];
         
+        let lockedIndices = [];
         for (let i = 1; i <= 4; i++) {
             const card = DOM.get(`card${i}`);
-            if (card) card.classList.add('spinning');
-            startRAF(`p${i}`, 'perk', i);
+            // 현재 카드가 고정(Lock)되어 있다면 명단에 추가하고 애니메이션을 돌리지 않음
+            if (card && card.classList.contains('locked') && currentSpunPerks[i - 1]) {
+                lockedIndices.push(i - 1);
+            } else {
+                if (card) card.classList.add('spinning');
+                startRAF(`p${i}`, 'perk', i);
+            }
+        }
+
+        // 만약 4개가 전부 다 잠겨있다면 그냥 종료
+        if (lockedIndices.length === 4) {
+            finalize();
+            return;
         }
 
         setTimeout(() => {
-            let shuffledPerks = getRandomPerks(activeData, currentTierFilter);
-            currentSpunPerks = shuffledPerks;
+            // 현재 고정되어 있는 퍽들의 이름을 추출하여 중복 방지 리스트 생성
+            let excludeNames = lockedIndices.map(idx => currentSpunPerks[idx].name);
+            let needed = 4 - lockedIndices.length; // 뽑아야 할 새로운 퍽 개수
+            
+            let newPerks = getRandomPerks(activeData, currentTierFilter, needed, excludeNames);
+            
+            // 기존 고정 퍽 + 새롭게 뽑힌 퍽 병합
+            let nextSpunPerks = [];
+            let newPerkIdx = 0;
+            for (let i = 0; i < 4; i++) {
+                if (lockedIndices.includes(i)) {
+                    nextSpunPerks[i] = currentSpunPerks[i]; // 기존 퍽 유지
+                } else {
+                    nextSpunPerks[i] = newPerks[newPerkIdx++]; // 새 퍽 할당
+                }
+            }
+            currentSpunPerks = nextSpunPerks;
 
-            shuffledPerks.forEach(p => {
+            // 새로 뽑힌 퍽만 프리로드
+            newPerks.forEach(p => {
                 if (p) new Image().src = path + p.file;
             });
 
+            // 스핀을 멈출 슬롯(고정되지 않은 슬롯)들의 인덱스만 추림
+            let unlockedIndices = [1, 2, 3, 4].filter(i => !lockedIndices.includes(i - 1));
+
             if (speedVal === 0) { 
                 setTimeout(() => {
-                    for (let i = 1; i <= 4; i++) stopPerk(i, shuffledPerks[i - 1], path);
+                    unlockedIndices.forEach(idx => stopPerk(idx, currentSpunPerks[idx - 1], path));
                     finalize();
                 }, 500);
             } else { 
-                let currentIdx = 1;
+                let currentStep = 0;
                 const stopSequentially = () => {
-                    stopPerk(currentIdx, shuffledPerks[currentIdx - 1], path);
-                    if (currentIdx === 4) { 
+                    let idx = unlockedIndices[currentStep];
+                    stopPerk(idx, currentSpunPerks[idx - 1], path);
+                    currentStep++;
+                    if (currentStep >= unlockedIndices.length) { 
                         finalize(); 
                         return; 
                     }
-                    currentIdx++; 
                     setTimeout(stopSequentially, currentDelay);
                 };
                 setTimeout(stopSequentially, 1000);
@@ -501,6 +571,7 @@ function startSequence() {
         }, 10);
 
     } else {
+        // 애드온 모드는 고정 기능 없음
         let finalKillerId;
         
         if (isRandomKiller && selectedKillers.length > 0) {
@@ -555,7 +626,7 @@ function startSequence() {
 
                 if (!activeData || activeData.length === 0) {
                     for (let i = 1; i <= 2; i++) stopRAF(`a${i}`);
-                    resetSlots(); 
+                    resetSlots(true); 
                     alert(`데이터가 없습니다.`); 
                     finalize();
                 } else {
@@ -635,13 +706,12 @@ function updateSpeedText() {
 }
 
 // ============================================================================
-// 8. 모달 제어 및 🔥에러 매니저 탑재 (엑스박스 유지 + 에러 버튼 팝업)
+// 8. 모달 제어 및 🔥에러 매니저 탑재
 // ============================================================================
 function openUpdateNotes() {
     const modal = DOM.get('updateModalOverlay');
     if (modal) modal.classList.add('show');
     
-    // iframe 대신 텍스트를 즉시 주입하는 로직으로 변경
     const modalBody = DOM.get('updateModalBody');
     if (modalBody) {
         if (typeof updateNotesText !== 'undefined') {
@@ -668,7 +738,6 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// ✅ 에러 통합 매니저 (깨진 파일 발생 시 즉각 우측 하단 버튼 생성)
 const ErrorManager = {
     logs: new Set(),
     addError(msg) {
@@ -739,7 +808,7 @@ function validateData() {
         infoArea.appendChild(dataDash);
     }
     
-    ErrorManager.renderButton(); // 카테고리 오타나 누락이 있으면 즉시 팝업
+    ErrorManager.renderButton(); 
 }
 
 // 진입점 초기화 실행
@@ -768,11 +837,9 @@ try {
 // ============================================================================
 window.addEventListener('DOMContentLoaded', () => {
     
-    // 🔥 에러 발생 시 엑스박스는 가리지 않고 화면에 그대로 노출시키며, 누락 파일 로깅 수행
     document.querySelectorAll('img').forEach(img => {
         img.addEventListener('error', function() {
             if (this.src) {
-                // 경로에서 순수 파일명만 정확히 추출
                 const filename = decodeURIComponent(this.src.substring(this.src.lastIndexOf('/') + 1));
                 if (filename && filename !== 'null' && filename !== 'undefined') {
                     ErrorManager.addError(`이미지 파일 누락: ${filename}`);

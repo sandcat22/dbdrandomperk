@@ -20,12 +20,11 @@
         <button class="update-notes-btn" id="btnUpdateNotes">UPDATE NOTES</button>
         <div class="watermark">
             Made By SANDCATS<br>
-            (V254 - Fully Optimized)<br>
+            (V255 - Perk Lock System)<br>
             2026-06-18
         </div>
     </div>
 
-    <!-- 모달 오버레이 (iframe 제거, 텍스트 박스로 완벽 교체) -->
     <div class="modal-overlay" id="updateModalOverlay">
         <div class="modal-content" id="updateModalContent">
             <div class="modal-header">
@@ -41,21 +40,25 @@
     <div id="perkWrapper">
         <div id="perkContainer">
             <div class="perk-card" id="card1">
+                <div class="lock-btn" id="lock1" onclick="toggleLock(1)" title="이 퍽 고정하기">🔓</div>
                 <img src="images/perk_bg.png" class="perk-bg" id="bg1"><img src="" class="perk-img" id="img1">
                 <div class="perk-name" id="name1"></div><div class="perk-category" id="cat1"></div>
                 <div class="tier-icon-container" id="tierBox1"><img src="" id="tierImg1" class="tier-icon-img"></div>
             </div>
             <div class="perk-card" id="card2">
+                <div class="lock-btn" id="lock2" onclick="toggleLock(2)" title="이 퍽 고정하기">🔓</div>
                 <img src="images/perk_bg.png" class="perk-bg" id="bg2"><img src="" class="perk-img" id="img2">
                 <div class="perk-name" id="name2"></div><div class="perk-category" id="cat2"></div>
                 <div class="tier-icon-container" id="tierBox2"><img src="" id="tierImg2" class="tier-icon-img"></div>
             </div>
             <div class="perk-card" id="card3">
+                <div class="lock-btn" id="lock3" onclick="toggleLock(3)" title="이 퍽 고정하기">🔓</div>
                 <img src="images/perk_bg.png" class="perk-bg" id="bg3"><img src="" class="perk-img" id="img3">
                 <div class="perk-name" id="name3"></div><div class="perk-category" id="cat3"></div>
                 <div class="tier-icon-container" id="tierBox3"><img src="" id="tierImg3" class="tier-icon-img"></div>
             </div>
             <div class="perk-card" id="card4">
+                <div class="lock-btn" id="lock4" onclick="toggleLock(4)" title="이 퍽 고정하기">🔓</div>
                 <img src="images/perk_bg.png" class="perk-bg" id="bg4"><img src="" class="perk-img" id="img4">
                 <div class="perk-name" id="name4"></div><div class="perk-category" id="cat4"></div>
                 <div class="tier-icon-container" id="tierBox4"><img src="" id="tierImg4" class="tier-icon-img"></div>
@@ -117,7 +120,6 @@
         <input type="range" id="speedRange" min="0" max="3" value="2" step="1">
     </div>
     
-    <!-- 추가된 JS 파일 포함 -->
     <script src="js/library.js"></script>
     <script src="js/updatenotes.js"></script>
     <script src="js/dbdrandomperk.js"></script>
