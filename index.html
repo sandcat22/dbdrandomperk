@@ -11,126 +11,119 @@
     <meta property="og:image" content="https://sandcat22.github.io/dbdrandomperk/images/perk_bg.png">
     <meta property="og:image:width" content="800">
     <meta property="og:image:height" content="400">
-    
-    <!-- 🔥 브라우저 캐시 강제 우회 (?v=260 추가) -->
-    <link rel="stylesheet" type="text/css" href="css/dbdrandomperk.css?v=260" />
+    <link rel="stylesheet" type="text/css" href="css/dbdrandomperk.css" />
+    <script src="js/library.js"></script>
+    <script src="js/updatenotes.js"></script>
 </head>
-<body class="mode-killer">
-
-    <div class="bottom-info-area">
-        <button class="update-notes-btn" id="btnUpdateNotes">UPDATE NOTES</button>
-        <div class="watermark">
-            Made By SANDCATS<br>
-            (V260 - Perk Lock System)<br>
-            2026-06-19
-        </div>
-    </div>
-
-    <!-- 업데이트 노트 모달 -->
-    <div class="modal-overlay" id="updateModalOverlay">
-        <div class="modal-content" id="updateModalContent">
-            <div class="modal-header">
-                <div class="modal-title">UPDATE NOTES</div>
-                <button class="close-modal" id="btnCloseModal">&times;</button>
-            </div>
-            <div class="modal-body" id="updateModalBody">
-                노트 불러오는 중...
+<body>
+    <div id="Wrapper" class="wrapper mode-killer">
+        <div class="bottom-info-area">
+            <button class="update-notes-btn" id="btnUpdateNotes">UPDATE NOTES</button>
+            <div class="watermark">
+                Made By SANDCATS<br>
+                (V230 - Zero Lag Pre-fetch)<br>
+                2026-06-15
             </div>
         </div>
-    </div>
 
-    <h1 id="headerTitle">🩸 KILLER PERK 🩸</h1>
-
-    <div id="perkWrapper">
-        <div id="perkContainer">
-            <!-- 카드 1 -->
-            <div class="perk-card" id="card1">
-                <img src="images/bamboozle.webp" class="lock-btn" id="lock1" onclick="toggleLock(1)">
-                <img src="images/perk_bg.png" class="perk-bg" id="bg1"><img src="" class="perk-img" id="img1">
-                <div class="perk-name" id="name1"></div><div class="perk-category" id="cat1"></div>
-                <div class="tier-icon-container" id="tierBox1"><img src="" id="tierImg1" class="tier-icon-img"></div>
-            </div>
-            <!-- 카드 2 -->
-            <div class="perk-card" id="card2">
-                <img src="images/bamboozle.webp" class="lock-btn" id="lock2" onclick="toggleLock(2)">
-                <img src="images/perk_bg.png" class="perk-bg" id="bg2"><img src="" class="perk-img" id="img2">
-                <div class="perk-name" id="name2"></div><div class="perk-category" id="cat2"></div>
-                <div class="tier-icon-container" id="tierBox2"><img src="" id="tierImg2" class="tier-icon-img"></div>
-            </div>
-            <!-- 카드 3 -->
-            <div class="perk-card" id="card3">
-                <img src="images/bamboozle.webp" class="lock-btn" id="lock3" onclick="toggleLock(3)">
-                <img src="images/perk_bg.png" class="perk-bg" id="bg3"><img src="" class="perk-img" id="img3">
-                <div class="perk-name" id="name3"></div><div class="perk-category" id="cat3"></div>
-                <div class="tier-icon-container" id="tierBox3"><img src="" id="tierImg3" class="tier-icon-img"></div>
-            </div>
-            <!-- 카드 4 -->
-            <div class="perk-card" id="card4">
-                <img src="images/bamboozle.webp" class="lock-btn" id="lock4" onclick="toggleLock(4)">
-                <img src="images/perk_bg.png" class="perk-bg" id="bg4"><img src="" class="perk-img" id="img4">
-                <div class="perk-name" id="name4"></div><div class="perk-category" id="cat4"></div>
-                <div class="tier-icon-container" id="tierBox4"><img src="" id="tierImg4" class="tier-icon-img"></div>
+        <div class="modal-overlay" id="updateModalOverlay">
+            <div class="modal-content" id="updateModalContent">
+                <div class="modal-header">
+                    <div class="modal-title">UPDATE NOTES</div>
+                    <button class="close-modal" id="btnCloseModal">&times;</button>
+                </div>
+                <div class="modal-body" id="updateModalBody">
+                    로딩 중...
+                </div>
             </div>
         </div>
+
+        <h1 id="headerTitle">🩸 KILLER PERK 🩸</h1>
+
+        <div id="perkWrapper" class="perk-wrapper">
+            <div id="perkContainer" class="perk-container">
+                <div class="perk-card" id="card1">
+                    <img src="images/bamboozle.webp" class="lock-btn" id="lock1">
+                    <img src="images/perk_bg.png" class="perk-bg" id="bg1"><img src="" class="perk-img" id="img1">
+                    <div class="perk-name" id="name1"></div><div class="perk-category" id="cat1"></div>
+                    <div class="tier-icon-container" id="tierBox1"><img src="" id="tierImg1" class="tier-icon-img"></div>
+                </div>
+                <div class="perk-card" id="card2">
+                    <img src="images/bamboozle.webp" class="lock-btn" id="lock2">
+                    <img src="images/perk_bg.png" class="perk-bg" id="bg2"><img src="" class="perk-img" id="img2">
+                    <div class="perk-name" id="name2"></div><div class="perk-category" id="cat2"></div>
+                    <div class="tier-icon-container" id="tierBox2"><img src="" id="tierImg2" class="tier-icon-img"></div>
+                </div>
+                <div class="perk-card" id="card3">
+                    <img src="images/bamboozle.webp" class="lock-btn" id="lock3">
+                    <img src="images/perk_bg.png" class="perk-bg" id="bg3"><img src="" class="perk-img" id="img3">
+                    <div class="perk-name" id="name3"></div><div class="perk-category" id="cat3"></div>
+                    <div class="tier-icon-container" id="tierBox3"><img src="" id="tierImg3" class="tier-icon-img"></div>
+                </div>
+                <div class="perk-card" id="card4">
+                    <img src="images/bamboozle.webp" class="lock-btn" id="lock4">
+                    <img src="images/perk_bg.png" class="perk-bg" id="bg4"><img src="" class="perk-img" id="img4">
+                    <div class="perk-name" id="name4"></div><div class="perk-category" id="cat4"></div>
+                    <div class="tier-icon-container" id="tierBox4"><img src="" id="tierImg4" class="tier-icon-img"></div>
+                </div>
+            </div>
+            
+            <div id="rightPanel" class="right-panel">
+                <div class="tier-filter-container" id="tierFilterContainer">
+                    <div class="filter-title">티어 필터</div>
+                    <button class="tier-btn active" id="btnFilter_all" data-tier="all">ALL 랜덤</button>
+                    <button class="tier-btn" id="btnFilter_4" data-tier="4">4점대 퍽</button>
+                    <button class="tier-btn" id="btnFilter_3" data-tier="3">3점대 퍽</button>
+                    <button class="tier-btn" id="btnFilter_2" data-tier="2">2점대 퍽</button>
+                    <button class="tier-btn" id="btnFilter_1" data-tier="1">1점대 퍽</button>
+                </div>
+                
+                <div class="score-container">
+                    <div class="avg-score-title">티어점수</div>
+                    <div id="averageScoreDisplay" class="avg-score">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="addonWrapper" class="addon-wrapper hide">
+            <div class="addon-area">
+                <div id="addonContainer" class="killer-addon-container">
+                    <div class="killer-img-container">
+                        <img src="" id="mainKillerImg" class="mainKillerImg">
+                        <div id="mainKillerName" class="killer-name-display"></div>
+                    </div>
+                    <div class="addon-slot-area">
+                        <div class="addon-slot-container">
+                            <div class="addon-slot" id="slot1"><img src="" id="adBg1" class="addon-bg-img"><img src="" id="adImg1" class="addon-img"></div>
+                            <div class="addon-name" id="adName1"></div>
+                        </div>
+                        <div class="addon-slot-container">
+                            <div class="addon-slot" id="slot2"><img src="" id="adBg2" class="addon-bg-img"><img src="" id="adImg2" class="addon-img"></div>
+                            <div class="addon-name" id="adName2"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="addonRightPanel" class="killer-list-panel">
+                    <div id="callKillerList" class="killer-list-panel-call-btn"></div>
+                    <div class="killer-list-top-area">
+                        <button id="btnRandomKiller" class="killer-list-btn random-btn">
+                            <span class="chk-box"></span> 다중 선택
+                        </button>
+                        <button id="btnSelectAllKillers" class="killer-list-btn all">ALL</button>
+                    </div>
+                    <div id="killerListContainer" class="killer-scroll-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <button id="btnSpin" class="start-btn killer-btn">START</button>
         
-        <div id="rightPanel">
-            <div class="tier-filter-container" id="tierFilterContainer">
-                <div class="filter-title">티어 필터</div>
-                <button class="tier-btn active" id="btnFilter_all" data-tier="all">ALL 랜덤</button>
-                <button class="tier-btn" id="btnFilter_4" data-tier="4">4점대 퍽</button>
-                <button class="tier-btn" id="btnFilter_3" data-tier="3">3점대 퍽</button>
-                <button class="tier-btn" id="btnFilter_2" data-tier="2">2점대 퍽</button>
-                <button class="tier-btn" id="btnFilter_1" data-tier="1">1점대 퍽</button>
-            </div>
-            
-            <div class="score-container">
-                <div class="avg-score-title">티어점수</div>
-                <div id="averageScoreDisplay" class="avg-score">-</div>
-            </div>
+        <div class="speed-control" id="speedControlBox">
+            <div id="speedStatus" class="speed-status" style="color:#ff3333">보통</div>
+            <input type="range" id="speedRange" min="0" max="3" value="2" step="1">
         </div>
     </div>
-
-    <div id="addonWrapper">
-        <div style="display: flex; gap: 30px; align-items: center; justify-content: center; width: 100%;">
-            <div id="addonContainer" class="killer-addon-container">
-                <div class="killer-img-container">
-                    <img src="" id="mainKillerImg" class="main-killer-img">
-                    <div id="mainKillerName" class="killer-name-display"></div>
-                </div>
-                <div style="display: flex; gap: 40px;">
-                    <div class="addon-slot-container">
-                        <div class="addon-slot" id="slot1"><img src="" id="adBg1" class="addon-bg-img"><img src="" id="adImg1" class="addon-img"></div>
-                        <div class="addon-name" id="adName1"></div>
-                    </div>
-                    <div class="addon-slot-container">
-                        <div class="addon-slot" id="slot2"><img src="" id="adBg2" class="addon-bg-img"><img src="" id="adImg2" class="addon-img"></div>
-                        <div class="addon-name" id="adName2"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="addonRightPanel" class="killer-list-panel">
-                <div style="display:flex; gap: 10px; margin-bottom: 12px;">
-                    <button id="btnRandomKiller" class="killer-list-btn random-btn" style="flex:2; margin:0; font-size: 15px; padding: 10px;">
-                        <span class="chk-box"></span> 다중 선택
-                    </button>
-                    <button id="btnSelectAllKillers" class="killer-list-btn" style="flex:1; padding: 10px; margin:0; font-size: 15px;">ALL</button>
-                </div>
-                <div id="killerListContainer" class="killer-scroll-list"></div>
-            </div>
-        </div>
-    </div>
-
-    <button id="btnSpin" class="start-btn killer-btn">START</button>
-    
-    <div class="speed-control" id="speedControlBox">
-        <div id="speedStatus" style="color:#ff3333">보통</div>
-        <input type="range" id="speedRange" min="0" max="3" value="2" step="1">
-    </div>
-    
-    <!-- 🔥 브라우저 캐시 강제 우회 (?v=260 추가) -->
-    <script src="js/library.js?v=260"></script>
-    <script src="js/updatenotes.js?v=260"></script>
-    <script src="js/dbdrandomperk.js?v=260"></script>
+    <script src="js/dbdrandomperk.js"></script>
 </body>
 </html>

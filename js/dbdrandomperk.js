@@ -9,6 +9,16 @@
 // ============================================================================
 const killerNameMap = typeof killers !== 'undefined' ? Object.fromEntries(killers.map(k => [k.id, k.name])) : {};
 
+const dbdBucket = {
+    currentMode: 'killer_perk',
+    isSpinning: false,
+    currentTierFilter: 'all',
+    currentSpunPerks: [],
+    isRandomKiller: false,
+    selectedKillers: ['trapper'],
+    spinTick: 0
+};
+
 function assignTiers(dataArray, tierDict) {
     if (!dataArray || !tierDict) return;
     dataArray.forEach(perk => {
@@ -24,14 +34,6 @@ function assignTiers(dataArray, tierDict) {
 
 if (typeof killerPerkData !== 'undefined' && typeof killerTiers !== 'undefined') assignTiers(killerPerkData, killerTiers);
 if (typeof survivorPerkData !== 'undefined' && typeof survivorTiers !== 'undefined') assignTiers(survivorPerkData, survivorTiers);
-
-let currentMode = 'killer_perk'; 
-let isSpinning = false;
-let currentTierFilter = 'all';
-let currentSpunPerks = [];
-let isRandomKiller = false;
-let selectedKillers = ['trapper'];
-let spinTick = 0;
 
 // ============================================================================
 // 2. 고성능 DOM 캐시 엔진
@@ -70,7 +72,7 @@ const DOM = {
 // 3. requestAnimationFrame 애니메이션 컨텍스트
 // ============================================================================
 const animationContext = {
-    activeSlots: new Map(), 
+    activeSlots: new Map(),
     lastTimes: {},        
     currentItems: {}      
 };
@@ -95,70 +97,74 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// 🔥 신규: 자물쇠 토글 기능
-window.toggleLock = function(idx) {
-    if (isSpinning) return;
-    if (currentMode === 'killer_addon') return; 
-    if (!currentSpunPerks[idx - 1]) return; // 빈 슬롯은 고정 불가
+// 내부 비즈니스 로직 함수로 변경 (인라인 바인딩 제거 목적)
+function toggleLock(idx) {
+    if (dbdBucket.isSpinning) return;
+    if (dbdBucket.currentMode === 'killer_addon') return; 
+    if (!dbdBucket.currentSpunPerks[idx - 1]) return; // 빈 슬롯은 고정 불가
     
     const card = DOM.get(`card${idx}`);
+    if (!card) return;
     
-    // CSS 클래스만 넣고 빼면 디자인(흑백/컬러)이 자동 적용됨
+    // CSS 클래스 토글을 통한 디자인 자동 제어
     if (card.classList.contains('locked')) {
         card.classList.remove('locked');
     } else {
         card.classList.add('locked');
     }
-};
+}
 
 function setTierFilter(val) {
-    if (isSpinning) return;
-    currentTierFilter = val;
+    if (dbdBucket.isSpinning) return;
+    dbdBucket.currentTierFilter = val;
     document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.remove('active'));
     const targetBtn = DOM.get('btnFilter_' + val);
     if (targetBtn) targetBtn.classList.add('active');
 }
 
 function toggleMode() {
-    if (isSpinning) return;
+    if (dbdBucket.isSpinning) return;
     const wrapperP = DOM.get('perkWrapper');
     const wrapperA = DOM.get('addonWrapper');
     
-    if (currentMode === 'killer_perk') {
-        currentMode = 'survivor_perk';
-        if (wrapperP) wrapperP.style.display = 'flex'; 
-        if (wrapperA) wrapperA.style.display = 'none';
-    } else if (currentMode === 'survivor_perk') {
-        currentMode = 'killer_addon';
-        if (wrapperP) wrapperP.style.display = 'none'; 
-        if (wrapperA) wrapperA.style.display = 'flex'; 
+    if (dbdBucket.currentMode === 'killer_perk') {
+        dbdBucket.currentMode = 'survivor_perk';
+        if (wrapperP) wrapperP.classList.remove('hide'); 
+        if (wrapperA) wrapperA.classList.add('hide');
+    } else if (dbdBucket.currentMode === 'survivor_perk') {
+        dbdBucket.currentMode = 'killer_addon';
+        if (wrapperP) wrapperP.classList.add('hide'); 
+        if (wrapperA) wrapperA.classList.remove('hide'); 
         renderKillerPicker();
     } else {
-        currentMode = 'killer_perk';
-        if (wrapperP) wrapperP.style.display = 'flex'; 
-        if (wrapperA) wrapperA.style.display = 'none';
+        dbdBucket.currentMode = 'killer_perk';
+        if (wrapperP) wrapperP.classList.remove('hide'); 
+        if (wrapperA) wrapperA.classList.add('hide');
     }
     updateInterface();
     resetSlots(true); // 모드 변경 시에는 모든 자물쇠 강제 초기화
 }
 
 function updateInterface() {
+    const wrapper = DOM.get('Wrapper');
     const h1 = DOM.get('headerTitle');
     const btn = DOM.get('btnSpin');
     const slider = DOM.get('speedRange');
     const status = DOM.get('speedStatus');
     const rightPanel = DOM.get('rightPanel');
     
-    document.body.className = currentMode === 'killer_perk' ? 'mode-killer' : 'mode-survivor';
+    wrapper.classList.remove('mode-killer','mode-survivor');
+    wrapper.classList.add('mode-killer');
+    if(dbdBucket.currentMode !== 'killer_perk') wrapper.classList.add('mode-survivor');
     
-    if (currentMode === 'killer_addon') {
+    if (dbdBucket.currentMode === 'killer_addon') {
         if (h1) { h1.innerText = "🟣 KILLER ADDON 🟣"; h1.style.color = "#E040FB"; }
         if (btn) btn.className = "start-btn addon-btn"; 
         if (status) { status.style.color = "#aaa"; status.innerText = "고정"; }
         if (slider) slider.disabled = true;
-        if (rightPanel) rightPanel.style.display = 'none'; 
+        if (rightPanel) rightPanel.classList.add('hide'); 
     } else {
-        const isKiller = currentMode === 'killer_perk';
+        const isKiller = dbdBucket.currentMode === 'killer_perk';
         if (h1) {
             h1.innerText = isKiller ? "🩸 KILLER PERK 🩸" : "🔹 SURVIVOR PERK 🔹";
             h1.style.color = isKiller ? "#ff3333" : "#4da6ff";
@@ -168,7 +174,7 @@ function updateInterface() {
         if (slider) slider.disabled = false; 
         updateSpeedText();
         
-        if (rightPanel) rightPanel.style.display = 'flex'; 
+        if (rightPanel) rightPanel.classList.remove('hide'); 
         document.querySelectorAll('.perk-bg').forEach(bg => {
             bg.src = isKiller ? "images/perk_bg.png" : "images/perk_bg_survivor.png";
         });
@@ -182,19 +188,19 @@ function resetSlots(forceAll = false) {
         scoreDisplay.innerText = '-';
         scoreDisplay.className = 'avg-score';
     }
-    
+
     animationContext.activeSlots.clear();
     animationContext.lastTimes = {};
     animationContext.currentItems = {};
     
     if (forceAll) {
-        currentSpunPerks = [];
+        dbdBucket.currentSpunPerks = [];
         for (let i = 1; i <= 4; i++) {
             const card = DOM.get(`card${i}`);
             if (card) card.classList.remove('locked');
         }
     }
-    
+
     for (let i = 1; i <= 4; i++) {
         const card = DOM.get(`card${i}`);
         const isLocked = !forceAll && card && card.classList.contains('locked');
@@ -223,12 +229,23 @@ function resetSlots(forceAll = false) {
     
     if (forceAll) {
         const killerImg = DOM.get('mainKillerImg');
-        if (killerImg) killerImg.classList.remove('spinning');
         const kName = DOM.get('mainKillerName');
-        if (kName && selectedKillers.length > 0) {
-            kName.innerText = killerNameMap[selectedKillers[0]] || '';
+        if (killerImg) killerImg.classList.remove('spinning');
+        if (kName && dbdBucket.selectedKillers.length > 0) {
+            kName.innerText = killerNameMap[dbdBucket.selectedKillers[0]] || '';
         }
     }
+}
+
+function handleImgError(img) { 
+    if (!img) return;
+    img.style.display = 'none'; 
+    if (img.parentElement) img.parentElement.classList.add('error-active'); 
+}
+function handleImgLoad(img) { 
+    if (!img) return;
+    if (img.parentElement) img.parentElement.classList.remove('error-active'); 
+    img.style.display = 'block'; 
 }
 
 // ============================================================================
@@ -242,7 +259,7 @@ function renderKillerPicker() {
     const fragment = document.createDocumentFragment();
     killers.forEach(k => {
         const btn = document.createElement('button');
-        btn.className = 'killer-list-btn killer-item-btn';
+        btn.className = 'killer-list-btn';
         btn.id = 'kbtn_' + k.id;
         btn.innerText = k.name;
         btn.onclick = () => selectKiller(k.id);
@@ -250,7 +267,7 @@ function renderKillerPicker() {
     });
     list.appendChild(fragment);
     
-    const initId = selectedKillers[0] || 'trapper';
+    const initId = dbdBucket.selectedKillers[0] || 'trapper';
     const initBtn = DOM.get('kbtn_' + initId);
     if (initBtn) initBtn.classList.add('active');
     
@@ -262,25 +279,25 @@ function renderKillerPicker() {
 }
 
 function selectAllKillers() {
-    if (isSpinning || typeof killers === 'undefined') return;
-    isRandomKiller = true;
+    if (dbdBucket.isSpinning || typeof killers === 'undefined') return;
+    dbdBucket.isRandomKiller = true;
     const rndBtn = DOM.get('btnRandomKiller');
     if (rndBtn) rndBtn.classList.add('active');
     
-    selectedKillers = killers.map(k => k.id);
-    document.querySelectorAll('.killer-item-btn').forEach(btn => btn.classList.add('active'));
+    dbdBucket.selectedKillers = killers.map(k => k.id);
+    document.querySelectorAll('.killer-list-btn').forEach(btn => btn.classList.add('active'));
 }
 
 function toggleRandomKiller() {
-    if (isSpinning) return;
-    isRandomKiller = !isRandomKiller;
+    if (dbdBucket.isSpinning) return;
+    dbdBucket.isRandomKiller = !dbdBucket.isRandomKiller;
     const rndBtn = DOM.get('btnRandomKiller');
-    if (rndBtn) rndBtn.classList.toggle('active', isRandomKiller);
+    if (rndBtn) rndBtn.classList.toggle('active', dbdBucket.isRandomKiller);
     
-    if (!isRandomKiller) {
-        const idToKeep = selectedKillers[0] || 'trapper';
-        selectedKillers = [idToKeep];
-        document.querySelectorAll('.killer-item-btn').forEach(btn => btn.classList.remove('active'));
+    if (!dbdBucket.isRandomKiller) {
+        const idToKeep = dbdBucket.selectedKillers[0] || 'trapper';
+        dbdBucket.selectedKillers = [idToKeep];
+        document.querySelectorAll('.killer-list-btn').forEach(btn => btn.classList.remove('active'));
         
         const keepBtn = DOM.get('kbtn_' + idToKeep);
         if (keepBtn) keepBtn.classList.add('active');
@@ -294,24 +311,24 @@ function toggleRandomKiller() {
 }
 
 function selectKiller(id) {
-    if (isSpinning) return;
+    if (dbdBucket.isSpinning) return;
     
-    if (isRandomKiller) {
-        const idx = selectedKillers.indexOf(id);
+    if (dbdBucket.isRandomKiller) {
+        const idx = dbdBucket.selectedKillers.indexOf(id);
         if (idx > -1) {
-            if (selectedKillers.length > 1) { 
-                selectedKillers.splice(idx, 1);
+            if (dbdBucket.selectedKillers.length > 1) { 
+                dbdBucket.selectedKillers.splice(idx, 1);
                 const targetBtn = DOM.get('kbtn_' + id);
                 if (targetBtn) targetBtn.classList.remove('active');
             }
         } else {
-            selectedKillers.push(id);
+            dbdBucket.selectedKillers.push(id);
             const targetBtn = DOM.get('kbtn_' + id);
             if (targetBtn) targetBtn.classList.add('active');
         }
     } else {
-        selectedKillers = [id];
-        document.querySelectorAll('.killer-item-btn').forEach(btn => btn.classList.remove('active'));
+        dbdBucket.selectedKillers = [id];
+        document.querySelectorAll('.killer-list-btn').forEach(btn => btn.classList.remove('active'));
         
         const targetBtn = DOM.get('kbtn_' + id);
         if (targetBtn) targetBtn.classList.add('active');
@@ -389,15 +406,15 @@ function loopAnimation(timestamp) {
         
         if (timestamp - animationContext.lastTimes[slotId] >= 45) {
             animationContext.lastTimes[slotId] = timestamp;
-            spinTick++;
+            dbdBucket.spinTick++;
 
             if (meta.type === 'perk') {
                 const idx = meta.index;
-                const data = currentMode === 'killer_perk' ? killerPerkData : survivorPerkData;
-                const path = currentMode === 'killer_perk' ? PATHS.PERK_K : PATHS.PERK_S;
+                const data = dbdBucket.currentMode === 'killer_perk' ? killerPerkData : survivorPerkData;
+                const path = dbdBucket.currentMode === 'killer_perk' ? PATHS.PERK_K : PATHS.PERK_S;
                 
                 if (data && data.length > 0) {
-                    const rnd = data[spinTick % Math.min(15, data.length)];
+                    const rnd = data[dbdBucket.spinTick % Math.min(15, data.length)];
                     if (rnd && animationContext.currentItems[slotId] !== rnd.file) {
                         animationContext.currentItems[slotId] = rnd.file;
                         const el = DOM.getPerkElements(idx);
@@ -411,18 +428,18 @@ function loopAnimation(timestamp) {
             } else if (meta.type === 'addon') {
                 const idx = meta.index;
                 let currentId = 'trapper';
-                if (isRandomKiller && selectedKillers.length > 0) {
-                    currentId = selectedKillers[Math.floor(Math.random() * selectedKillers.length)];
-                } else if (selectedKillers.length > 0) {
-                    currentId = selectedKillers[0];
+                if (dbdBucket.isRandomKiller && dbdBucket.selectedKillers.length > 0) {
+                    currentId = dbdBucket.selectedKillers[Math.floor(Math.random() * dbdBucket.selectedKillers.length)];
+                } else if (dbdBucket.selectedKillers.length > 0) {
+                    currentId = dbdBucket.selectedKillers[0];
                 }
                 
                 const spinData = (typeof killerAddons !== 'undefined' && killerAddons[currentId]) ? killerAddons[currentId] : []; 
                 const folderId = currentId === 'theFirst' ? 'theFirst' : currentId;
                 const spinPath = typeof PATHS !== 'undefined' ? `${PATHS.ADDON}${folderId}/` : '';
-                
+
                 if (spinData && spinData.length > 0) {
-                    const rnd = spinData[spinTick % Math.min(10, spinData.length)];
+                    const rnd = spinData[dbdBucket.spinTick % Math.min(10, spinData.length)];
                     if (rnd && animationContext.currentItems[slotId] !== rnd.file) {
                         animationContext.currentItems[slotId] = rnd.file;
                         const el = DOM.getAddonElements(idx);
@@ -436,7 +453,7 @@ function loopAnimation(timestamp) {
                     }
                 }
             } else if (meta.type === 'killer') {
-                const tempId = selectedKillers[Math.floor(Math.random() * selectedKillers.length)];
+                const tempId = dbdBucket.selectedKillers[Math.floor(Math.random() * dbdBucket.selectedKillers.length)];
                 if (animationContext.currentItems[slotId] !== tempId) {
                     animationContext.currentItems[slotId] = tempId;
                     
@@ -473,19 +490,19 @@ function stopRAF(slotId) {
 // 7. 메인 룰렛 제어 시퀀스 (🔥자물쇠 시스템 완벽 연동)
 // ============================================================================
 function startSequence() {
-    if (isSpinning) return;
-    isSpinning = true;
+    if (dbdBucket.isSpinning) return;
+    dbdBucket.isSpinning = true;
     
     const spinBtn = DOM.get('btnSpin');
     if (spinBtn) spinBtn.disabled = true;
     
     let activeData, path, type;
 
-    if (currentMode === 'killer_perk') { 
+    if (dbdBucket.currentMode === 'killer_perk') { 
         activeData = typeof killerPerkData !== 'undefined' ? killerPerkData : []; 
         path = typeof PATHS !== 'undefined' ? PATHS.PERK_K : ''; 
         type = 'perk'; 
-    } else if (currentMode === 'survivor_perk') { 
+    } else if (dbdBucket.currentMode === 'survivor_perk') { 
         activeData = typeof survivorPerkData !== 'undefined' ? survivorPerkData : []; 
         path = typeof PATHS !== 'undefined' ? PATHS.PERK_S : ''; 
         type = 'perk'; 
@@ -499,12 +516,12 @@ function startSequence() {
         const speedRangeEl = DOM.get('speedRange');
         const speedVal = speedRangeEl ? parseInt(speedRangeEl.value) : 2;
         const currentDelay = [0, 600, 1300, 2600][speedVal];
-        
+
         let lockedIndices = [];
         for (let i = 1; i <= 4; i++) {
             const card = DOM.get(`card${i}`);
             // 현재 카드가 고정(Lock)되어 있다면 명단에 추가하고 애니메이션을 돌리지 않음
-            if (card && card.classList.contains('locked') && currentSpunPerks[i - 1]) {
+            if (card && card.classList.contains('locked') && dbdBucket.currentSpunPerks[i - 1]) {
                 lockedIndices.push(i - 1);
             } else {
                 if (card) card.classList.add('spinning');
@@ -520,22 +537,22 @@ function startSequence() {
 
         setTimeout(() => {
             // 현재 고정되어 있는 퍽들의 이름을 추출하여 중복 방지 리스트 생성
-            let excludeNames = lockedIndices.map(idx => currentSpunPerks[idx].name);
+            let excludeNames = lockedIndices.map(idx => dbdBucket.currentSpunPerks[idx].name);
             let needed = 4 - lockedIndices.length; // 뽑아야 할 새로운 퍽 개수
             
-            let newPerks = getRandomPerks(activeData, currentTierFilter, needed, excludeNames);
+            let newPerks = getRandomPerks(activeData, dbdBucket.currentTierFilter, needed, excludeNames);
             
             // 기존 고정 퍽 + 새롭게 뽑힌 퍽 병합
             let nextSpunPerks = [];
             let newPerkIdx = 0;
             for (let i = 0; i < 4; i++) {
                 if (lockedIndices.includes(i)) {
-                    nextSpunPerks[i] = currentSpunPerks[i]; // 기존 퍽 유지
+                    nextSpunPerks[i] = dbdBucket.currentSpunPerks[i]; // 기존 퍽 유지
                 } else {
                     nextSpunPerks[i] = newPerks[newPerkIdx++]; // 새 퍽 할당
                 }
             }
-            currentSpunPerks = nextSpunPerks;
+            dbdBucket.currentSpunPerks = nextSpunPerks;
 
             // 새로 뽑힌 퍽만 프리로드
             newPerks.forEach(p => {
@@ -547,14 +564,14 @@ function startSequence() {
 
             if (speedVal === 0) { 
                 setTimeout(() => {
-                    unlockedIndices.forEach(idx => stopPerk(idx, currentSpunPerks[idx - 1], path));
+                    unlockedIndices.forEach(idx => stopPerk(idx, dbdBucket.currentSpunPerks[idx - 1], path));
                     finalize();
                 }, 500);
             } else { 
                 let currentStep = 0;
                 const stopSequentially = () => {
                     let idx = unlockedIndices[currentStep];
-                    stopPerk(idx, currentSpunPerks[idx - 1], path);
+                    stopPerk(idx, dbdBucket.currentSpunPerks[idx - 1], path);
                     currentStep++;
                     if (currentStep >= unlockedIndices.length) { 
                         finalize(); 
@@ -570,7 +587,7 @@ function startSequence() {
         // 애드온 모드는 고정 기능 없음
         let finalKillerId;
         
-        if (isRandomKiller && selectedKillers.length > 0) {
+        if (dbdBucket.isRandomKiller && dbdBucket.selectedKillers.length > 0) {
             const killerImg = DOM.get('mainKillerImg');
             if (killerImg) killerImg.classList.add('spinning');
             startRAF('killer', 'killer');
@@ -583,9 +600,9 @@ function startSequence() {
         }
 
         setTimeout(() => {
-            finalKillerId = isRandomKiller && selectedKillers.length > 0 
-                ? selectedKillers[Math.floor(Math.random() * selectedKillers.length)]
-                : (selectedKillers[0] || 'trapper');
+            finalKillerId = dbdBucket.isRandomKiller && dbdBucket.selectedKillers.length > 0 
+                ? dbdBucket.selectedKillers[Math.floor(Math.random() * dbdBucket.selectedKillers.length)]
+                : (dbdBucket.selectedKillers[0] || 'trapper');
             
             if (typeof PATHS !== 'undefined') {
                 new Image().src = `${PATHS.PORTRAIT}${finalKillerId}.webp`;
@@ -603,10 +620,10 @@ function startSequence() {
                 if (shuffled[1]) new Image().src = path + shuffled[1].file;
             }
 
-            let spinDuration = (isRandomKiller && selectedKillers.length > 1) ? 1200 : 700;
+            let spinDuration = (dbdBucket.isRandomKiller && dbdBucket.selectedKillers.length > 1) ? 1200 : 700;
 
             setTimeout(() => {
-                if (isRandomKiller && selectedKillers.length > 0) {
+                if (dbdBucket.isRandomKiller && dbdBucket.selectedKillers.length > 0) {
                     stopRAF('killer');
                     const killerImg = DOM.get('mainKillerImg');
                     if (killerImg) {
@@ -647,7 +664,7 @@ function stopPerk(idx, item, path) {
     
     if (el.card) {
         el.card.classList.remove('spinning'); 
-        el.card.classList.add('selected', currentMode);
+        el.card.classList.add('selected', dbdBucket.currentMode);
     }
 
     const tierNum = item.tier || 3;
@@ -673,20 +690,20 @@ function stopAddon(idx, item, path) {
 }
 
 function finalize() { 
-    isSpinning = false; 
+    dbdBucket.isSpinning = false; 
     const spinBtn = DOM.get('btnSpin');
     if (spinBtn) spinBtn.disabled = false; 
     
-    if (currentMode !== 'killer_addon' && currentSpunPerks && currentSpunPerks.length === 4) {
-        let avg = (Number(currentSpunPerks[0].tier || 3) + 
-                   Number(currentSpunPerks[1].tier || 3) + 
-                   Number(currentSpunPerks[2].tier || 3) + 
-                   Number(currentSpunPerks[3].tier || 3)) / 4;
+    if (dbdBucket.currentMode !== 'killer_addon' && dbdBucket.currentSpunPerks && dbdBucket.currentSpunPerks.length === 4) {
+        let avg = (Number(dbdBucket.currentSpunPerks[0].tier || 3) + 
+                   Number(dbdBucket.currentSpunPerks[1].tier || 3) + 
+                   Number(dbdBucket.currentSpunPerks[2].tier || 3) + 
+                   Number(dbdBucket.currentSpunPerks[3].tier || 3)) / 4;
                    
         const scoreDisplay = DOM.get('averageScoreDisplay');
         if (scoreDisplay) {
             scoreDisplay.innerText = avg.toFixed(2);
-            scoreDisplay.className = `avg-score show ${currentMode === 'killer_perk' ? 'killer-score' : 'survivor-score'}`;
+            scoreDisplay.className = `avg-score show ${dbdBucket.currentMode === 'killer_perk' ? 'killer-score' : 'survivor-score'}`;
         }
     }
 }
@@ -811,12 +828,11 @@ function validateData() {
 try {
     renderKillerPicker();
     updateInterface();
-    validateData(); 
     
     setTimeout(() => {
-        let preImgLoad = setInterval(() => {
-            if (typeof PATHS !== 'undefined' && typeof killers !== 'undefined') {
-                if (killers.length >= 40) {
+        preImgLoad = setInterval(() => {
+            if (typeof PATHS !== 'undefined' && typeof arrayKiller !== 'undefined') {
+                if (arrayKiller.length >= 40) {
                     clearInterval(preImgLoad);
                 }
             } else {
@@ -829,24 +845,25 @@ try {
 }
 
 // ============================================================================
-// 9. 동적 DOM 이벤트 핸들링 허브
+// 9. 동적 DOM 이벤트 핸들링 허브 (인라인 이벤트 이관)
 // ============================================================================
 window.addEventListener('DOMContentLoaded', () => {
-    
-    document.querySelectorAll('img').forEach(img => {
-        img.addEventListener('error', function() {
-            if (this.src) {
-                const filename = decodeURIComponent(this.src.substring(this.src.lastIndexOf('/') + 1));
-                if (filename && filename !== 'null' && filename !== 'undefined') {
-                    ErrorManager.addError(`이미지 파일 누락: ${filename}`);
-                }
-            }
-        });
-    });
+    // 9-0. 🔥 자물쇠(Lock) 동적 리스너 루프 바인딩
+    for (let i = 1; i <= 4; i++) {
+        // const lockBtn = DOM.get(`lock${i}`);
+        const lockBtn = DOM.get(`card${i}`);
+        if (lockBtn) {
+            lockBtn.addEventListener('click', () => {
+                toggleLock(i);
+            });
+        }
+    }
 
+    // 9-1. 헤더 타이틀 클릭 모드 변경
     const headerTitle = DOM.get('headerTitle');
     if (headerTitle) headerTitle.addEventListener('click', toggleMode);
 
+    // 9-2. 티어 필터 컨테이너 위임 처리 (이벤트 위임 패턴으로 가비지 감소)
     const filterContainer = DOM.get('tierFilterContainer');
     if (filterContainer) {
         filterContainer.addEventListener('click', (e) => {
@@ -878,4 +895,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const updateModalOverlay = DOM.get('updateModalOverlay');
     if (updateModalOverlay) updateModalOverlay.addEventListener('click', closeUpdateNotes);
+
+    const callKillerList = DOM.get('callKillerList');
+    const addonRightPanel = DOM.get('addonRightPanel');
+    if (callKillerList) callKillerList.addEventListener('click', () => {
+        addonRightPanel.classList.contains('active') ? addonRightPanel.classList.remove('active') : addonRightPanel.classList.add('active');
+    });
 });
