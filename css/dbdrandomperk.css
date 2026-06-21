@@ -152,15 +152,35 @@ h1:hover {
 }
 
 .perk-card.selected.killer_perk {
+    position: relative;
     border: 4px solid #ff1111;
     background: linear-gradient(180deg, rgba(60, 0, 0, 0.95) 0%, rgba(10, 0, 0, 1) 100%);
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(200, 0, 0, 0.5);
 }
 
 .perk-card.selected.survivor_perk {
+    position: relative;
     border: 4px solid #1166ff;
     background: linear-gradient(180deg, rgba(0, 20, 60, 0.95) 0%, rgba(0, 5, 10, 1) 100%);
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 100, 255, 0.5);
+}
+
+.perk-card.selected.killer_perk::before,
+.perk-card.selected.survivor_perk::before {
+    content:'';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    transition: background 500ms ease;
+}
+
+.perk-card.selected.killer_perk:hover::before,
+.perk-card.selected.survivor_perk:hover::before {
+    background-color: #ffffff34;
+    cursor: pointer;
 }
 
 .lock-btn {
@@ -169,7 +189,7 @@ h1:hover {
     right: 21px;
     width: 48px;
     height: 48px;
-    cursor: pointer;
+    /* cursor: pointer; */
     z-index: 20;
     opacity: 0.3;
     transition: 0.3s;
@@ -182,7 +202,7 @@ h1:hover {
     display: block;
 }
 
-.lock-btn:hover {
+.perk-card.selected.survivor_perk:hover .lock-btn {
     opacity: 0.8;
     transform: scale(1.1);
 }
@@ -737,8 +757,267 @@ input[type=range] {
     display: none;
 }
 
-@media screen and (max-width: 1279px) {
-    /* @media (aspect-ratio < 0.7) { */
+@media screen and (aspect-ratio > 0.69) and (aspect-ratio < 1.05) {
+    body>.wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    .perk-wrapper {
+        align-items: flex-start;
+        min-height: 50vh;
+    }
+    .perk-container {
+        width: 100vw;
+        padding: 0 5vw;
+        margin: 2vh 0;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1vw;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    .perk-card {
+        width: 21vw;
+        height: auto;
+        aspect-ratio: 0.69;
+    }
+    .perk-bg,
+    .perk-img {
+        width: 100%;
+        height: auto;
+        margin-top: 3vh;
+        top: 0;
+    }
+    .perk-name {
+        display: flex;
+        width: 100%;
+        height: auto;
+        padding: 0 10px;
+        margin-top: 10px;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        bottom: 3vh;
+        font-size: 1.2em;
+        font-weight: bold;
+        text-align: center;
+        line-height: 1.2;
+        color: #ccc;
+        z-index: 3;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+    }
+    .perk-category {
+        position: absolute;
+        bottom: 0.8vh;
+        font-size: 1em;
+        color: #777;
+        margin-top: 10px;
+        text-align: center;
+        z-index: 3;
+    }
+
+    .tier-icon-container {
+        width: 7vw;
+        height: 7vw;
+        top: 7px;
+        left: 7px;
+    }
+
+    .lock-btn {
+        width: 5vw;
+        height: 5vw;
+        top: 7px;
+        right: 7px;
+    }
+
+    .right-panel {
+        width: 100vw;
+        height: 18vh;
+        padding: 5vw;
+        position: initial;
+        left: 0;
+        bottom: 0;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-end;
+        align-self: end;
+        transform: translateY(5vh);
+        box-sizing: border-box;
+    }
+    .right-panel .tier-filter-container {
+        width: 80vw;
+        padding: 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        column-gap: 10px;
+        justify-content: center;
+        align-self: stretch;
+    }
+    .right-panel .tier-filter-container .filter-title {
+        /* display: flex; */
+        display: none;
+        width: 100vw;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.6rem;
+    }
+    .right-panel .tier-filter-container .tier-btn {
+        width: calc(100% / 5 - 10px);
+        font-size: 1.6rem;
+    }
+    .right-panel .score-container {
+        width: 20vw;
+    }
+    .right-panel .score-container .avg-score-title {
+        font-size: 1.4rem;
+    }
+    .right-panel .score-container .avg-score {
+        font-size: 2.2rem;
+    }
+
+    .addon-wrapper {
+        /* margin-top: 5vh; */
+    }
+
+    .addon-area {
+        /* padding-top: 3vh; */
+    }
+
+    .killer-addon-container {
+        width: 60vw;
+        padding: 2vh 0;
+        justify-content: flex-start;
+        background: none;
+        border: 0;
+    }
+
+    .killer-img-container {
+        width: 50%;
+        height: auto;
+        margin-top: 0;
+    }
+
+    .killer-img-container img {
+        width: 100%;
+        /* transform: translate(10%, -10%) scale(1.0); */
+        gap: 0;
+    }
+
+    .killer-name-display {
+        font-size: 1.6em;
+    }
+
+    .addon-slot-area {
+        display: flex; 
+        width: 40%;
+        padding: 3vh 0;
+        flex-direction: column;
+        gap: 0px;
+    }
+
+    .addon-slot-container {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .addon-slot {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        margin-bottom: 10px;
+    }
+
+    .addon-bg-img {
+
+    }
+
+    .addon-name {
+        font-size: 1.2em;
+        min-height: initial;
+        margin-top: 0;
+    }
+
+    .killer-list-panel {
+        width: 100vw;
+        position: absolute;
+        top: -11vh;
+        left: 0;
+        background-color: #0007;
+        transform: translate(100%);
+        transition: transform 300ms ease;
+        z-index: 10;
+    }
+
+    .killer-list-panel.active {
+        transform: translate(0%);
+    }
+
+    .killer-list-panel-call-btn {
+        position: relative;
+        margin-left: -15px;
+    }
+
+    .killer-list-panel-call-btn:before,
+    .killer-list-panel-call-btn:after {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        opacity: 0.75;
+        box-sizing: border-box;
+    }
+
+    .killer-list-panel-call-btn:before {
+        width: 50px;
+        height: 50px;
+        content: '';
+        transform: translate(-100%);
+        background-image:url('../images/callKillerList.webp');
+        background-position: center;
+        background-size: cover;
+        border: 4px solid #444;
+        border-radius: 12px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: 0;
+    }
+
+    .killer-list-panel-call-btn:after {
+        content: '×';
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 50px;
+        transform: translateY(-240%);
+    }
+
+    .chk-box {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #888;
+        border-radius: 3px;
+        transition: 0.2s;
+    }
+
+    .killer-scroll-list {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+    }
+
+    .killer-list-btn,
+    .killer-list-btn.all,
+    .killer-list-btn.random-btn {
+        font-size: 1.0em;
+    }
+
+}
+
+@media screen and (max-width: 1279px) and (aspect-ratio <= 0.61) {
     body>.wrapper {
         display: flex;
         flex-direction: column;
@@ -956,7 +1235,7 @@ input[type=range] {
         left: 0;
         background-color: #0007;
         transform: translate(100%);
-        transition: transform 500ms ease;
+        transition: transform 300ms ease;
         z-index: 10;
     }
 
@@ -986,6 +1265,8 @@ input[type=range] {
         background-size: cover;
         border: 4px solid #444;
         border-radius: 12px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
         border-right: 0;
     }
 
