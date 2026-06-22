@@ -757,6 +757,315 @@ input[type=range] {
     display: none;
 }
 
+@media screen and (min-width: 2559px) {
+    h1 {
+        margin-bottom: 6vh;
+        font-size: 6em;
+    }
+
+    .perk-container {
+        margin-bottom: 10vh;
+        gap: 3vw;
+    }
+
+    .perk-card {
+        width: 15vw;
+        height: auto; 
+        aspect-ratio: calc(275 / 400);
+    }
+
+    .perk-bg {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 5vh;
+        opacity: 0.7;
+        display: none;
+        z-index: 1;
+    }
+
+    .perk-img {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 5vh;
+        z-index: 2;
+        display: none;
+        object-fit: contain;
+    }
+
+    .perk-name {
+        display: flex;
+        width: 100%;
+        height: 70px;
+        padding: 0 10px;
+        margin: 0;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        bottom: 3vh;
+        color: #ccc;
+        text-align: center;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+        line-height: 1.2;
+        font-size: 2.2em;
+        font-weight: bold;
+        z-index: 3;
+    }
+
+    .perk-category {
+        position: absolute;
+        bottom: 1vh;
+        color: #777;
+        font-size: 1.6em;
+        text-align: center;
+        z-index: 3;
+    }
+
+    .tier-icon-container {
+        display: none;
+        width: 5vw;
+        height: auto;
+        aspect-ratio: 1/1;
+        top: 2vh;
+        left: 0.5vw;
+        z-index: 10;
+    }
+
+    .tier-icon-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: all 0.3s ease;
+    }
+
+    .lock-btn {
+        display: none;
+        width: 4vw;
+        height: auto;
+        aspect-ratio: 1/1;
+        top: 2vh;
+        right: 0.5vw;
+        object-fit: contain;
+        z-index: 20;
+    }
+
+    .right-panel {
+        width: 10vw;
+    }
+
+    .tier-filter-container {
+        gap: 1vh;
+    }
+
+    .filter-title {
+        font-size: 2em;
+    }
+
+    .tier-btn {
+        font-size: 2.4em;
+    }
+
+    .tier-btn:hover {
+        border-color: #444;
+        color: #888;
+    }
+
+    .avg-score-title {
+        font-size: 2em;
+    }
+
+    .avg-score {
+        font-size: 3.2em;
+    }
+
+    .addon-wrapper {
+        min-height: 50vh;
+        width: 100%;
+        position: relative;
+    }
+
+    .addon-area {
+        display: flex;
+        gap: 3vw;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .killer-addon-container {
+        display: flex;
+        width: 35vw;
+        padding: 2vh 2vw;
+        align-items: space-between;
+        gap: 0;
+        background: linear-gradient(145deg, rgba(20, 20, 20, 0.8), rgba(5, 5, 5, 0.8));
+        border: 4px solid #444;
+        border-radius: 20px;
+        box-sizing: border-box;
+    }
+
+    .killer-img-container {
+        display: flex;
+        width: 50%;
+        height: auto;
+        margin-top: -10vh;
+        aspect-ratio: calc(280 / 320);
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        flex-shrink: 0;
+        position: relative;
+        gap: 15px;
+    }
+
+    .main-killer-img {
+        min-width: 100%;
+        height: auto;
+        object-fit: contain;
+        filter: drop-shadow(0 0 20px rgba(255, 51, 51, 0.4));
+        transition: 0.1s;
+    }
+
+    .killer-name-display {
+        font-size: 3.5em;
+        font-weight: 900;
+    }
+
+    .addon-slot-area {
+        display: flex; 
+        width: 50%;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .addon-slot-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        flex-shrink: 0;
+        width: 280px;
+    }
+
+    .addon-slot {
+        width: 10vw;
+        height: auto;
+        aspect-ratio: 1/1;
+        border-radius: 12px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0a0a0a;
+        border: 3px solid #333;
+        box-shadow: inset 0 0 30px #000;
+        box-sizing: border-box;
+        transition: all 0.3s ease-out;
+        margin-bottom: 25px;
+    }
+
+    .addon-img,
+    .addon-bg-img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .addon-name {
+        font-size: 2em;
+    }
+
+    .addon-slot.selected {
+        border: 4px solid #E040FB;
+        box-shadow: inset 0 0 20px #000, 0 0 40px rgba(224, 64, 251, 0.5);
+        background: #1a001a;
+    }
+
+    .addon-slot.selected+.addon-name {
+        color: #E040FB;
+        text-shadow: 0 0 10px #E040FB;
+    }
+
+    .killer-list-panel {
+        width: 40vw;
+        height: auto;
+        background: rgba(10, 10, 10, 0.8);
+        border: 2px solid #2a2a2a;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        box-sizing: border-box;
+    }
+
+    .killer-list-top-area {
+        display: flex;
+        gap: 0.5vw;
+        margin-bottom: 0.5vw;
+    }
+
+    .killer-scroll-list {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5vw;
+        overflow: visible;
+    }
+
+    .killer-list-btn {
+        font-size: 2em;
+        padding: 1vh 2vw;
+    }
+
+    .random-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.1vw;
+        flex-shrink: 0;
+    }
+
+    .killer-list-btn.all {
+        flex: 1;
+        padding: 10px;
+        margin: 0;
+        font-size: 2em;
+    }
+
+    .killer-list-btn.random-btn {
+        flex: 2;
+        margin: 0;
+        font-size: 2em;
+        padding: 10px;
+        gap: 1vw;
+    }
+
+    .chk-box {
+        display: inline-block;
+        width: 1vw;
+        height: auto;
+        aspect-ratio: 1/1;
+        border: 2px solid #888;
+        border-radius: 3px;
+        transition: 0.2s;
+    }
+
+    .random-btn.active .chk-box {
+        background: #E040FB;
+        border-color: #E040FB;
+        box-shadow: 0 0 8px #E040FB;
+    }
+
+    button.start-btn {
+        padding: 1vh 5vw;
+        font-size: 5em;
+        border-radius: 50vh;
+    }
+}
+
 @media screen and (aspect-ratio > 0.69) and (aspect-ratio < 1.05) {
     body>.wrapper {
         display: flex;
@@ -1218,10 +1527,6 @@ input[type=range] {
         width: 100%;
         height: auto;
         aspect-ratio: 1;
-    }
-
-    .addon-bg-img {
-
     }
 
     .addon-name {
