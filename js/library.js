@@ -129,9 +129,9 @@ const killerPerkData = [
 
 /* STREAMING_CHUNK:Defining survivor perks... */
 const survivorPerkData = [
-    { name: "반대심문", file: "CrossExamination.webp", category: "셰인 위그와스" },
-    { name: "풀악셀", file: "WideOpenThrottle.webp", category: "셰인 위그와스" },
-    { name: "도움의 손길", file: "LendaHand.webp", category: "셰인 위그와스" },
+    { name: "반대심문", file: "crossExamination.webp", category: "셰인 위그와스" },
+    { name: "풀악셀", file: "wideOpenThrottle.webp", category: "셰인 위그와스" },
+    { name: "도움의 손길", file: "lendaHand.webp", category: "셰인 위그와스" },
     { name: "몰입 상태", file: "flowState.webp", category: "권태영" }, { name: "우리만의 공간", file: "aPlaceForUs.webp", category: "권태영" }, { name: "5수 앞", file: "fiveMovesAhead.webp", category: "권태영" },
     { name: "기도: 거미줄치기", file: "invocationWeavingSpiders.webp", category: "세이블 와드" }, { name: "그림자의 힘", file: "strengthInShadows.webp", category: "세이블 와드" }, { name: "사악함", file: "wicked.webp", category: "세이블 와드" },
     { name: "음유시인의 영감", file: "bardicInspiration.webp", category: "아스트리 야자르" }, { name: "반사된 환영", file: "mirroredIllusion.webp", category: "아스트리 야자르" }, { name: "고요한 시선", file: "stillSight.webp", category: "아스트리 야자르" },
