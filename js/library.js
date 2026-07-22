@@ -49,9 +49,9 @@ const survivors = [
 
 /* STREAMING_CHUNK:Defining killer perks... */
 const killerPerkData = [
-    { name: "주술: 죽음에 대한 공포", file: "hexScaredToDeath.webp", category: "슬래셔" },
-    { name: "침묵의 그림자", file: "silentShadow.webp", category: "고스트페이스" },
-    { name: "난동", file: "rampage.webp", category: "군단" },
+    { name: "주술: 죽음의 대한 공포", file: "hexScaredToDeath.webp", category: "슬래셔" },
+    { name: "고요한 그림자", file: "silentShadow.webp", category: "슬래셔" },
+    { name: "난동", file: "rampage.webp", category: "슬래셔" },
     { name: "시간 여행", file: "turnBackTheClock.webp", category: "역병" },
     { name: "비밀 프로젝트", file: "secretProject.webp", category: "닥터" },
     { name: "주술: 하이브 마인드", file: "hexHiveMind.webp", category: "해그" },
