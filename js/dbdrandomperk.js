@@ -1,7 +1,7 @@
 /**
  * Dead by Daylight Random Perk/Addon Generator
  * Optimized for High-Performance Rendering
- * V255 - Perk Lock (Pinning) System Added
+ * V265 - Chosung Multi-Select Filter & Lock System Combined + Auto Update Notes Popup + Filter Auto Reset
  */
 
 // ============================================================================
@@ -12,7 +12,9 @@ const killerNameMap = typeof killers !== 'undefined' ? Object.fromEntries(killer
 const dbdBucket = {
     currentMode: 'killer_perk',
     isSpinning: false,
+    currentFilterType: 'tier', // 'tier' 또는 'chosung'
     currentTierFilter: 'all',
+    currentChosungFilter: [], // 다중 선택을 위해 빈 배열로 초기화
     currentSpunPerks: [],
     isRandomKiller: false,
     selectedKillers: ['trapper'],
@@ -36,7 +38,43 @@ if (typeof killerPerkData !== 'undefined' && typeof killerTiers !== 'undefined')
 if (typeof survivorPerkData !== 'undefined' && typeof survivorTiers !== 'undefined') assignTiers(survivorPerkData, survivorTiers);
 
 // ============================================================================
-// 2. 고성능 DOM 캐시 엔진
+// 2. 초성 추출 및 데이터 전처리 엔진
+// ============================================================================
+function getCleanPerkName(name) {
+    const prefixes = ["주술: ", "재앙: ", "호재: ", "팀워크: ", "기도: "];
+    let cleanName = name;
+    for (let p of prefixes) {
+        if (cleanName.startsWith(p)) {
+            cleanName = cleanName.substring(p.length);
+            break;
+        }
+    }
+    return cleanName.trim();
+}
+
+function getChosung(name) {
+    let cleanName = getCleanPerkName(name);
+
+    const numToKor = { '0':'영', '1':'일', '2':'이', '3':'삼', '4':'사', '5':'오', '6':'육', '7':'칠', '8':'팔', '9':'구' };
+    cleanName = cleanName.replace(/[0-9]/g, match => numToKor[match]);
+
+    cleanName = cleanName.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
+
+    if (cleanName.length === 0) return '기타';
+
+    const firstChar = cleanName.charAt(0);
+    const code = firstChar.charCodeAt(0) - 44032;
+    
+    if (code > -1 && code < 11172) {
+        const chosungList = ['ㄱ', 'ㄱ', 'ㄴ', 'ㄷ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅂ', 'ㅅ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+        return chosungList[Math.floor(code / 588)];
+    }
+    
+    return '기타'; 
+}
+
+// ============================================================================
+// 3. 고성능 DOM 캐시 엔진
 // ============================================================================
 const DOM = {
     cache: new Map(),
@@ -69,7 +107,7 @@ const DOM = {
 };
 
 // ============================================================================
-// 3. requestAnimationFrame 애니메이션 컨텍스트
+// 4. requestAnimationFrame 애니메이션 컨텍스트
 // ============================================================================
 const animationContext = {
     activeSlots: new Map(),
@@ -78,7 +116,7 @@ const animationContext = {
 };
 
 // ============================================================================
-// 4. 이벤트 및 UI 유틸리티
+// 5. 이벤트 및 UI 유틸리티
 // ============================================================================
 window.addEventListener('DOMContentLoaded', () => {
     try {
@@ -97,16 +135,14 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// 내부 비즈니스 로직 함수로 변경 (인라인 바인딩 제거 목적)
 function toggleLock(idx) {
     if (dbdBucket.isSpinning) return;
     if (dbdBucket.currentMode === 'killer_addon') return; 
-    if (!dbdBucket.currentSpunPerks[idx - 1]) return; // 빈 슬롯은 고정 불가
+    if (!dbdBucket.currentSpunPerks[idx - 1]) return;
     
     const card = DOM.get(`card${idx}`);
     if (!card) return;
     
-    // CSS 클래스 토글을 통한 디자인 자동 제어
     if (card.classList.contains('locked')) {
         card.classList.remove('locked');
     } else {
@@ -122,8 +158,37 @@ function setTierFilter(val) {
     if (targetBtn) targetBtn.classList.add('active');
 }
 
+// 🔥 모드 전환 시 필터 강제 초기화 로직이 추가되었습니다.
 function toggleMode() {
     if (dbdBucket.isSpinning) return;
+    
+    // [1] 필터 상태 변수 초기화
+    dbdBucket.currentFilterType = 'tier';
+    dbdBucket.currentTierFilter = 'all';
+    dbdBucket.currentChosungFilter = [];
+    
+    // [2] 탭 UI 및 내용 패널 초기화 (티어 탭으로 원복)
+    const tabTier = DOM.get('tabTier');
+    const tabChosung = DOM.get('tabChosung');
+    const tierContainer = DOM.get('tierFilterContainer');
+    const chosungContainer = DOM.get('chosungFilterContainer');
+    
+    if (tabTier && tabChosung && tierContainer && chosungContainer) {
+        tabTier.classList.add('active');
+        tabChosung.classList.remove('active');
+        tierContainer.classList.remove('hide');
+        chosungContainer.classList.add('hide');
+    }
+
+    // [3] 티어 버튼 UI 초기화 ('ALL 랜덤'으로 원복)
+    document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.remove('active'));
+    const allTierBtn = DOM.get('btnFilter_all');
+    if (allTierBtn) allTierBtn.classList.add('active');
+
+    // [4] 초성 버튼 UI 초기화 (선택 해제)
+    document.querySelectorAll('.cho-grid .cho-btn').forEach(btn => btn.classList.remove('active'));
+
+    // [5] 모드 변경 실행
     const wrapperP = DOM.get('perkWrapper');
     const wrapperA = DOM.get('addonWrapper');
     
@@ -141,8 +206,9 @@ function toggleMode() {
         if (wrapperP) wrapperP.classList.remove('hide'); 
         if (wrapperA) wrapperA.classList.add('hide');
     }
+    
     updateInterface();
-    resetSlots(true); // 모드 변경 시에는 모든 자물쇠 강제 초기화
+    resetSlots(true);
 }
 
 function updateInterface() {
@@ -175,13 +241,13 @@ function updateInterface() {
         updateSpeedText();
         
         if (rightPanel) rightPanel.classList.remove('hide'); 
+        
         document.querySelectorAll('.perk-bg').forEach(bg => {
             bg.src = isKiller ? "images/perk_bg.png" : "images/perk_bg_survivor.png";
         });
     }
 }
 
-// 🔥 수정: 자물쇠가 걸린 카드는 지우지 않도록 방어
 function resetSlots(forceAll = false) {
     const scoreDisplay = DOM.get('averageScoreDisplay');
     if (scoreDisplay) {
@@ -237,19 +303,8 @@ function resetSlots(forceAll = false) {
     }
 }
 
-function handleImgError(img) { 
-    if (!img) return;
-    img.style.display = 'none'; 
-    if (img.parentElement) img.parentElement.classList.add('error-active'); 
-}
-function handleImgLoad(img) { 
-    if (!img) return;
-    if (img.parentElement) img.parentElement.classList.remove('error-active'); 
-    img.style.display = 'block'; 
-}
-
 // ============================================================================
-// 5. 살인마 데이터 조작 및 셔플 알고리즘
+// 6. 살인마 데이터 조작 및 셔플 필터링 알고리즘
 // ============================================================================
 function renderKillerPicker() {
     const list = DOM.get('killerListContainer');
@@ -351,52 +406,72 @@ function shuffleArray(array) {
     return array;
 }
 
-// 🔥 수정: 필요한 만큼만 뽑고, 이미 뽑힌 퍽은 제외하는 알고리즘
-function getRandomPerks(data, filterVal, needed = 4, excludeNames = []) {
+// -------------------------------------------------------------
+// 핵심 로직: 다중 초성 필터 배열 검사 반영
+// -------------------------------------------------------------
+function getRandomPerks(data, needed = 4, excludeNames = []) {
     let availableData = data.filter(p => !excludeNames.includes(p.name));
     if (!availableData || availableData.length === 0) return [];
     
-    if (filterVal === 'all') {
+    // [1] 초성 필터가 켜져있는 경우 (배열에 값이 있을 때만 필터 적용)
+    if (dbdBucket.currentFilterType === 'chosung') {
+        if (dbdBucket.currentChosungFilter.length > 0) {
+            availableData = availableData.filter(p => {
+                const cho = getChosung(p.name);
+                return dbdBucket.currentChosungFilter.includes(cho);
+            });
+        }
         return shuffleArray([...availableData]).slice(0, needed);
     }
+    
+    // [2] 티어 필터가 켜져있는 경우
+    if (dbdBucket.currentFilterType === 'tier' && dbdBucket.currentTierFilter !== 'all') {
+        const pools = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+        availableData.forEach(p => { if (pools[p.tier]) pools[p.tier].push(p); });
 
-    const pools = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-    availableData.forEach(p => { if (pools[p.tier]) pools[p.tier].push(p); });
+        let minSum = 0, maxSum = 20, targetTiers = [];
+        if (dbdBucket.currentTierFilter === '4') { minSum = 16; maxSum = 20; targetTiers = [3, 4, 4, 5, 5]; }
+        else if (dbdBucket.currentTierFilter === '3') { minSum = 12; maxSum = 15; targetTiers = [2, 3, 3, 4, 4]; }
+        else if (dbdBucket.currentTierFilter === '2') { minSum = 8; maxSum = 11; targetTiers = [1, 2, 2, 3, 3]; }
+        else if (dbdBucket.currentTierFilter === '1') { minSum = 4; maxSum = 7; targetTiers = [1, 1, 2]; }
 
-    let minSum = 0, maxSum = 20, targetTiers = [];
-    if (filterVal === '4') { minSum = 16; maxSum = 20; targetTiers = [3, 4, 4, 5, 5]; }
-    else if (filterVal === '3') { minSum = 12; maxSum = 15; targetTiers = [2, 3, 3, 4, 4]; }
-    else if (filterVal === '2') { minSum = 8; maxSum = 11; targetTiers = [1, 2, 2, 3, 3]; }
-    else if (filterVal === '1') { minSum = 4; maxSum = 7; targetTiers = [1, 1, 2]; }
+        if (needed < 4) {
+            let validPool = [];
+            targetTiers.forEach(t => { if(pools[t]) validPool.push(...pools[t]); });
+            validPool = [...new Set(validPool)];
+            return shuffleArray(validPool).slice(0, needed);
+        }
 
-    for (let attempts = 0; attempts < 2000; attempts++) {
-        let selectedTiers = Array.from({ length: 4 }, () => targetTiers[Math.floor(Math.random() * targetTiers.length)]);
-        let sum = selectedTiers.reduce((a, b) => a + b, 0);
-        
-        if (sum >= minSum && sum <= maxSum) {
-            let combo = [];
-            let usedIndices = { 1: new Set(), 2: new Set(), 3: new Set(), 4: new Set(), 5: new Set() };
-            let isValid = true;
+        for (let attempts = 0; attempts < 2000; attempts++) {
+            let selectedTiers = Array.from({ length: 4 }, () => targetTiers[Math.floor(Math.random() * targetTiers.length)]);
+            let sum = selectedTiers.reduce((a, b) => a + b, 0);
             
-            for (let t of selectedTiers) {
-                let pool = pools[t];
-                if (!pool || pool.length === 0 || usedIndices[t].size >= pool.length) {
-                    isValid = false; 
-                    break;
+            if (sum >= minSum && sum <= maxSum) {
+                let combo = [];
+                let usedIndices = { 1: new Set(), 2: new Set(), 3: new Set(), 4: new Set(), 5: new Set() };
+                let isValid = true;
+                
+                for (let t of selectedTiers) {
+                    let pool = pools[t];
+                    if (!pool || pool.length === 0 || usedIndices[t].size >= pool.length) {
+                        isValid = false; 
+                        break;
+                    }
+                    let r;
+                    do { r = Math.floor(Math.random() * pool.length); } while (usedIndices[t].has(r));
+                    usedIndices[t].add(r);
+                    combo.push(pool[r]);
                 }
-                let r;
-                do { r = Math.floor(Math.random() * pool.length); } while (usedIndices[t].has(r));
-                usedIndices[t].add(r);
-                combo.push(pool[r]);
+                if (isValid) return combo.slice(0, needed);
             }
-            if (isValid) return combo.slice(0, needed);
         }
     }
+    
     return shuffleArray([...availableData]).slice(0, needed);
 }
 
 // ============================================================================
-// 6. 최적화된 고성능 통합 애니메이션 엔진 (rAF 기반)
+// 7. 최적화된 고성능 통합 애니메이션 엔진 (rAF 기반)
 // ============================================================================
 function loopAnimation(timestamp) {
     if (animationContext.activeSlots.size === 0) return;
@@ -487,7 +562,7 @@ function stopRAF(slotId) {
 }
 
 // ============================================================================
-// 7. 메인 룰렛 제어 시퀀스 (🔥자물쇠 시스템 완벽 연동)
+// 8. 메인 룰렛 제어 시퀀스
 // ============================================================================
 function startSequence() {
     if (dbdBucket.isSpinning) return;
@@ -510,7 +585,7 @@ function startSequence() {
         type = 'addon'; 
     }
 
-    resetSlots(false); // false를 전달하여 자물쇠가 걸린 슬롯은 보존함
+    resetSlots(false); 
 
     if (type === 'perk') {
         const speedRangeEl = DOM.get('speedRange');
@@ -520,53 +595,60 @@ function startSequence() {
         let lockedIndices = [];
         for (let i = 1; i <= 4; i++) {
             const card = DOM.get(`card${i}`);
-            // 현재 카드가 고정(Lock)되어 있다면 명단에 추가하고 애니메이션을 돌리지 않음
             if (card && card.classList.contains('locked') && dbdBucket.currentSpunPerks[i - 1]) {
                 lockedIndices.push(i - 1);
-            } else {
+            }
+        }
+
+        if (lockedIndices.length === 4) {
+            finalize();
+            return;
+        }
+        
+        let excludeNames = lockedIndices.map(idx => dbdBucket.currentSpunPerks[idx].name);
+        let needed = 4 - lockedIndices.length; 
+        
+        let newPerks = getRandomPerks(activeData, needed, excludeNames);
+        
+        if (newPerks.length === 0) {
+            alert("선택한 조건(필터)에 해당하는 퍽이 더 이상 존재하지 않습니다.\n옵션을 변경하거나 고정(Lock)을 해제해주세요.");
+            finalize();
+            return;
+        }
+
+        if (newPerks.length < needed) {
+            alert(`해당 초성/조건에 맞는 퍽이 ${newPerks.length}개 뿐입니다.\n부족한 슬롯은 비워진 상태로 표시됩니다.`);
+        }
+
+        for (let i = 1; i <= 4; i++) {
+            const card = DOM.get(`card${i}`);
+            if (!lockedIndices.includes(i - 1)) {
                 if (card) card.classList.add('spinning');
                 startRAF(`p${i}`, 'perk', i);
             }
         }
 
-        // 만약 4개가 전부 다 잠겨있다면 그냥 종료
-        if (lockedIndices.length === 4) {
-            finalize();
-            return;
+        let nextSpunPerks = [];
+        let newPerkIdx = 0;
+        for (let i = 0; i < 4; i++) {
+            if (lockedIndices.includes(i)) {
+                nextSpunPerks[i] = dbdBucket.currentSpunPerks[i]; 
+            } else {
+                nextSpunPerks[i] = newPerks[newPerkIdx++] || null; 
+            }
         }
+        dbdBucket.currentSpunPerks = nextSpunPerks;
+
+        newPerks.forEach(p => {
+            if (p) new Image().src = path + p.file;
+        });
+
+        let unlockedIndices = [1, 2, 3, 4].filter(i => !lockedIndices.includes(i - 1));
 
         setTimeout(() => {
-            // 현재 고정되어 있는 퍽들의 이름을 추출하여 중복 방지 리스트 생성
-            let excludeNames = lockedIndices.map(idx => dbdBucket.currentSpunPerks[idx].name);
-            let needed = 4 - lockedIndices.length; // 뽑아야 할 새로운 퍽 개수
-            
-            let newPerks = getRandomPerks(activeData, dbdBucket.currentTierFilter, needed, excludeNames);
-            
-            // 기존 고정 퍽 + 새롭게 뽑힌 퍽 병합
-            let nextSpunPerks = [];
-            let newPerkIdx = 0;
-            for (let i = 0; i < 4; i++) {
-                if (lockedIndices.includes(i)) {
-                    nextSpunPerks[i] = dbdBucket.currentSpunPerks[i]; // 기존 퍽 유지
-                } else {
-                    nextSpunPerks[i] = newPerks[newPerkIdx++]; // 새 퍽 할당
-                }
-            }
-            dbdBucket.currentSpunPerks = nextSpunPerks;
-
-            // 새로 뽑힌 퍽만 프리로드
-            newPerks.forEach(p => {
-                if (p) new Image().src = path + p.file;
-            });
-
-            // 스핀을 멈출 슬롯(고정되지 않은 슬롯)들의 인덱스만 추림
-            let unlockedIndices = [1, 2, 3, 4].filter(i => !lockedIndices.includes(i - 1));
-
             if (speedVal === 0) { 
-                setTimeout(() => {
-                    unlockedIndices.forEach(idx => stopPerk(idx, dbdBucket.currentSpunPerks[idx - 1], path));
-                    finalize();
-                }, 500);
+                unlockedIndices.forEach(idx => stopPerk(idx, dbdBucket.currentSpunPerks[idx - 1], path));
+                finalize();
             } else { 
                 let currentStep = 0;
                 const stopSequentially = () => {
@@ -584,7 +666,6 @@ function startSequence() {
         }, 10);
 
     } else {
-        // 애드온 모드는 고정 기능 없음
         let finalKillerId;
         
         if (dbdBucket.isRandomKiller && dbdBucket.selectedKillers.length > 0) {
@@ -654,12 +735,23 @@ function startSequence() {
 
 function stopPerk(idx, item, path) {
     stopRAF(`p${idx}`);
-    if (!item) return;
-
     const el = DOM.getPerkElements(idx);
+    
+    if (!item) {
+        if (el.img) el.img.style.display = 'none';
+        if (el.bg) el.bg.style.display = 'none';
+        if (el.name) { el.name.innerText = '없음'; el.name.style.color = '#555'; }
+        if (el.cat) el.cat.innerText = '-';
+        if (el.card) {
+            el.card.classList.remove('spinning');
+            el.card.classList.remove('selected', 'killer_perk', 'survivor_perk');
+        }
+        if (el.tierBox) el.tierBox.style.display = 'none';
+        return;
+    }
 
     if (el.img) { el.img.src = path + item.file; el.img.style.display = 'block'; }
-    if (el.name) el.name.innerText = item.name;
+    if (el.name) { el.name.innerText = item.name; el.name.style.color = '#ccc'; }
     if (el.cat) el.cat.innerText = item.category;
     
     if (el.card) {
@@ -695,15 +787,18 @@ function finalize() {
     if (spinBtn) spinBtn.disabled = false; 
     
     if (dbdBucket.currentMode !== 'killer_addon' && dbdBucket.currentSpunPerks && dbdBucket.currentSpunPerks.length === 4) {
-        let avg = (Number(dbdBucket.currentSpunPerks[0].tier || 3) + 
-                   Number(dbdBucket.currentSpunPerks[1].tier || 3) + 
-                   Number(dbdBucket.currentSpunPerks[2].tier || 3) + 
-                   Number(dbdBucket.currentSpunPerks[3].tier || 3)) / 4;
-                   
+        let validPerks = dbdBucket.currentSpunPerks.filter(p => p !== null);
         const scoreDisplay = DOM.get('averageScoreDisplay');
         if (scoreDisplay) {
-            scoreDisplay.innerText = avg.toFixed(2);
-            scoreDisplay.className = `avg-score show ${dbdBucket.currentMode === 'killer_perk' ? 'killer-score' : 'survivor-score'}`;
+            if (validPerks.length > 0) {
+                let sum = validPerks.reduce((acc, p) => acc + Number(p.tier || 3), 0);
+                let avg = sum / validPerks.length;
+                scoreDisplay.innerText = avg.toFixed(2);
+                scoreDisplay.className = `avg-score show ${dbdBucket.currentMode === 'killer_perk' ? 'killer-score' : 'survivor-score'}`;
+            } else {
+                scoreDisplay.innerText = '-';
+                scoreDisplay.className = 'avg-score';
+            }
         }
     }
 }
@@ -718,9 +813,6 @@ function updateSpeedText() {
     status.innerText = texts[val] || "보통";
 }
 
-// ============================================================================
-// 8. 모달 제어 및 🔥에러 매니저 탑재
-// ============================================================================
 function openUpdateNotes() {
     const modal = DOM.get('updateModalOverlay');
     if (modal) modal.classList.add('show');
@@ -742,115 +834,20 @@ function closeUpdateNotes(event) {
     }
 }
 
-document.addEventListener('keydown', function(event) {
-    if (event.key === "Escape") {
-        const modal = DOM.get('updateModalOverlay');
-        if (modal && modal.classList.contains('show')) {
-            closeUpdateNotes();
-        }
-    }
-});
-
-const ErrorManager = {
-    logs: new Set(),
-    addError(msg) {
-        this.logs.add(msg);
-        this.renderButton();
-    },
-    renderButton() {
-        const infoArea = document.querySelector('.bottom-info-area');
-        if (!infoArea) return;
-        let btn = document.getElementById('dataErrorBtn');
-        if (this.logs.size > 0 && !btn) {
-            btn = document.createElement('button');
-            btn.id = 'dataErrorBtn';
-            btn.innerHTML = '🚨 DATA ERROR';
-            btn.style.cssText = 'background: #ff3333; color: white; border: none; padding: 5px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px; font-size: 11px; animation: blink 1s infinite;';
-            btn.onclick = () => alert("🚨 발견된 오류 내역 🚨\n\n" + Array.from(this.logs).join('\n'));
-            infoArea.appendChild(btn);
-            
-            if (!document.getElementById('blinkStyle')) {
-                const style = document.createElement('style');
-                style.id = 'blinkStyle';
-                style.innerHTML = `@keyframes blink { 50% { opacity: 0.5; } }`;
-                document.head.appendChild(style);
-            }
-        }
-    }
-};
-
-function validateData() {
-    let kCount = typeof killers !== 'undefined' ? killers.length : 0;
-    let sCount = typeof survivors !== 'undefined' ? survivors.length : 0;
-    let kpCount = typeof killerPerkData !== 'undefined' ? killerPerkData.length : 0;
-    let spCount = typeof survivorPerkData !== 'undefined' ? survivorPerkData.length : 0;
-    let adCount = 0;
-    
-    if (typeof killerAddons !== 'undefined') {
-        killers.forEach(k => {
-            const addons = killerAddons[k.id];
-            if (!addons) ErrorManager.addError(`[${k.name}] 애드온 누락`);
-            else {
-                adCount += addons.length;
-                if (addons.length !== 20) ErrorManager.addError(`[${k.name}] 애드온 개수 불일치(${addons.length}개)`);
-            }
-        });
-    }
-
-    const validKillerCategories = [...Object.values(killerNameMap), "공용 퍽"];
-    if (typeof killerPerkData !== 'undefined') {
-        killerPerkData.forEach(p => {
-            if (!validKillerCategories.includes(p.category)) ErrorManager.addError(`[킬러 퍽: ${p.name}] 카테고리명(${p.category}) 오타`);
-        });
-    }
-
-    const validSurvivorCategories = [...Object.values(survivorNameMap), "공용 퍽"];
-    if (typeof survivorPerkData !== 'undefined') {
-        survivorPerkData.forEach(p => {
-            if (!validSurvivorCategories.includes(p.category)) ErrorManager.addError(`[생존자 퍽: ${p.name}] 카테고리명(${p.category}) 오타`);
-        });
-    }
-
-    const infoArea = document.querySelector('.bottom-info-area');
-    if (infoArea) {
-        const dataDash = document.createElement('div');
-        dataDash.style.fontSize = '11px';
-        dataDash.style.color = 'rgba(255,255,255,0.3)';
-        dataDash.style.marginTop = '5px';
-        dataDash.innerText = `K:${kCount} | S:${sCount} | KP:${kpCount} | SP:${spCount} | AD:${adCount}`;
-        infoArea.appendChild(dataDash);
-    }
-    
-    ErrorManager.renderButton(); 
-}
-
 // 진입점 초기화 실행
 try {
     renderKillerPicker();
     updateInterface();
-    
-    setTimeout(() => {
-        preImgLoad = setInterval(() => {
-            if (typeof PATHS !== 'undefined' && typeof arrayKiller !== 'undefined') {
-                if (arrayKiller.length >= 40) {
-                    clearInterval(preImgLoad);
-                }
-            } else {
-                clearInterval(preImgLoad);
-            }
-        }, 500);
-    }, 1000);
 } catch (e) {
     console.error("UI 초기화 구성 도중 에러가 발견되었습니다:", e);
 }
 
 // ============================================================================
-// 9. 동적 DOM 이벤트 핸들링 허브 (인라인 이벤트 이관)
+// 9. 동적 DOM 이벤트 핸들링 허브
 // ============================================================================
 window.addEventListener('DOMContentLoaded', () => {
-    // 9-0. 🔥 자물쇠(Lock) 동적 리스너 루프 바인딩
+    // 9-0. 자물쇠(Lock) 동적 리스너 루프 바인딩
     for (let i = 1; i <= 4; i++) {
-        // const lockBtn = DOM.get(`lock${i}`);
         const lockBtn = DOM.get(`card${i}`);
         if (lockBtn) {
             lockBtn.addEventListener('click', () => {
@@ -863,10 +860,36 @@ window.addEventListener('DOMContentLoaded', () => {
     const headerTitle = DOM.get('headerTitle');
     if (headerTitle) headerTitle.addEventListener('click', toggleMode);
 
-    // 9-2. 티어 필터 컨테이너 위임 처리 (이벤트 위임 패턴으로 가비지 감소)
-    const filterContainer = DOM.get('tierFilterContainer');
-    if (filterContainer) {
-        filterContainer.addEventListener('click', (e) => {
+    // 9-2. 우측 탭 스위치 로직 연동
+    const tabTier = DOM.get('tabTier');
+    const tabChosung = DOM.get('tabChosung');
+    const tierContainer = DOM.get('tierFilterContainer');
+    const chosungContainer = DOM.get('chosungFilterContainer');
+    
+    if (tabTier && tabChosung) {
+        tabTier.addEventListener('click', () => {
+            if (dbdBucket.isSpinning) return;
+            dbdBucket.currentFilterType = 'tier';
+            tabTier.classList.add('active');
+            tabChosung.classList.remove('active');
+            tierContainer.classList.remove('hide');
+            chosungContainer.classList.add('hide');
+        });
+        
+        tabChosung.addEventListener('click', () => {
+            if (dbdBucket.isSpinning) return;
+            dbdBucket.currentFilterType = 'chosung';
+            tabChosung.classList.add('active');
+            tabTier.classList.remove('active');
+            chosungContainer.classList.remove('hide');
+            tierContainer.classList.add('hide');
+        });
+    }
+
+    // 9-3. 티어 및 초성 버튼 클릭 위임 처리
+    if (tierContainer) {
+        tierContainer.addEventListener('click', (e) => {
+            if (dbdBucket.isSpinning) return;
             const targetBtn = e.target.closest('.tier-btn');
             if (targetBtn) {
                 const tierVal = targetBtn.getAttribute('data-tier');
@@ -874,6 +897,40 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    if (chosungContainer) {
+        chosungContainer.addEventListener('click', (e) => {
+            if (dbdBucket.isSpinning) return;
+            const targetBtn = e.target.closest('.cho-btn');
+            
+            if (targetBtn && !targetBtn.classList.contains('disabled-btn')) {
+                if (targetBtn.classList.contains('clear-btn')) {
+                    dbdBucket.currentChosungFilter = [];
+                    document.querySelectorAll('.cho-grid .cho-btn').forEach(btn => btn.classList.remove('active'));
+                } else {
+                    const choVal = targetBtn.getAttribute('data-cho');
+                    if (choVal) {
+                        targetBtn.classList.toggle('active');
+                        
+                        if (targetBtn.classList.contains('active')) {
+                            if (!dbdBucket.currentChosungFilter.includes(choVal)) {
+                                dbdBucket.currentChosungFilter.push(choVal);
+                            }
+                        } else {
+                            dbdBucket.currentChosungFilter = dbdBucket.currentChosungFilter.filter(v => v !== choVal);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // 9-4. 나머지 이벤트 바인딩
+    const btnUpdateNotes = DOM.get('btnUpdateNotes');
+    if (btnUpdateNotes) btnUpdateNotes.addEventListener('click', openUpdateNotes);
+
+    const watermarkBtn = DOM.get('watermarkBtn');
+    if (watermarkBtn) watermarkBtn.addEventListener('click', openUpdateNotes);
 
     const btnRandomKiller = DOM.get('btnRandomKiller');
     if (btnRandomKiller) btnRandomKiller.addEventListener('click', toggleRandomKiller);
@@ -887,9 +944,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const speedRange = DOM.get('speedRange');
     if (speedRange) speedRange.addEventListener('input', updateSpeedText);
 
-    const btnUpdateNotes = DOM.get('btnUpdateNotes');
-    if (btnUpdateNotes) btnUpdateNotes.addEventListener('click', openUpdateNotes);
-
     const btnCloseModal = DOM.get('btnCloseModal');
     if (btnCloseModal) btnCloseModal.addEventListener('click', closeUpdateNotes);
 
@@ -901,4 +955,16 @@ window.addEventListener('DOMContentLoaded', () => {
     if (callKillerList) callKillerList.addEventListener('click', () => {
         addonRightPanel.classList.contains('active') ? addonRightPanel.classList.remove('active') : addonRightPanel.classList.add('active');
     });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            const modal = DOM.get('updateModalOverlay');
+            if (modal && modal.classList.contains('show')) {
+                closeUpdateNotes();
+            }
+        }
+    });
+
+    // 페이지 진입 시 업데이트 노트 자동 출력
+    openUpdateNotes();
 });

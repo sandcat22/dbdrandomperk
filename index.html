@@ -19,14 +19,11 @@
     <div id="Wrapper" class="wrapper mode-killer">
         <div class="bottom-info-area">
             <button class="update-notes-btn" id="btnUpdateNotes">UPDATE NOTES</button>
-            <div class="watermark">
-                Made By SANDCATS<br>
-                (V265)<br>
-                2026-07-03
+            <div class="watermark" id="watermarkBtn" title="업데이트 노트 보기">
+                Made By SANDCATS
             </div>
         </div>
 
-        <!-- inline style="display:none;"을 제거하여 CSS 우선순위 해결 -->
         <div class="modal-overlay" id="updateModalOverlay">
             <div class="modal-content" id="updateModalContent">
                 <div class="modal-header">
@@ -70,8 +67,12 @@
             </div>
             
             <div id="rightPanel" class="right-panel">
+                <div class="filter-tab-container">
+                    <div id="tabTier" class="filter-tab active">티어 필터</div>
+                    <div id="tabChosung" class="filter-tab">초성 필터</div>
+                </div>
+
                 <div class="tier-filter-container" id="tierFilterContainer">
-                    <div class="filter-title">티어 필터</div>
                     <button class="tier-btn active" id="btnFilter_all" data-tier="all">ALL 랜덤</button>
                     <button class="tier-btn" id="btnFilter_4" data-tier="4">4점대 퍽</button>
                     <button class="tier-btn" id="btnFilter_3" data-tier="3">3점대 퍽</button>
@@ -79,6 +80,27 @@
                     <button class="tier-btn" id="btnFilter_1" data-tier="1">1점대 퍽</button>
                 </div>
                 
+                <div class="tier-filter-container hide" id="chosungFilterContainer">
+                    <div class="cho-grid">
+                        <button class="cho-btn" data-cho="ㄱ">ㄱ</button>
+                        <button class="cho-btn" data-cho="ㄴ">ㄴ</button>
+                        <button class="cho-btn" data-cho="ㄷ">ㄷ</button>
+                        <button class="cho-btn" data-cho="ㄹ">ㄹ</button>
+                        <button class="cho-btn" data-cho="ㅁ">ㅁ</button>
+                        <button class="cho-btn" data-cho="ㅂ">ㅂ</button>
+                        <button class="cho-btn" data-cho="ㅅ">ㅅ</button>
+                        <button class="cho-btn" data-cho="ㅇ">ㅇ</button>
+                        <button class="cho-btn" data-cho="ㅈ">ㅈ</button>
+                        <button class="cho-btn" data-cho="ㅊ">ㅊ</button>
+                        <button class="cho-btn" data-cho="ㅋ">ㅋ</button>
+                        <button class="cho-btn" data-cho="ㅌ">ㅌ</button>
+                        <button class="cho-btn" data-cho="ㅍ">ㅍ</button>
+                        <button class="cho-btn" data-cho="ㅎ">ㅎ</button>
+                        <div class="cho-btn disabled-btn">·</div>
+                    </div>
+                    <button class="cho-btn clear-btn" id="btnChoClear">선택 초기화 (CLEAR)</button>
+                </div>
+
                 <div class="score-container">
                     <div class="avg-score-title">티어점수</div>
                     <div id="averageScoreDisplay" class="avg-score">-</div>
