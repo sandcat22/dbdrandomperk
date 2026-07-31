@@ -1,4 +1,4 @@
-const updateNotesText = `패치 노트 | V265
+const updateNotesText = `패치 노트 | V265 2026-07-31
 
 ■ 신규 기능
 - 초성 필터 기능 추가
