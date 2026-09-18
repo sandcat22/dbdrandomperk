@@ -9,8 +9,17 @@
 // ============================================================================
 const killerNameMap = typeof killers !== 'undefined' ? Object.fromEntries(killers.map(k => [k.id, k.name])) : {};
 
+function getUrlMode() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const mode = params.get('mode');
+        if (['killer_perk', 'survivor_perk', 'killer_addon'].includes(mode)) return mode;
+    } catch(e) {}
+    return 'killer_perk';
+}
+
 const dbdBucket = {
-    currentMode: 'killer_perk',
+    currentMode: getUrlMode(),
     isSpinning: false,
     currentFilterType: 'tier', // 'tier' 또는 'chosung'
     currentTierFilter: 'all',
@@ -836,7 +845,18 @@ function closeUpdateNotes(event) {
 
 // 진입점 초기화 실행
 try {
-    renderKillerPicker();
+    if (dbdBucket.currentMode === 'killer_addon') {
+        const wrapperP = DOM.get('perkWrapper');
+        const wrapperA = DOM.get('addonWrapper');
+        if (wrapperP) wrapperP.classList.add('hide');
+        if (wrapperA) wrapperA.classList.remove('hide');
+        renderKillerPicker();
+    } else if (dbdBucket.currentMode === 'survivor_perk') {
+        const wrapperP = DOM.get('perkWrapper');
+        const wrapperA = DOM.get('addonWrapper');
+        if (wrapperP) wrapperP.classList.remove('hide');
+        if (wrapperA) wrapperA.classList.add('hide');
+    }
     updateInterface();
 } catch (e) {
     console.error("UI 초기화 구성 도중 에러가 발견되었습니다:", e);
@@ -965,6 +985,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 페이지 진입 시 업데이트 노트 자동 출력
-    openUpdateNotes();
+    // 페이지 진입 시 업데이트 노트 자동 출력 (nomodal 파라미터가 있는 경우 스킵)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.has('nomodal')) {
+        openUpdateNotes();
+    }
 });

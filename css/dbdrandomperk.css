@@ -1,20 +1,23 @@
 html,
 body {
-    display: flex;
+    width: 100%;
+    min-height: 100%;
     margin: 0;
     padding: 0;
-    justify-content: center;
-    align-items: center;
     background-color: #000;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    -webkit-text-size-adjust: 100%;
 }
 
 body>.wrapper {
     display: flex;
     flex-direction: column;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
     margin: 0;
-    padding: 0;
+    padding: 20px 16px;
+    box-sizing: border-box;
     align-items: center;
     justify-content: center;
     color: #ffffff;
@@ -25,7 +28,8 @@ body>.wrapper {
     background-repeat: no-repeat;
     background-color: rgba(0, 0, 0, 0.85);
     background-blend-mode: overlay;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     transition: background-color 0.5s;
 }
 
@@ -48,8 +52,9 @@ h1:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    min-height: 500px;
+    flex-direction: row;
+    gap: 35px;
+    min-height: 440px;
     width: 100%;
     position: relative;
 }
@@ -218,14 +223,12 @@ h1:hover {
 }
 
 .right-panel {
-    position: absolute;
-    right: 50px;
-    top: 50%;
-    transform: translateY(-50%);
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 140px;
+    flex-shrink: 0;
 }
 
 .filter-tab-container {
@@ -450,7 +453,7 @@ body>.wrapper.mode-survivor .cho-btn.active {
     gap: 15px;
 }
 
-.main-killer-img {
+.main-killer-img, .mainKillerImg {
     width: 100%;
     height: 260px;
     object-fit: contain;
@@ -458,7 +461,7 @@ body>.wrapper.mode-survivor .cho-btn.active {
     transition: 0.1s;
 }
 
-.main-killer-img.spinning {
+.main-killer-img.spinning, .mainKillerImg.spinning {
     filter: blur(4px) grayscale(70%);
     transform: scale(0.95);
     opacity: 0.7;
@@ -475,7 +478,7 @@ body>.wrapper.mode-survivor .cho-btn.active {
     transition: 0.1s;
 }
 
-.main-killer-img.spinning~.killer-name-display {
+.main-killer-img.spinning~.killer-name-display, .mainKillerImg.spinning~.killer-name-display {
     filter: blur(2px);
     opacity: 0.7;
 }
@@ -552,6 +555,8 @@ body>.wrapper.mode-survivor .cho-btn.active {
 .killer-list-panel {
     width: 580px;
     height: auto;
+    max-height: 490px;
+    overflow-y: auto;
     background: rgba(10, 10, 10, 0.8);
     border: 2px solid #2a2a2a;
     border-radius: 12px;
@@ -560,6 +565,26 @@ body>.wrapper.mode-survivor .cho-btn.active {
     padding: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
     box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #555 rgba(10, 10, 10, 0.6);
+}
+
+.killer-list-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.killer-list-panel::-webkit-scrollbar-track {
+    background: rgba(10, 10, 10, 0.6);
+    border-radius: 4px;
+}
+
+.killer-list-panel::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+.killer-list-panel::-webkit-scrollbar-thumb:hover {
+    background: #E040FB;
 }
 
 .killer-list-top-area {
@@ -773,8 +798,9 @@ input[type=range] {
 .modal-content {
     background: linear-gradient(145deg, #151515, #0a0a0a);
     border: 3px solid #8e24aa;
-    width: 700px;
-    max-height: 80vh;
+    width: min(92vw, 700px);
+    max-height: 85vh;
+    max-height: 85dvh;
     border-radius: 12px;
     box-shadow: 0 0 50px rgba(142, 36, 170, 0.5);
     display: flex;
@@ -851,15 +877,613 @@ input[type=range] {
 }
 
 /* ==============================================================
-   🔥 2560x1440 (2K / 1440p) 해상도 완벽 1.33배 스케일링 대응 
+   🎯 통합 반응형 시스템: 4K UHD, 2K QHD, FHD, 랩탑, 세로(피벗/모바일/태블릿) 완벽 대응
    ============================================================== */
-@media screen and (min-width: 2400px) {
+
+/* --------------------------------------------------------------
+   1. 📱 세로 모드 전용 레이아웃 (스마트폰, 태블릿, 피벗 세로 모니터 전 기종)
+   (orientation: portrait) 및 정사각형에 가까운 화면(aspect-ratio <= 1.05) 대응
+   -------------------------------------------------------------- */
+@media screen and (orientation: portrait), screen and (max-aspect-ratio: 105/100) {
+    body>.wrapper {
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: clamp(15px, 3vh, 35px) clamp(10px, 3vw, 24px) 70px clamp(10px, 3vw, 24px);
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    h1 {
+        font-size: clamp(28px, 6.2vw, 52px);
+        margin: 5px 0 clamp(12px, 2.5vh, 25px) 0;
+        letter-spacing: clamp(2px, 0.5vw, 4px);
+    }
+
+    /* 4개 퍽 카드 2x2 반응형 격자 배치 */
+    .perk-wrapper {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: auto;
+        width: 100%;
+        gap: clamp(12px, 2vh, 22px);
+    }
+
+    .perk-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: clamp(10px, 2.5vw, 20px);
+        width: min(94vw, 580px);
+        max-width: 580px;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
+    .perk-card {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 0.70;
+        border-width: clamp(2px, 0.6vw, 4px);
+        border-radius: clamp(8px, 1.8vw, 14px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.85);
+        padding: 6px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .perk-bg,
+    .perk-img {
+        width: 70%;
+        height: auto;
+        aspect-ratio: 1;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 0;
+        position: absolute;
+    }
+
+    .perk-name {
+        position: absolute;
+        bottom: clamp(18px, 4.5vw, 28px);
+        left: 0;
+        width: 100%;
+        height: clamp(38px, 9vw, 54px);
+        margin-top: 0;
+        padding: 0 8px;
+        font-size: clamp(13px, 3.5vw, 20px);
+        line-height: 1.2;
+        word-break: keep-all;
+        box-sizing: border-box;
+    }
+
+    .perk-category {
+        position: absolute;
+        bottom: clamp(4px, 1vw, 8px);
+        left: 0;
+        width: 100%;
+        font-size: clamp(10px, 2.4vw, 13px);
+        margin-top: 0;
+    }
+
+    .tier-icon-container {
+        width: clamp(34px, 8.5vw, 52px);
+        height: clamp(34px, 8.5vw, 52px);
+        top: clamp(6px, 1.5vw, 10px);
+        left: clamp(6px, 1.5vw, 10px);
+    }
+
+    .lock-btn {
+        width: clamp(28px, 7vw, 44px);
+        height: clamp(28px, 7vw, 44px);
+        top: clamp(8px, 2vw, 14px);
+        right: clamp(8px, 2vw, 14px);
+    }
+
+    /* 세로 모드 우측 패널 (2x2 카드 아래로 자연스럽게 이동) */
+    .right-panel {
+        position: static;
+        transform: none;
+        width: min(94vw, 580px);
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filter-tab-container {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    .filter-tab {
+        padding: 8px 0;
+        font-size: clamp(13px, 3.2vw, 16px);
+    }
+
+    .tier-filter-container {
+        flex-direction: row;
+        width: 100%;
+        gap: 6px;
+        justify-content: space-between;
+    }
+
+    .tier-btn {
+        flex: 1;
+        padding: 10px 2px;
+        font-size: clamp(11px, 2.7vw, 14px);
+        white-space: nowrap;
+    }
+
+    .cho-grid {
+        grid-template-columns: repeat(7, 1fr);
+        width: 100%;
+        gap: 4px;
+        margin-top: 4px;
+    }
+
+    .cho-btn {
+        padding: 8px 0;
+        font-size: clamp(12px, 3vw, 15px);
+    }
+
+    .cho-btn.clear-btn {
+        grid-column: span 7;
+        margin-top: 4px;
+        padding: 8px 0;
+        font-size: clamp(12px, 3vw, 14px);
+    }
+
+    .score-container {
+        width: 100%;
+        margin-top: 4px;
+        padding: 8px 12px;
+        min-height: 52px;
+        flex-direction: row;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .avg-score-title {
+        font-size: clamp(12px, 2.8vw, 15px);
+        margin-bottom: 0;
+    }
+
+    .avg-score {
+        font-size: clamp(24px, 5.5vw, 34px);
+    }
+
+    button.start-btn {
+        margin-top: clamp(14px, 2.5vh, 26px);
+        width: min(88vw, 440px);
+        padding: clamp(12px, 2.2vh, 18px) 0;
+        font-size: clamp(22px, 5.2vw, 34px);
+        border-radius: 50px;
+    }
+
+    .speed-control {
+        width: min(75vw, 280px);
+        margin-top: 10px;
+    }
+
+    .speed-status {
+        font-size: clamp(16px, 3.8vw, 22px);
+        margin-bottom: 6px;
+    }
+
+    .bottom-info-area {
+        position: static;
+        margin-top: 24px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .watermark {
+        font-size: 13px;
+    }
+
+    .update-notes-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    /* 애드온 모드 세로 배치 */
+    .addon-wrapper {
+        min-height: auto;
+        width: 100%;
+    }
+
+    .addon-area {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .killer-addon-container {
+        flex-direction: column;
+        width: min(94vw, 580px);
+        padding: clamp(12px, 2.5vh, 22px);
+        gap: 12px;
+        border-radius: 16px;
+    }
+
+    .killer-img-container {
+        width: 100%;
+        height: auto;
+        max-height: 240px;
+        gap: 8px;
+    }
+
+    .main-killer-img, .mainKillerImg {
+        height: clamp(140px, 22vh, 200px);
+    }
+
+    .killer-name-display {
+        font-size: clamp(18px, 4vw, 24px);
+        min-height: 28px;
+    }
+
+    .addon-slot-area {
+        flex-direction: row;
+        gap: 12px;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .addon-slot-container {
+        width: calc(50% - 6px);
+    }
+
+    .addon-slot {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        margin-bottom: 8px;
+    }
+
+    .addon-img {
+        width: 80%;
+        height: 80%;
+    }
+
+    .addon-name {
+        font-size: clamp(12px, 2.8vw, 16px);
+        min-height: 40px;
+        margin-top: 4px;
+    }
+
+    .killer-list-panel {
+        width: min(94vw, 580px);
+        max-height: 45vh;
+        overflow-y: auto;
+        padding: 12px;
+    }
+
+    .killer-scroll-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+
+    .killer-list-btn {
+        font-size: clamp(11px, 2.6vw, 13px);
+        padding: 8px 2px;
+    }
+
+    .killer-list-top-area {
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+}
+
+/* --------------------------------------------------------------
+   2. 🖥️ 대형 피벗(세로 회전) 모니터 (1080x1920, 1440x2560, 2160x3840 4K 세로)
+   세로 모드이면서 화면 너비가 768px 이상인 고해상도 환경
+   -------------------------------------------------------------- */
+@media screen and (orientation: portrait) and (min-width: 768px),
+       screen and (max-aspect-ratio: 105/100) and (min-width: 768px) {
+    .perk-container {
+        width: min(90vw, 840px);
+        max-width: 840px;
+        gap: 22px;
+    }
+
+    .perk-card {
+        aspect-ratio: 0.70;
+        border-radius: 16px;
+    }
+
+    .perk-name {
+        font-size: clamp(20px, 2.6vw, 30px);
+        bottom: 30px;
+        height: 60px;
+    }
+
+    .perk-category {
+        font-size: clamp(14px, 1.8vw, 18px);
+        bottom: 8px;
+    }
+
+    .tier-icon-container {
+        width: clamp(55px, 6.5vw, 75px);
+        height: clamp(55px, 6.5vw, 75px);
+    }
+
+    .lock-btn {
+        width: clamp(45px, 5.5vw, 65px);
+        height: clamp(45px, 5.5vw, 65px);
+    }
+
+    .right-panel {
+        width: min(90vw, 840px);
+        max-width: 840px;
+    }
+
+    .tier-btn {
+        padding: 14px 4px;
+        font-size: 16px;
+    }
+
+    .cho-btn {
+        padding: 11px 0;
+        font-size: 16px;
+    }
+
+    .killer-addon-container {
+        width: min(90vw, 840px);
+        max-width: 840px;
+    }
+
+    .killer-list-panel {
+        width: min(90vw, 840px);
+        max-width: 840px;
+    }
+
+    .killer-scroll-list {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+}
+
+/* 4K 피벗 세로 모니터 초고해상도 (너비 1400px 이상 세로) */
+@media screen and (orientation: portrait) and (min-width: 1400px),
+       screen and (max-aspect-ratio: 105/100) and (min-width: 1400px) {
+    h1 {
+        font-size: 76px;
+        margin-bottom: 30px;
+    }
+    .perk-container {
+        width: min(85vw, 1200px);
+        max-width: 1200px;
+        gap: 35px;
+    }
+    .perk-name {
+        font-size: 38px;
+        bottom: 40px;
+        height: 85px;
+    }
+    .perk-category {
+        font-size: 24px;
+        bottom: 12px;
+    }
+    .tier-icon-container {
+        width: 100px;
+        height: 100px;
+    }
+    .lock-btn {
+        width: 75px;
+        height: 75px;
+    }
+    .right-panel {
+        width: min(85vw, 1200px);
+        max-width: 1200px;
+    }
+    .tier-btn {
+        padding: 18px 6px;
+        font-size: 22px;
+    }
+    .cho-btn {
+        padding: 14px 0;
+        font-size: 20px;
+    }
+    button.start-btn {
+        width: 600px;
+        font-size: 44px;
+        padding: 22px 0;
+    }
+}
+
+/* --------------------------------------------------------------
+   3. 💻 랩탑 및 일반 해상도 가로 모드 (1024px ~ 1520px 및 900p / 768p 디스플레이)
+   우측 패널과 4개 카드의 충돌 방지 및 적응형 축소
+   -------------------------------------------------------------- */
+@media screen and (min-aspect-ratio: 105/100) and (max-width: 1540px),
+       screen and (min-aspect-ratio: 105/100) and (max-height: 850px) {
+    body>.wrapper {
+        padding: 12px 10px;
+    }
+
+    h1 {
+        font-size: 42px;
+        margin-bottom: 12px;
+    }
+
+    .perk-wrapper {
+        gap: 20px;
+        min-height: 330px;
+    }
+
+    .perk-container {
+        gap: 16px;
+    }
+
+    .perk-card {
+        width: 215px;
+        height: 320px;
+        border-width: 3px;
+        border-radius: 10px;
+    }
+
+    .perk-bg,
+    .perk-img {
+        width: 160px;
+        height: 160px;
+        top: 25px;
+    }
+
+    .perk-name {
+        font-size: 19px;
+        margin-top: 205px;
+        height: 56px;
+        padding: 0 8px;
+    }
+
+    .perk-category {
+        font-size: 13px;
+    }
+
+    .tier-icon-container {
+        width: 52px;
+        height: 52px;
+        top: 8px;
+        left: 8px;
+    }
+
+    .lock-btn {
+        width: 38px;
+        height: 38px;
+        top: 14px;
+        right: 14px;
+    }
+
+    .right-panel {
+        width: 125px;
+    }
+
+    .filter-tab {
+        padding: 6px 0;
+        font-size: 12px;
+    }
+
+    .tier-btn {
+        padding: 9px 0;
+        font-size: 13px;
+    }
+
+    .cho-btn {
+        padding: 6px 0;
+        font-size: 11px;
+    }
+
+    .score-container {
+        margin-top: 10px;
+        padding: 8px 4px;
+        min-height: 65px;
+    }
+
+    .avg-score-title {
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+
+    .avg-score {
+        font-size: 26px;
+    }
+
+    button.start-btn {
+        margin-top: 16px;
+        padding: 12px 65px;
+        font-size: 24px;
+    }
+
+    .speed-control {
+        width: 170px;
+        margin-top: 10px;
+    }
+
+    .speed-status {
+        font-size: 17px;
+        margin-bottom: 6px;
+    }
+
+    /* 애드온 모드 랩탑 최적화 */
+    .killer-addon-container {
+        padding: 18px 25px;
+        gap: 20px;
+    }
+
+    .killer-img-container {
+        width: 210px;
+        height: 250px;
+    }
+
+    .main-killer-img, .mainKillerImg {
+        height: 200px;
+    }
+
+    .killer-name-display {
+        font-size: 18px;
+    }
+
+    .addon-slot-area {
+        gap: 25px;
+    }
+
+    .addon-slot-container {
+        width: 200px;
+    }
+
+    .addon-slot {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 15px;
+    }
+
+    .addon-img {
+        width: 140px;
+        height: 140px;
+    }
+
+    .addon-name {
+        font-size: 16px;
+        min-height: 40px;
+    }
+
+    .killer-list-panel {
+        width: 480px;
+        padding: 12px;
+    }
+
+    .killer-scroll-list {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+
+    .killer-list-btn {
+        font-size: 11px;
+        padding: 7px 2px;
+    }
+}
+
+/* --------------------------------------------------------------
+   4. 📺 2K QHD (2560x1440) 가로 모드 (2200px ~ 2999px) 1.33배 스케일링
+   -------------------------------------------------------------- */
+@media screen and (min-aspect-ratio: 105/100) and (max-aspect-ratio: 2/1) and (min-width: 2200px) and (max-width: 2999px) {
     h1 {
         margin-bottom: 27px;
         font-size: 80px;
     }
     .perk-wrapper {
-        min-height: 666px;
+        min-height: 560px;
+        gap: 45px;
     }
     .perk-container {
         gap: 47px;
@@ -871,11 +1495,7 @@ input[type=range] {
         border-radius: 16px;
         box-shadow: 0 16px 33px rgba(0, 0, 0, 0.9);
     }
-    .perk-bg {
-        width: 280px;
-        height: 280px;
-        top: 47px;
-    }
+    .perk-bg,
     .perk-img {
         width: 280px;
         height: 280px;
@@ -903,7 +1523,6 @@ input[type=range] {
         right: 28px;
     }
     .right-panel {
-        right: 66px;
         width: 186px;
     }
     .filter-tab-container {
@@ -917,10 +1536,6 @@ input[type=range] {
     }
     .tier-filter-container {
         gap: 11px;
-    }
-    .filter-title {
-        font-size: 18px;
-        margin-bottom: 3px;
     }
     .tier-btn {
         padding: 16px 0;
@@ -938,9 +1553,6 @@ input[type=range] {
         border-width: 3px;
         border-radius: 5px;
     }
-    .cho-btn.clear-btn {
-        margin-top: 7px;
-    }
     .score-container {
         margin-top: 20px;
         padding: 20px 7px;
@@ -956,83 +1568,82 @@ input[type=range] {
         font-size: 42px;
     }
     .killer-addon-container {
-        padding: 33px 47px;
-        gap: 40px;
+        padding: 26px 36px;
+        gap: 32px;
         border-width: 5px;
-        border-radius: 26px;
+        border-radius: 24px;
     }
     .killer-img-container {
-        width: 373px;
-        height: 426px;
-        gap: 20px;
+        width: 320px;
+        height: 380px;
+        gap: 16px;
     }
-    .main-killer-img {
-        height: 346px;
+    .main-killer-img, .mainKillerImg {
+        height: 310px;
     }
     .killer-name-display {
-        font-size: 29px;
-        min-height: 40px;
+        font-size: 26px;
+        min-height: 36px;
     }
     .addon-slot-area {
-        gap: 53px;
+        gap: 40px;
     }
     .addon-slot-container {
-        width: 373px;
+        width: 320px;
     }
     .addon-slot {
-        width: 333px;
-        height: 333px;
+        width: 290px;
+        height: 290px;
         border-width: 4px;
         border-radius: 16px;
-        margin-bottom: 33px;
+        margin-bottom: 24px;
     }
     .addon-img {
-        width: 266px;
-        height: 266px;
-    }
-    .addon-bg-img {
-        border-radius: 12px;
+        width: 230px;
+        height: 230px;
     }
     .addon-name {
-        font-size: 26px;
-        min-height: 66px;
-        margin-top: 20px;
+        font-size: 23px;
+        min-height: 58px;
+        margin-top: 16px;
     }
     .killer-list-panel {
         width: 773px;
+        max-height: 500px;
+        overflow-y: auto;
         border-width: 3px;
         border-radius: 16px;
-        padding: 20px;
+        padding: 18px 20px;
+        scrollbar-width: thin;
+        scrollbar-color: #555 rgba(10, 10, 10, 0.6);
     }
     .killer-list-top-area {
         gap: 13px;
         margin-bottom: 16px;
     }
     .killer-scroll-list {
-        gap: 11px;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 9px;
     }
     .killer-list-btn {
-        padding: 13px 5px;
+        padding: 11px 4px;
         border-width: 2px;
         border-radius: 8px;
-        font-size: 17px;
+        font-size: 15px;
     }
-    .random-btn {
-        gap: 11px;
+    .killer-list-panel::-webkit-scrollbar {
+        width: 8px;
     }
-    .killer-list-btn.all {
-        padding: 13px;
-        font-size: 20px;
-    }
-    .killer-list-btn.random-btn {
-        font-size: 20px;
-        padding: 13px;
-    }
-    .chk-box {
-        width: 18px;
-        height: 18px;
-        border-width: 3px;
+    .killer-list-panel::-webkit-scrollbar-track {
+        background: rgba(10, 10, 10, 0.6);
         border-radius: 4px;
+    }
+    .killer-list-panel::-webkit-scrollbar-thumb {
+        background: #444;
+        border-radius: 4px;
+    }
+    .killer-list-panel::-webkit-scrollbar-thumb:hover {
+        background: #E040FB;
     }
     button.start-btn {
         margin-top: 40px;
@@ -1067,16 +1678,11 @@ input[type=range] {
         border-width: 4px;
         border-radius: 16px;
     }
-    .modal-header {
-        padding: 20px 26px;
-        border-bottom-width: 3px;
-    }
     .modal-title {
         font-size: 26px;
     }
     .close-modal {
         font-size: 37px;
-        margin-top: -6px;
     }
     .modal-body {
         padding: 33px;
@@ -1084,166 +1690,518 @@ input[type=range] {
     }
 }
 
-/* ==============================================================
-   이하 기존 반응형 레이아웃 대응 (수정 없음)
-   ============================================================== */
-@media screen and (aspect-ratio > 0.69) and (aspect-ratio < 1.05) {
+/* --------------------------------------------------------------
+   5. 🚀 4K UHD (3840x2160 및 3000px 이상 초대형 디스플레이) 완벽 1.85배 스케일링
+   -------------------------------------------------------------- */
+@media screen and (min-aspect-ratio: 105/100) and (max-aspect-ratio: 2/1) and (min-width: 3000px) and (min-height: 1700px),
+       screen and (min-aspect-ratio: 2/1) and (min-width: 4800px) and (min-height: 1700px) {
     body>.wrapper {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        align-items: center;
-        justify-content: flex-start;
+        padding: 40px 30px;
     }
-    .perk-wrapper { align-items: flex-start; min-height: 50vh; }
+    h1 {
+        margin-bottom: 35px;
+        font-size: 110px;
+        letter-spacing: 8px;
+    }
+    .perk-wrapper {
+        min-height: 780px;
+        gap: 60px;
+    }
     .perk-container {
-        width: 100vw;
-        padding: 0 5vw;
-        margin: 2vh 0;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        gap: 1vw;
-        box-sizing: border-box;
-        overflow: hidden;
+        gap: 55px;
     }
-    .perk-card { width: 21vw; height: auto; aspect-ratio: 0.69; }
-    .perk-bg, .perk-img { width: 100%; height: auto; margin-top: 3vh; top: 0; }
+    .perk-card {
+        width: 510px;
+        height: 740px;
+        border-width: 7px;
+        border-radius: 22px;
+        box-shadow: 0 22px 48px rgba(0, 0, 0, 0.95);
+    }
+    .perk-bg,
+    .perk-img {
+        width: 390px;
+        height: 390px;
+        top: 60px;
+    }
     .perk-name {
-        display: flex; width: 100%; height: auto; padding: 0 10px; margin-top: 10px;
-        align-items: center; justify-content: center; position: absolute; bottom: 3vh;
-        font-size: 1.2em; font-weight: bold; text-align: center; line-height: 1.2;
-        color: #ccc; z-index: 3; text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+        font-size: 44px;
+        margin-top: 485px;
+        height: 130px;
+        padding: 0 18px;
     }
     .perk-category {
-        position: absolute; bottom: 0.8vh; font-size: 1em; color: #777; margin-top: 10px; text-align: center; z-index: 3;
+        font-size: 28px;
     }
-    .tier-icon-container { width: 7vw; height: 7vw; top: 7px; left: 7px; }
-    .lock-btn { width: 5vw; height: 5vw; top: 7px; right: 7px; }
-
+    .tier-icon-container {
+        width: 130px;
+        height: 130px;
+        top: 22px;
+        left: 22px;
+    }
+    .lock-btn {
+        width: 88px;
+        height: 88px;
+        top: 36px;
+        right: 36px;
+    }
     .right-panel {
-        width: 100vw; height: auto; padding: 2vw 5vw; position: initial; left: 0; bottom: 0;
-        flex-direction: column; justify-content: center; align-items: center; align-self: center;
-        transform: translateY(2vh); box-sizing: border-box;
+        width: 260px;
     }
-    .right-panel .filter-tab-container {
-        width: 80vw;
+    .filter-tab-container {
+        margin-bottom: 15px;
+        border-width: 4px;
+        border-radius: 7px;
     }
-    .right-panel .tier-filter-container {
-        width: 80vw; padding: 8px; flex-direction: row; flex-wrap: wrap; column-gap: 10px; justify-content: center;
+    .filter-tab {
+        padding: 16px 0;
+        font-size: 24px;
     }
-    .right-panel .tier-filter-container .tier-btn {
-        width: calc(100% / 5 - 10px); font-size: 1.6rem;
+    .tier-filter-container {
+        gap: 15px;
     }
-    .right-panel .cho-grid {
-        width: 80vw; grid-template-columns: repeat(7, 1fr); gap: 10px;
+    .tier-btn {
+        padding: 22px 0;
+        font-size: 27px;
+        border-width: 4px;
+        border-radius: 8px;
     }
-    .right-panel .score-container { width: 30vw; margin-top: 10px; }
-    
-    .killer-addon-container { width: 60vw; padding: 2vh 0; justify-content: flex-start; background: none; border: 0; }
-    .killer-img-container { width: 50%; height: auto; margin-top: 0; }
-    .killer-img-container img { width: 100%; gap: 0; }
-    .killer-name-display { font-size: 1.6em; }
-    .addon-slot-area { display: flex; width: 40%; padding: 3vh 0; flex-direction: column; gap: 0px; }
-    .addon-slot-container { width: 100%; justify-content: center; align-items: center; margin-bottom: 20px; }
-    .addon-slot { width: 100%; height: auto; aspect-ratio: 1; margin-bottom: 10px; }
-    .addon-name { font-size: 1.2em; min-height: initial; margin-top: 0; }
-
+    .cho-grid {
+        gap: 12px;
+        margin-top: 10px;
+    }
+    .cho-btn {
+        padding: 15px 0;
+        font-size: 24px;
+        border-width: 4px;
+        border-radius: 8px;
+    }
+    .cho-btn.clear-btn {
+        margin-top: 10px;
+        font-size: 22px;
+    }
+    .score-container {
+        margin-top: 28px;
+        padding: 26px 10px;
+        min-height: 145px;
+        border-width: 4px;
+        border-radius: 8px;
+    }
+    .avg-score-title {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    .avg-score {
+        font-size: 58px;
+    }
+    .killer-addon-container {
+        padding: 45px 65px;
+        gap: 55px;
+        border-width: 7px;
+        border-radius: 35px;
+    }
+    .killer-img-container {
+        width: 500px;
+        height: 580px;
+        gap: 25px;
+    }
+    .main-killer-img, .mainKillerImg {
+        height: 480px;
+    }
+    .killer-name-display {
+        font-size: 40px;
+        min-height: 55px;
+    }
+    .addon-slot-area {
+        gap: 70px;
+    }
+    .addon-slot-container {
+        width: 480px;
+    }
+    .addon-slot {
+        width: 430px;
+        height: 430px;
+        border-width: 6px;
+        border-radius: 22px;
+        margin-bottom: 40px;
+    }
+    .addon-img {
+        width: 350px;
+        height: 350px;
+    }
+    .addon-name {
+        font-size: 34px;
+        min-height: 85px;
+        margin-top: 25px;
+    }
     .killer-list-panel {
-        width: 100vw; position: absolute; top: -11vh; left: 0;
-        background-color: #0007; transform: translate(100%); transition: transform 300ms ease; z-index: 10;
+        width: 1080px;
+        max-height: 650px;
+        overflow-y: auto;
+        border-width: 4px;
+        border-radius: 22px;
+        padding: 24px 28px;
+        scrollbar-width: thin;
+        scrollbar-color: #555 rgba(10, 10, 10, 0.6);
     }
-    .killer-list-panel.active { transform: translate(0%); }
-    .killer-list-panel-call-btn { position: relative; margin-left: -15px; }
-    .killer-list-panel-call-btn:before, .killer-list-panel-call-btn:after { position: absolute; width: 30px; height: 30px; opacity: 0.75; box-sizing: border-box; }
-    .killer-list-panel-call-btn:before {
-        width: 50px; height: 50px; content: ''; transform: translate(-100%);
-        background-image:url('../images/callKillerList.webp'); background-position: center; background-size: cover;
-        border: 4px solid #444; border-radius: 12px; border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0;
+    .killer-list-top-area {
+        gap: 18px;
+        margin-bottom: 22px;
     }
-    .killer-list-panel-call-btn:after { content: '×'; position: absolute; top: 0; right: 0; font-size: 50px; transform: translateY(-240%); }
-    .chk-box { display: inline-block; width: 18px; height: 18px; border: 2px solid #888; border-radius: 3px; transition: 0.2s; }
-    .killer-scroll-list { grid-template-columns: repeat(5, 1fr); gap: 10px; }
-    .killer-list-btn, .killer-list-btn.all, .killer-list-btn.random-btn { font-size: 1.0em; }
+    .killer-scroll-list {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+    }
+    .killer-list-btn {
+        padding: 14px 6px;
+        border-width: 3px;
+        border-radius: 12px;
+        font-size: 20px;
+    }
+    .killer-list-panel::-webkit-scrollbar {
+        width: 10px;
+    }
+    .killer-list-panel::-webkit-scrollbar-track {
+        background: rgba(10, 10, 10, 0.6);
+        border-radius: 5px;
+    }
+    .killer-list-panel::-webkit-scrollbar-thumb {
+        background: #555;
+        border-radius: 5px;
+    }
+    .killer-list-panel::-webkit-scrollbar-thumb:hover {
+        background: #E040FB;
+    }
+    .chk-box {
+        width: 25px;
+        height: 25px;
+        border-width: 4px;
+    }
+    button.start-btn {
+        margin-top: 50px;
+        padding: 26px 150px;
+        font-size: 54px;
+        border-radius: 90px;
+    }
+    .speed-control {
+        width: 360px;
+        margin-top: 28px;
+    }
+    .speed-status {
+        font-size: 36px;
+        margin-bottom: 18px;
+    }
+    .bottom-info-area {
+        bottom: 35px;
+        right: 50px;
+        gap: 18px;
+    }
+    .watermark {
+        font-size: 26px;
+    }
+    .update-notes-btn {
+        font-size: 24px;
+        padding: 16px 30px;
+        border-width: 4px;
+        border-radius: 8px;
+    }
+    .modal-content {
+        width: 1300px;
+        border-width: 5px;
+        border-radius: 20px;
+    }
+    .modal-header {
+        padding: 28px 36px;
+        border-bottom-width: 4px;
+    }
+    .modal-title {
+        font-size: 36px;
+    }
+    .close-modal {
+        font-size: 50px;
+    }
+    .modal-body {
+        padding: 45px;
+        font-size: 26px;
+        line-height: 1.9;
+    }
 }
 
-@media screen and (max-width: 1279px) and (aspect-ratio <= 0.61) {
-    body>.wrapper {
-        display: flex; flex-direction: column; height: 100vh; margin: 0; padding: 0;
-        align-items: center; justify-content: flex-start; color: #ffffff;
-        font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-        background-image: url('../images/background.jpg'); background-size: cover; background-position: center;
-        background-repeat: no-repeat; background-color: rgba(0, 0, 0, 0.85); background-blend-mode: overlay;
-        overflow: hidden; transition: background-color 0.5s;
+/* ==============================================================
+   6. 🖥️ 21:9 & 32:9 울트라와이드 디스플레이 전용 최적화 (3440x1440, 2560x1080, 5120x1440 등)
+   가로 폭의 장점을 극대화(5열 킬러 배치)하면서, 세로(1080p~1600p) 화면 잘림/스크롤을 완벽 방지
+   ============================================================== */
+@media screen and (min-aspect-ratio: 2/1) and (max-height: 1699px) {
+    body > .wrapper {
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
+        padding: clamp(8px, 1.6vh, 22px) clamp(20px, 2vw, 40px);
+        justify-content: center;
+        align-items: center;
+        overflow-y: auto;
+        box-sizing: border-box;
     }
-    .perk-wrapper { align-items: flex-start; }
-    .perk-container { width: 100vw; padding: 0 5vw; margin: 2vh 0 5.5vh; flex-wrap: wrap; gap: 35px; box-sizing: border-box; }
-    .perk-card { width: calc(50% - 50px); height: auto; aspect-ratio: 0.69; }
-    .perk-bg { width: 100%; transform: scale(1.01em); height: auto; transform: translate(10px, -10px); }
-    .perk-img { width: 100%; height: auto; }
+
+    h1 {
+        font-size: clamp(38px, 4.4vh, 60px);
+        margin-top: 0;
+        margin-bottom: clamp(10px, 1.6vh, 20px);
+        letter-spacing: clamp(3px, 0.3vw, 6px);
+    }
+
+    /* --------------------------------------------------
+       [퍽 모드] 4개 카드 가로 정렬 + 우측 패널 중앙 집중 배치
+       -------------------------------------------------- */
+    .perk-wrapper {
+        flex-direction: row;
+        gap: clamp(25px, 2.5vw, 45px);
+        min-height: auto;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+    }
+
+    .perk-container {
+        gap: clamp(20px, 2vw, 36px);
+        margin: 0;
+    }
+
+    .perk-card {
+        width: clamp(240px, 17vh, 310px);
+        height: clamp(350px, 25vh, 450px);
+        border-width: 4px;
+        border-radius: 14px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.9);
+    }
+
+    .perk-bg,
+    .perk-img {
+        width: clamp(180px, 13vh, 235px);
+        height: clamp(180px, 13vh, 235px);
+        top: clamp(28px, 2.5vh, 40px);
+    }
+
     .perk-name {
-        font-size: 28px; display: flex; width: 100%; height: auto; padding: 0 10px; margin-top: 420px;
-        color: #ccc; align-items: center; justify-content: center; font-weight: bold; text-align: center;
-        line-height: 1.2; z-index: 3; text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+        font-size: clamp(20px, 1.8vh, 26px);
+        margin-top: clamp(230px, 16.5vh, 300px);
+        height: clamp(60px, 5.5vh, 76px);
+        padding: 0 10px;
     }
-    .perk-category { font-size: 24px; color: #777; margin-top: 10px; text-align: center; z-index: 3; }
-    .tier-icon-container { width: 140px; height: 140px; top: 12px; left: 12px; }
-    .lock-btn { top: 21px; right: 21px; width: 96px; height: 96px; }
 
-    button.start-btn {
-        width: 80vw; margin-top: 8vh; padding: 15px 80px; font-size: 3em; color: white;
-        border-radius: 50px; cursor: pointer; font-weight: 900; transition: all 0.3s; border: 3px solid transparent;
+    .perk-category {
+        font-size: clamp(13px, 1.2vh, 17px);
     }
-    .speed-status { font-size: 28px; font-weight: bold; margin-bottom: 10px; text-shadow: 0 0 5px currentColor; }
-    .speed-control { display: flex; width: 60vw; margin-top: 15px; flex-direction: column; align-items: center; transition: opacity 0.3s; }
-    
+
+    .tier-icon-container {
+        width: clamp(62px, 5.5vh, 80px);
+        height: clamp(62px, 5.5vh, 80px);
+        top: clamp(10px, 1vh, 16px);
+        left: clamp(10px, 1vh, 16px);
+    }
+
+    .lock-btn {
+        width: clamp(42px, 4vh, 55px);
+        height: clamp(42px, 4vh, 55px);
+        top: clamp(16px, 1.5vh, 24px);
+        right: clamp(16px, 1.5vh, 24px);
+    }
+
     .right-panel {
-        width: 100vw; height: auto; padding: 5vw; left: 0; bottom: 0;
-        flex-direction: column; justify-content: center; align-items: center;
-        align-self: end; transform: translateY(5vw); box-sizing: border-box;
+        width: clamp(145px, 6vw, 175px);
+        margin: 0;
+        transform: none;
     }
-    .right-panel .filter-tab-container { width: 80vw; margin-bottom: 15px; font-size: 2rem; }
-    .right-panel .filter-tab { padding: 12px 0; font-size: 1.8rem; }
-    .right-panel .tier-filter-container {
-        width: 80vw; padding: 8px; flex-direction: row; flex-wrap: wrap; column-gap: 10px; justify-content: center;
+
+    .filter-tab {
+        padding: clamp(7px, 0.8vh, 10px) 0;
+        font-size: clamp(13px, 1.3vh, 16px);
     }
-    .right-panel .tier-filter-container .tier-btn { width: calc(100% / 5 - 10px); font-size: 1.6rem; }
-    
-    .right-panel .cho-grid {
-        width: 80vw; grid-template-columns: repeat(7, 1fr); gap: 10px;
+
+    .tier-btn {
+        padding: clamp(10px, 1.1vh, 14px) 0;
+        font-size: clamp(14px, 1.4vh, 17px);
     }
-    .right-panel .cho-btn { font-size: 1.6rem; padding: 10px 0; }
 
-    .right-panel .score-container { width: 40vw; margin-top: 15px; }
-    .right-panel .score-container .avg-score-title { font-size: 1.6rem; }
-    .right-panel .score-container .avg-score { font-size: 2.4rem; }
+    .cho-btn {
+        padding: clamp(7px, 0.8vh, 10px) 0;
+        font-size: clamp(13px, 1.3vh, 15px);
+    }
 
-    .addon-wrapper { margin-top: 5vh; }
-    .addon-area { padding-top: 3vh; }
-    .killer-addon-container { width: 90vw; padding: 5vh 5vw 0; justify-content: space-evenly; background: none; border: 0; }
-    .killer-img-container { width: 50%; height: auto; margin-top: 0; }
-    .killer-img-container img { width: 100%; transform: translateX(10%, -10%) scale(1.0); }
-    .killer-name-display { font-size: 2.6em; }
-    .addon-slot-area { display: flex; width: 40%; padding: 3vh 0; flex-direction: column; gap: 40px; }
-    .addon-slot-container { width: 100%; }
-    .addon-slot { width: 100%; height: auto; aspect-ratio: 1; }
-    .addon-name { font-size: 2em; }
+    .score-container {
+        margin-top: clamp(10px, 1.2vh, 16px);
+        padding: clamp(10px, 1.2vh, 16px) 6px;
+        min-height: clamp(70px, 7vh, 90px);
+    }
 
+    .avg-score-title {
+        font-size: clamp(13px, 1.3vh, 16px);
+    }
+
+    .avg-score {
+        font-size: clamp(28px, 3vh, 38px);
+    }
+
+    /* --------------------------------------------------
+       [애드온 모드] 킬러/애드온 + 5열 킬러 목록 좌우 균형 배치
+       -------------------------------------------------- */
+    .addon-wrapper {
+        min-height: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .addon-area {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(25px, 2.5vw, 50px);
+        width: 100%;
+    }
+
+    .killer-addon-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: clamp(16px, 2vh, 26px) clamp(22px, 2vw, 36px);
+        gap: clamp(20px, 2vw, 36px);
+        border-radius: 18px;
+        border-width: 4px;
+        box-sizing: border-box;
+        width: fit-content;
+    }
+
+    .killer-img-container {
+        width: clamp(220px, 18vh, 270px);
+        height: clamp(260px, 27vh, 340px);
+        gap: 12px;
+    }
+
+    .main-killer-img, .mainKillerImg {
+        height: clamp(200px, 22vh, 270px);
+        width: 100%;
+        object-fit: contain;
+    }
+
+    .killer-name-display {
+        font-size: clamp(19px, 2vh, 25px);
+        min-height: clamp(26px, 2.6vh, 34px);
+    }
+
+    .addon-slot-area {
+        gap: clamp(20px, 2vw, 36px);
+    }
+
+    .addon-slot-container {
+        width: clamp(190px, 17vh, 240px);
+    }
+
+    .addon-slot {
+        width: clamp(180px, 16vh, 230px);
+        height: clamp(180px, 16vh, 230px);
+        border-radius: 14px;
+        border-width: 3px;
+        margin-bottom: clamp(10px, 1.2vh, 16px);
+    }
+
+    .addon-img {
+        width: 78%;
+        height: 78%;
+    }
+
+    .addon-name {
+        font-size: clamp(15px, 1.5vh, 20px);
+        min-height: clamp(38px, 4vh, 48px);
+        margin-top: 8px;
+    }
+
+    /* 5열 킬러 목록 패널: 가로 폭을 살리고 높이를 38vh 이내로 유지 */
     .killer-list-panel {
-        width: 100vw; position: absolute; top: 0; left: 0;
-        background-color: #0007; transform: translate(100%); transition: transform 300ms ease; z-index: 10;
+        width: clamp(620px, 34vw, 760px);
+        max-height: clamp(360px, 38vh, 480px);
+        overflow-y: auto;
+        padding: clamp(12px, 1.5vh, 18px) clamp(14px, 1.5vw, 20px);
+        border-radius: 16px;
+        border-width: 3px;
+        box-sizing: border-box;
+        scrollbar-width: thin;
+        scrollbar-color: #555 rgba(10, 10, 10, 0.6);
     }
-    .killer-list-panel.active { transform: translate(0%); }
-    .killer-list-panel-call-btn { position: relative; margin-left: -15px; }
-    .killer-list-panel-call-btn:before, .killer-list-panel-call-btn:after { position: absolute; width: 100px; height: 100px; opacity: 0.75; box-sizing: border-box; }
-    .killer-list-panel-call-btn:before {
-        content: ''; transform: translate(-100%);
-        background-image:url('../images/callKillerList.webp'); background-position: center; background-size: cover;
-        border: 4px solid #444; border-radius: 12px; border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0;
+
+    .killer-list-panel::-webkit-scrollbar {
+        width: 8px;
     }
-    .killer-list-panel-call-btn:after { content: '×'; position: absolute; top: 0; right: -15px; font-size: 140px; transform: translateY(-170%); }
-    .chk-box { display: inline-block; width: 28px; height: 28px; margin-right: 5px; border: 2px solid #888; border-radius: 3px; transition: 0.2s; }
-    .killer-scroll-list { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .killer-list-btn, .killer-list-btn.all, .killer-list-btn.random-btn { padding: 15px 4px; font-size: 2em; }
-    .modal-content { width: 95vw; max-height: 95vh; }
-    .modal-body { font-size: 1.8em; word-break: keep-all; }
+
+    .killer-list-panel::-webkit-scrollbar-track {
+        background: rgba(10, 10, 10, 0.6);
+        border-radius: 4px;
+    }
+
+    .killer-list-panel::-webkit-scrollbar-thumb {
+        background: #444;
+        border-radius: 4px;
+    }
+
+    .killer-list-panel::-webkit-scrollbar-thumb:hover {
+        background: #E040FB;
+    }
+
+    .killer-list-top-area {
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .killer-scroll-list {
+        grid-template-columns: repeat(5, 1fr);
+        gap: clamp(6px, 0.7vh, 9px);
+    }
+
+    .killer-list-btn {
+        padding: clamp(7px, 0.9vh, 11px) clamp(3px, 0.3vw, 6px);
+        font-size: clamp(12px, 1.2vh, 14.5px);
+        border-radius: 6px;
+    }
+
+    .killer-list-btn.all,
+    .killer-list-btn.random-btn {
+        font-size: clamp(13px, 1.3vh, 15px);
+        padding: clamp(8px, 1vh, 11px);
+    }
+
+    /* --------------------------------------------------
+       하단 컨트롤 (START 버튼 및 속도 조절 슬라이더)
+       -------------------------------------------------- */
+    button.start-btn {
+        margin-top: clamp(16px, 2vh, 26px);
+        padding: clamp(12px, 1.5vh, 18px) clamp(70px, 6vw, 110px);
+        font-size: clamp(24px, 2.5vh, 32px);
+        border-radius: 50px;
+    }
+
+    .speed-control {
+        margin-top: clamp(8px, 1vh, 14px);
+        width: clamp(180px, 16vw, 240px);
+    }
+
+    .speed-status {
+        font-size: clamp(17px, 1.8vh, 22px);
+        margin-bottom: clamp(5px, 0.7vh, 9px);
+    }
+
+    .bottom-info-area {
+        bottom: clamp(16px, 2vh, 25px);
+        right: clamp(20px, 2vw, 35px);
+    }
+
+    .watermark {
+        font-size: clamp(13px, 1.3vh, 16px);
+    }
+
+    .update-notes-btn {
+        font-size: clamp(12px, 1.2vh, 14px);
+        padding: clamp(6px, 0.8vh, 9px) clamp(12px, 1vw, 18px);
+    }
 }
