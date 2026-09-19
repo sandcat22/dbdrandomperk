@@ -54,7 +54,7 @@ h1:hover {
     align-items: center;
     justify-content: center;
     flex-direction: row;
-    gap: clamp(16px, 1.3vw, 24px);
+    gap: clamp(20px, 1.6vw, 36px);
     min-height: auto;
     width: 100%;
     position: relative;
@@ -62,57 +62,57 @@ h1:hover {
 
 .perk-container {
     display: flex;
-    gap: clamp(12px, 1vw, 18px);
+    gap: clamp(16px, 1.4vw, 28px);
     align-items: center;
     justify-content: center;
 }
 
 .perk-card {
-    width: clamp(350px, 19.8vw, 395px);
-    height: clamp(540px, 60vh, 630px);
+    width: clamp(380px, 21vw, 435px);
+    height: clamp(640px, 68vh, 750px);
     background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.95));
-    border: 5px solid #333;
-    border-radius: 16px;
+    border: 6px solid #333;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.9);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.95);
     box-sizing: border-box;
 }
 
 .perk-bg {
-    width: clamp(300px, 17.5vw, 350px);
-    height: clamp(300px, 17.5vw, 350px);
+    width: clamp(340px, 19vw, 400px);
+    height: clamp(340px, 19vw, 400px);
     position: absolute;
-    top: clamp(20px, 2.4vh, 30px);
+    top: clamp(22px, 2.5vh, 36px);
     opacity: 0.7;
     display: none;
     z-index: 1;
 }
 
 .perk-img {
-    width: clamp(300px, 17.5vw, 350px);
-    height: clamp(300px, 17.5vw, 350px);
+    width: clamp(340px, 19vw, 400px);
+    height: clamp(340px, 19vw, 400px);
     position: absolute;
-    top: clamp(20px, 2.4vh, 30px);
+    top: clamp(22px, 2.5vh, 36px);
     z-index: 2;
     display: none;
     object-fit: contain;
 }
 
 .perk-name {
-    font-size: clamp(25px, 1.45vw, 30px);
+    font-size: clamp(28px, 1.6vw, 35px);
     font-weight: bold;
     text-align: center;
     color: #ccc;
-    margin-top: clamp(345px, 20vw, 395px);
+    margin-top: clamp(385px, 41vh, 455px);
     width: 100%;
-    height: clamp(65px, 7vh, 80px);
+    height: clamp(72px, 8vh, 92px);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 12px;
+    padding: 0 14px;
     line-height: 1.25;
     z-index: 3;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
@@ -120,19 +120,19 @@ h1:hover {
 }
 
 .perk-category {
-    font-size: clamp(16px, 0.95vw, 19px);
+    font-size: clamp(18px, 1.1vw, 22px);
     color: #777;
-    margin-top: 4px;
+    margin-top: 6px;
     text-align: center;
     z-index: 3;
 }
 
 .tier-icon-container {
     position: absolute;
-    top: 14px;
-    left: 14px;
-    width: clamp(80px, 4.6vw, 95px);
-    height: clamp(80px, 4.6vw, 95px);
+    top: 16px;
+    left: 16px;
+    width: clamp(90px, 5.2vw, 115px);
+    height: clamp(90px, 5.2vw, 115px);
     display: none;
     z-index: 10;
 }
@@ -192,10 +192,10 @@ h1:hover {
 
 .lock-btn {
     position: absolute;
-    top: 18px;
-    right: 18px;
-    width: clamp(44px, 2.7vw, 56px);
-    height: clamp(44px, 2.7vw, 56px);
+    top: 20px;
+    right: 20px;
+    width: clamp(52px, 3vw, 66px);
+    height: clamp(52px, 3vw, 66px);
     z-index: 20;
     opacity: 0.3;
     transition: 0.3s;
@@ -229,7 +229,7 @@ h1:hover {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: clamp(140px, 7.8vw, 168px);
+    width: clamp(155px, 8.2vw, 185px);
     flex-shrink: 0;
 }
 
@@ -433,16 +433,16 @@ body>.wrapper.mode-survivor .cho-btn.active {
 
 .killer-addon-container {
     background: linear-gradient(145deg, #181818, #0a0a0a);
-    padding: clamp(20px, 2.2vh, 28px) clamp(26px, 2vw, 36px);
-    border-radius: 20px;
-    border: 4px solid #3a3a3a;
+    padding: clamp(24px, 2.4vh, 36px) clamp(28px, 2.2vw, 44px);
+    border-radius: 24px;
+    border: 5px solid #3a3a3a;
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
-    gap: clamp(24px, 2vw, 38px);
+    gap: clamp(28px, 2.2vw, 45px);
     align-items: center;
     width: fit-content;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.9);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.95);
 }
 
 .killer-img-container {
@@ -450,16 +450,16 @@ body>.wrapper.mode-survivor .cho-btn.active {
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    width: clamp(270px, 15vw, 330px);
-    height: clamp(400px, 44vh, 480px);
+    width: clamp(330px, 18vw, 410px);
+    height: clamp(520px, 56vh, 640px);
     flex-shrink: 0;
     position: relative;
-    gap: 10px;
+    gap: 14px;
 }
 
 .main-killer-img, .mainKillerImg {
     width: 100%;
-    height: clamp(340px, 38vh, 410px);
+    height: clamp(440px, 48vh, 550px);
     object-fit: contain;
     filter: drop-shadow(0 0 20px rgba(255, 51, 51, 0.4));
     transition: 0.1s;
@@ -472,13 +472,13 @@ body>.wrapper.mode-survivor .cho-btn.active {
 }
 
 .killer-name-display {
-    font-size: clamp(22px, 2.2vh, 26px);
+    font-size: clamp(26px, 2.5vh, 32px);
     font-weight: 900;
     color: #E040FB;
     text-shadow: 0 0 10px #E040FB, 0 0 20px #E040FB;
     text-align: center;
     width: 100%;
-    min-height: 32px;
+    min-height: 38px;
     transition: 0.1s;
 }
 
@@ -490,7 +490,7 @@ body>.wrapper.mode-survivor .cho-btn.active {
 .addon-slot-area {
     display: flex; 
     flex-direction: row;
-    gap: clamp(16px, 1.4vw, 24px);
+    gap: clamp(22px, 1.8vw, 34px);
     justify-content: center;
     align-items: center;
 }
@@ -501,23 +501,23 @@ body>.wrapper.mode-survivor .cho-btn.active {
     align-items: center;
     position: relative;
     flex-shrink: 0;
-    width: clamp(180px, 10vw, 220px);
+    width: clamp(230px, 12.5vw, 290px);
 }
 
 .addon-slot {
-    width: clamp(170px, 9.5vw, 210px);
-    height: clamp(170px, 9.5vw, 210px);
-    border-radius: 16px;
+    width: clamp(220px, 12vw, 280px);
+    height: clamp(220px, 12vw, 280px);
+    border-radius: 20px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #0a0a0a;
-    border: 3px solid #333;
+    border: 4px solid #333;
     box-shadow: inset 0 0 30px #000;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
-    margin-bottom: clamp(6px, 0.8vh, 10px);
+    margin-bottom: clamp(8px, 1vh, 14px);
 }
 
 .addon-img {
@@ -539,14 +539,14 @@ body>.wrapper.mode-survivor .cho-btn.active {
 }
 
 .addon-name {
-    font-size: clamp(15px, 1.5vh, 18px);
+    font-size: clamp(18px, 1.8vh, 23px);
     font-weight: bold;
     text-align: center;
     color: #aaa;
-    min-height: 42px;
+    min-height: 48px;
     width: 100%;
     line-height: 1.3;
-    margin-top: 4px;
+    margin-top: 6px;
 }
 
 .addon-slot.selected {
@@ -561,17 +561,17 @@ body>.wrapper.mode-survivor .cho-btn.active {
 }
 
 .killer-list-panel {
-    width: clamp(620px, 34vw, 760px);
-    height: clamp(420px, 46vh, 500px);
-    max-height: clamp(420px, 46vh, 500px);
+    width: clamp(680px, 36vw, 850px);
+    height: clamp(520px, 56vh, 640px);
+    max-height: clamp(520px, 56vh, 640px);
     overflow-y: auto;
     background: #121212;
     border: 2px solid #333;
-    border-radius: 14px;
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
-    padding: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85);
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: #555 rgba(10, 10, 10, 0.6);
@@ -2053,84 +2053,84 @@ input[type=range] {
     }
 
     .perk-container {
-        gap: clamp(20px, 1.4vw, 32px);
+        gap: clamp(24px, 1.8vw, 44px);
         margin: 0;
     }
 
     .perk-card {
-        width: clamp(490px, 19.5vw, 700px);
-        height: clamp(620px, 58vh, 880px);
+        width: clamp(560px, 20.8vw, 750px);
+        height: clamp(780px, 68vh, 1020px);
         border-width: 7px;
-        border-radius: 22px;
-        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.95);
+        border-radius: 24px;
+        box-shadow: 0 26px 55px rgba(0, 0, 0, 0.95);
     }
 
     .perk-bg,
     .perk-img {
-        width: clamp(390px, 37vh, 580px);
-        height: clamp(390px, 37vh, 580px);
-        top: clamp(26px, 2.6vh, 46px);
+        width: clamp(480px, 42vh, 640px);
+        height: clamp(480px, 42vh, 640px);
+        top: clamp(30px, 2.8vh, 48px);
     }
 
     .perk-name {
-        font-size: clamp(28px, 2.7vh, 46px);
-        margin-top: clamp(430px, 40vh, 620px);
-        height: clamp(75px, 7vh, 110px);
-        padding: 0 16px;
+        font-size: clamp(36px, 3vh, 50px);
+        margin-top: clamp(520px, 45vh, 700px);
+        height: clamp(90px, 8vh, 120px);
+        padding: 0 18px;
     }
 
     .perk-category {
-        font-size: clamp(17px, 1.7vh, 28px);
-        margin-top: 6px;
+        font-size: clamp(22px, 1.8vh, 30px);
+        margin-top: 8px;
     }
 
     .tier-icon-container {
-        width: clamp(95px, 9.5vh, 150px);
-        height: clamp(95px, 9.5vh, 150px);
-        top: clamp(16px, 1.5vh, 28px);
-        left: clamp(16px, 1.5vh, 28px);
+        width: clamp(130px, 10.5vh, 170px);
+        height: clamp(130px, 10.5vh, 170px);
+        top: 22px;
+        left: 22px;
     }
 
     .lock-btn {
-        width: clamp(55px, 5.5vh, 90px);
-        height: clamp(55px, 5.5vh, 90px);
-        top: clamp(20px, 2vh, 36px);
-        right: clamp(20px, 2vh, 36px);
+        width: clamp(75px, 6vh, 98px);
+        height: clamp(75px, 6vh, 98px);
+        top: 26px;
+        right: 26px;
     }
 
     .right-panel {
-        width: clamp(170px, 6.8vw, 260px);
+        width: clamp(220px, 7vw, 280px);
         margin: 0;
         transform: none;
     }
 
     .filter-tab {
-        padding: clamp(12px, 1.4vh, 18px) 0;
-        font-size: clamp(16px, 1.6vh, 20px);
+        padding: clamp(14px, 1.5vh, 20px) 0;
+        font-size: clamp(17px, 1.7vh, 22px);
     }
 
     .tier-btn {
-        padding: clamp(16px, 1.7vh, 24px) 0;
-        font-size: clamp(17px, 1.8vh, 22px);
+        padding: clamp(18px, 1.8vh, 26px) 0;
+        font-size: clamp(18px, 1.8vh, 23px);
     }
 
     .cho-btn {
-        padding: clamp(11px, 1.3vh, 16px) 0;
-        font-size: clamp(15px, 1.6vh, 20px);
+        padding: clamp(12px, 1.4vh, 18px) 0;
+        font-size: clamp(16px, 1.7vh, 21px);
     }
 
     .score-container {
-        margin-top: clamp(16px, 1.8vh, 26px);
-        padding: clamp(14px, 1.8vh, 24px) 10px;
-        min-height: clamp(95px, 11vh, 140px);
+        margin-top: clamp(18px, 1.8vh, 28px);
+        padding: clamp(16px, 1.8vh, 26px) 12px;
+        min-height: clamp(105px, 11.5vh, 150px);
     }
 
     .avg-score-title {
-        font-size: clamp(15px, 1.6vh, 20px);
+        font-size: clamp(16px, 1.7vh, 22px);
     }
 
     .avg-score {
-        font-size: clamp(38px, 4.4vh, 58px);
+        font-size: clamp(42px, 4.6vh, 62px);
     }
 
     /* --------------------------------------------------
@@ -2157,49 +2157,49 @@ input[type=range] {
         display: flex;
         flex-direction: row;
         align-items: center;
-        padding: clamp(24px, 2.2vh, 36px) clamp(30px, 2vw, 45px);
-        gap: clamp(30px, 2vw, 50px);
+        padding: clamp(28px, 2.5vh, 42px) clamp(34px, 2.2vw, 52px);
+        gap: clamp(34px, 2.2vw, 55px);
         background: linear-gradient(145deg, #181818, #0a0a0a);
-        border-radius: 22px;
+        border-radius: 24px;
         border: 5px solid #3a3a3a;
-        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.95);
+        box-shadow: 0 26px 55px rgba(0, 0, 0, 0.95);
         box-sizing: border-box;
         width: fit-content;
     }
 
     .killer-img-container {
-        width: clamp(340px, 12vw, 450px);
-        height: clamp(480px, 48vh, 620px);
+        width: clamp(440px, 15vw, 560px);
+        height: clamp(660px, 54vh, 850px);
         gap: 16px;
     }
 
     .main-killer-img, .mainKillerImg {
-        height: clamp(410px, 42vh, 540px);
+        height: clamp(560px, 46vh, 730px);
         width: 100%;
         object-fit: contain;
     }
 
     .killer-name-display {
-        font-size: clamp(26px, 2.5vh, 34px);
-        min-height: clamp(36px, 3.6vh, 48px);
+        font-size: clamp(30px, 2.8vh, 40px);
+        min-height: clamp(40px, 3.8vh, 52px);
     }
 
     .addon-slot-area {
         display: flex;
         flex-direction: row;
-        gap: clamp(20px, 1.4vw, 32px);
+        gap: clamp(24px, 1.6vw, 40px);
         justify-content: center;
         align-items: center;
     }
 
     .addon-slot-container {
-        width: clamp(220px, 7.5vw, 290px);
+        width: clamp(280px, 9.5vw, 360px);
     }
 
     .addon-slot {
-        width: clamp(210px, 7vw, 280px);
-        height: clamp(210px, 7vw, 280px);
-        border-radius: 18px;
+        width: clamp(270px, 9vw, 350px);
+        height: clamp(270px, 9vw, 350px);
+        border-radius: 20px;
         border: 5px solid #333;
         margin-bottom: clamp(10px, 1vh, 16px);
     }
@@ -2210,23 +2210,23 @@ input[type=range] {
     }
 
     .addon-name {
-        font-size: clamp(17px, 1.8vh, 22px);
-        min-height: clamp(42px, 4vh, 54px);
+        font-size: clamp(20px, 2vh, 26px);
+        min-height: clamp(50px, 4.5vh, 65px);
         margin-top: 8px;
     }
 
     /* 5열 킬러 목록 패널: 가로 폭을 살리고 높이를 시원하게 확장 */
     .killer-list-panel {
-        width: clamp(800px, 30vw, 1150px);
-        height: clamp(480px, 48vh, 620px);
-        max-height: clamp(480px, 48vh, 620px);
+        width: clamp(920px, 32vw, 1280px);
+        height: clamp(660px, 54vh, 850px);
+        max-height: clamp(660px, 54vh, 850px);
         overflow-y: auto;
         background: #121212;
-        padding: clamp(20px, 2vh, 28px) clamp(22px, 2vw, 32px);
-        border-radius: 20px;
+        padding: clamp(22px, 2.2vh, 32px) clamp(24px, 2vw, 36px);
+        border-radius: 22px;
         border: 4px solid #333;
         box-sizing: border-box;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
         scrollbar-width: thin;
         scrollbar-color: #555 rgba(10, 10, 10, 0.6);
     }
