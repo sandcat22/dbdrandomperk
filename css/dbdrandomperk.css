@@ -1,9 +1,10 @@
 /* ==============================================================
    DbD Random Roulette - Master Responsive CSS
    Optimized for:
-   1. Streamer Environment (2560x1440 browser window, 1250~1320px viewport)
-   2. Developer Environment (3440x1440 21:9 Ultrawide, centered 16:9 frame)
-   3. Mobile Environment (<= 768px & Portrait, 2x2 grid, smooth vertical scroll)
+   1. Streamer Environment (2560x1440 browser window, 1250~1320px viewport, max-height: 94vh)
+   2. Developer Environment (3440x1440 21:9 Ultrawide, max-width: 1800px, centered)
+   3. Anti-Overlap Layout (Perk Stage & Right Filter Panel in Flex Row with guaranteed gap)
+   4. Mobile Environment (<= 768px, 2x2 grid, smooth vertical scroll)
    ============================================================== */
 
 /* --------------------------------------------------------------
@@ -33,12 +34,12 @@ body {
     background-blend-mode: overlay;
 }
 
-/* 데스크탑 16:9 비율 고정 및 높이(vh) 기준 메인 컨테이너 */
+/* 데스크탑 메인 컨테이너 (울트라와이드 max-width 제한 및 스트리머 max-height 94vh 제한) */
 body > .wrapper {
     height: 94vh;
     max-height: 94vh;
     aspect-ratio: 16 / 9;
-    max-width: calc(94vh * 16 / 9);
+    max-width: min(1800px, calc(94vh * 16 / 9));
     width: 100%;
     margin: 0 auto;
     display: flex;
@@ -47,7 +48,7 @@ body > .wrapper {
     align-items: center;
     position: relative;
     box-sizing: border-box;
-    padding: 1.5vh 2vh;
+    padding: 1.2vh 1.8vw;
     overflow: hidden; /* 데스크탑 내부 요소 절대 잘림 및 스크롤바 방지 */
     color: #ffffff;
     font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
@@ -64,58 +65,63 @@ body > .wrapper {
 h1 {
     text-shadow: 0 0 15px currentColor;
     margin-top: 0;
-    margin-bottom: 1.2vh;
+    margin-bottom: clamp(6px, 1.2vh, 14px);
     font-style: italic;
-    font-size: 4.8vh;
-    letter-spacing: 0.4vh;
+    font-size: clamp(28px, 4.5vh, 48px);
+    letter-spacing: clamp(2px, 0.35vh, 5px);
     cursor: pointer;
     transition: 0.3s;
     user-select: none;
     line-height: 1.1;
+    flex-shrink: 0;
 }
 
 h1:hover {
-    transform: scale(1.05);
+    transform: scale(1.04);
 }
 
 /* --------------------------------------------------------------
-   2. 퍽 모드 (Perk Mode - Desktop Height-First Scaling)
+   2. 퍽 모드 (Perk Mode - 중앙 퍽 슬롯과 우측 필터 메뉴 Flex 배치로 겹침 원천 방지)
    -------------------------------------------------------------- */
 .perk-wrapper {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
+    gap: clamp(14px, 2vh, 32px); /* 퍽 컨테이너와 우측 패널 사이의 안전 간격 */
     width: 100%;
     position: relative;
+    flex-shrink: 1;
 }
 
 .perk-container {
     display: flex;
-    gap: 1.8vh;
+    gap: clamp(10px, 1.5vh, 22px);
     align-items: center;
     justify-content: center;
+    flex-shrink: 1;
 }
 
 .perk-card {
-    width: calc(49vh * 0.68);
-    height: 49vh;
+    height: clamp(340px, 47vh, 520px);
+    width: calc(clamp(340px, 47vh, 520px) * 0.68);
     aspect-ratio: 0.68;
     background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.95));
-    border: 0.5vh solid #333;
-    border-radius: 1.8vh;
+    border: 0.45vh solid #333;
+    border-radius: 1.6vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    box-shadow: 0 1.5vh 3.5vh rgba(0, 0, 0, 0.95);
+    box-shadow: 0 1.2vh 3vh rgba(0, 0, 0, 0.95);
     box-sizing: border-box;
+    flex-shrink: 0;
 }
 
 .perk-bg {
-    width: 24.5vh;
-    height: 24.5vh;
-    max-width: 90%;
+    width: 23vh;
+    height: 23vh;
+    max-width: 88%;
     position: absolute;
     top: 3.2vh;
     left: 50%;
@@ -126,9 +132,9 @@ h1:hover {
 }
 
 .perk-img {
-    width: 24.5vh;
-    height: 24.5vh;
-    max-width: 90%;
+    width: 23vh;
+    height: 23vh;
+    max-width: 88%;
     position: absolute;
     top: 3.2vh;
     left: 50%;
@@ -139,19 +145,19 @@ h1:hover {
 }
 
 .perk-name {
-    font-size: 2.2vh;
+    font-size: clamp(15px, 2.1vh, 26px);
     font-weight: bold;
     text-align: center;
     color: #ccc;
     position: absolute;
-    bottom: 4.8vh;
+    bottom: 4.6vh;
     left: 0;
     width: 100%;
-    height: 5.8vh;
+    height: 5.5vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 1vh;
+    padding: 0 0.8vh;
     line-height: 1.25;
     z-index: 3;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
@@ -160,10 +166,10 @@ h1:hover {
 }
 
 .perk-category {
-    font-size: 1.35vh;
+    font-size: clamp(11px, 1.3vh, 16px);
     color: #777;
     position: absolute;
-    bottom: 1.4vh;
+    bottom: 1.3vh;
     left: 0;
     width: 100%;
     text-align: center;
@@ -172,10 +178,10 @@ h1:hover {
 
 .tier-icon-container {
     position: absolute;
-    top: 1.2vh;
-    left: 1.2vh;
-    width: 5.8vh;
-    height: 5.8vh;
+    top: 1vh;
+    left: 1vh;
+    width: 5.5vh;
+    height: 5.5vh;
     display: none;
     z-index: 10;
 }
@@ -235,10 +241,10 @@ h1:hover {
 
 .lock-btn {
     position: absolute;
-    top: 1.5vh;
-    right: 1.5vh;
-    width: 4.8vh;
-    height: 4.8vh;
+    top: 1.2vh;
+    right: 1.2vh;
+    width: 4.5vh;
+    height: 4.5vh;
     z-index: 20;
     opacity: 0.3;
     transition: 0.3s;
@@ -268,17 +274,14 @@ h1:hover {
 }
 
 /* --------------------------------------------------------------
-   3. 우측 필터 & 티어 패널 (Desktop Absolute Dock)
+   3. 우측 필터 메뉴 패널 (Flex 배치로 퍽 카드와 겹침 없이 나란히 정렬)
    -------------------------------------------------------------- */
 .right-panel {
-    position: absolute;
-    right: 1.2vh;
-    top: 50%;
-    transform: translateY(-50%);
+    position: relative; /* absolute 제거: 플렉스 컨테이너 안에서 절대 겹치지 않음 */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 13vh;
+    width: clamp(120px, 13vh, 160px);
     flex-shrink: 0;
     z-index: 15;
 }
@@ -286,7 +289,7 @@ h1:hover {
 .filter-tab-container {
     display: flex;
     width: 100%;
-    margin-bottom: 0.6vh;
+    margin-bottom: 0.5vh;
     background: rgba(10, 10, 10, 0.8);
     border: 0.2vh solid #2a2a2a;
     border-radius: 0.4vh;
@@ -296,8 +299,8 @@ h1:hover {
 .filter-tab {
     flex: 1;
     text-align: center;
-    padding: 0.6vh 0;
-    font-size: 1.15vh;
+    padding: 0.55vh 0;
+    font-size: clamp(10px, 1.15vh, 14px);
     font-weight: bold;
     color: #666;
     cursor: pointer;
@@ -313,12 +316,12 @@ h1:hover {
 .tier-filter-container {
     display: flex;
     flex-direction: column;
-    gap: 0.5vh;
+    gap: 0.45vh;
     width: 100%;
 }
 
 .filter-title {
-    font-size: 1.15vh;
+    font-size: clamp(10px, 1.15vh, 14px);
     font-weight: bold;
     color: #666;
     margin-bottom: 0.2vh;
@@ -328,17 +331,17 @@ h1:hover {
 }
 
 .tier-btn {
-    padding: 0.85vh 0;
+    padding: 0.8vh 0;
     background: rgba(10, 10, 10, 0.8);
     border: 0.2vh solid #2a2a2a;
     color: #555;
     font-weight: bold;
-    font-size: 1.25vh;
+    font-size: clamp(11px, 1.2vh, 15px);
     border-radius: 0.4vh;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: 'Malgun Gothic', sans-serif;
-    box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0.3vh 0.5vh rgba(0, 0, 0, 0.5);
 }
 
 .tier-btn:hover {
@@ -366,20 +369,20 @@ body > .wrapper.mode-survivor .tier-btn.active {
 .cho-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.4vh;
-    margin-top: 0.4vh;
+    gap: 0.35vh;
+    margin-top: 0.35vh;
 }
 
 .cho-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.55vh 0;
+    padding: 0.5vh 0;
     background: rgba(10, 10, 10, 0.8);
     border: 0.2vh solid #2a2a2a;
     color: #555;
     font-weight: bold;
-    font-size: 1.05vh;
+    font-size: clamp(10px, 1vh, 13px);
     border-radius: 0.4vh;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -388,7 +391,7 @@ body > .wrapper.mode-survivor .tier-btn.active {
 
 .cho-btn.clear-btn {
     width: 100%;
-    margin-top: 0.4vh;
+    margin-top: 0.35vh;
 }
 
 .cho-btn:hover {
@@ -424,22 +427,22 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 .score-container {
-    margin-top: 0.8vh;
+    margin-top: 0.7vh;
     background: rgba(10, 10, 10, 0.8);
     border: 0.2vh solid #2a2a2a;
     border-radius: 0.4vh;
-    padding: 0.8vh 0.4vh;
+    padding: 0.7vh 0.4vh;
     text-align: center;
-    box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0.3vh 0.5vh rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 6vh;
+    min-height: 5.5vh;
 }
 
 .avg-score-title {
-    font-size: 1.15vh;
+    font-size: clamp(10px, 1.1vh, 13px);
     color: #666;
     font-weight: bold;
     margin-bottom: 0.2vh;
@@ -447,7 +450,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 .avg-score {
-    font-size: 2.4vh;
+    font-size: clamp(18px, 2.3vh, 28px);
     font-weight: 900;
     color: #333;
     transition: all 0.3s;
@@ -465,7 +468,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 /* --------------------------------------------------------------
-   4. 애드온 모드 (Addon Mode - Desktop Height-First Scaling)
+   4. 애드온 모드 (Addon Mode - 살인마 애드온 영역과 우측 목록 패널 Flex 배치)
    -------------------------------------------------------------- */
 .addon-wrapper {
     display: flex;
@@ -473,11 +476,13 @@ body > .wrapper.mode-survivor .cho-btn.active {
     justify-content: center;
     width: 100%;
     position: relative;
+    flex-shrink: 1;
 }
 
 .addon-area {
     display: flex;
-    gap: 2.5vh;
+    flex-direction: row;
+    gap: clamp(14px, 2vh, 32px);
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -485,17 +490,17 @@ body > .wrapper.mode-survivor .cho-btn.active {
 
 .killer-addon-container {
     background: linear-gradient(145deg, #181818, #0a0a0a);
-    padding: 2vh 3vh;
-    border-radius: 2.2vh;
+    padding: 1.8vh 2.5vh;
+    border-radius: 2vh;
     border: 0.4vh solid #3a3a3a;
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
-    gap: 2.5vh;
+    gap: 2.2vh;
     align-items: center;
     width: fit-content;
-    box-shadow: 0 1.5vh 3.5vh rgba(0, 0, 0, 0.95);
-    height: 49vh;
+    box-shadow: 0 1.2vh 3vh rgba(0, 0, 0, 0.95);
+    height: clamp(340px, 47vh, 520px);
 }
 
 .killer-img-container {
@@ -503,17 +508,17 @@ body > .wrapper.mode-survivor .cho-btn.active {
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    width: 28vh;
-    height: 45vh;
+    width: clamp(180px, 26vh, 280px);
+    height: 43vh;
     flex-shrink: 0;
     position: relative;
-    gap: 1vh;
+    gap: 0.8vh;
 }
 
 .main-killer-img,
 .mainKillerImg {
     width: 100%;
-    height: 38vh;
+    height: 36vh;
     object-fit: contain;
     filter: drop-shadow(0 0 1.5vh rgba(255, 51, 51, 0.4));
     transition: 0.1s;
@@ -527,13 +532,13 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 .killer-name-display {
-    font-size: 2.2vh;
+    font-size: clamp(16px, 2.1vh, 24px);
     font-weight: 900;
     color: #E040FB;
     text-shadow: 0 0 1vh #E040FB;
     text-align: center;
     width: 100%;
-    min-height: 3.2vh;
+    min-height: 3vh;
     transition: 0.1s;
 }
 
@@ -546,7 +551,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
 .addon-slot-area {
     display: flex;
     flex-direction: row;
-    gap: 2vh;
+    gap: 1.8vh;
     justify-content: center;
     align-items: center;
 }
@@ -557,13 +562,13 @@ body > .wrapper.mode-survivor .cho-btn.active {
     align-items: center;
     position: relative;
     flex-shrink: 0;
-    width: 16vh;
+    width: clamp(100px, 15vh, 160px);
 }
 
 .addon-slot {
-    width: 15vh;
-    height: 15vh;
-    border-radius: 1.8vh;
+    width: clamp(95px, 14.5vh, 150px);
+    height: clamp(95px, 14.5vh, 150px);
+    border-radius: 1.6vh;
     position: relative;
     display: flex;
     align-items: center;
@@ -573,7 +578,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
     box-shadow: inset 0 0 2.5vh #000;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
-    margin-bottom: 0.6vh;
+    margin-bottom: 0.5vh;
 }
 
 .addon-img {
@@ -595,11 +600,11 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 .addon-name {
-    font-size: 1.45vh;
+    font-size: clamp(11px, 1.4vh, 16px);
     font-weight: bold;
     text-align: center;
     color: #aaa;
-    min-height: 3.5vh;
+    min-height: 3.2vh;
     width: 100%;
     line-height: 1.25;
     margin-top: 0.3vh;
@@ -617,13 +622,13 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 .killer-list-panel {
-    width: 36vh;
-    height: 49vh;
-    max-height: 49vh;
+    width: clamp(240px, 34vh, 380px);
+    height: clamp(340px, 47vh, 520px);
+    max-height: clamp(340px, 47vh, 520px);
     overflow-y: auto;
     background: #121212;
     border: 0.3vh solid #333;
-    border-radius: 1.8vh;
+    border-radius: 1.6vh;
     display: flex;
     flex-direction: column;
     padding: 1.2vh;
@@ -631,10 +636,11 @@ body > .wrapper.mode-survivor .cho-btn.active {
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: #555 rgba(10, 10, 10, 0.6);
+    flex-shrink: 0;
 }
 
 .killer-list-panel::-webkit-scrollbar {
-    width: 0.7vh;
+    width: 0.6vh;
 }
 
 .killer-list-panel::-webkit-scrollbar-track {
@@ -660,7 +666,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
 .killer-scroll-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.5vh;
+    gap: 0.45vh;
     overflow: visible;
 }
 
@@ -668,10 +674,10 @@ body > .wrapper.mode-survivor .cho-btn.active {
     background: rgba(20, 20, 20, 0.9);
     border: 1px solid #333;
     color: #888;
-    padding: 0.8vh 0.2vh;
+    padding: 0.7vh 0.2vh;
     border-radius: 0.5vh;
     font-weight: bold;
-    font-size: 1.2vh;
+    font-size: clamp(10px, 1.15vh, 14px);
     cursor: pointer;
     transition: 0.2s;
     text-align: center;
@@ -705,13 +711,13 @@ body > .wrapper.mode-survivor .cho-btn.active {
     flex: 1;
     padding: 0.6vh;
     margin: 0;
-    font-size: 1.2vh;
+    font-size: clamp(10px, 1.15vh, 14px);
 }
 
 .killer-list-btn.random-btn {
     flex: 2;
     margin: 0;
-    font-size: 1.2vh;
+    font-size: clamp(10px, 1.15vh, 14px);
     padding: 0.6vh;
 }
 
@@ -734,10 +740,10 @@ body > .wrapper.mode-survivor .cho-btn.active {
    5. 컨트롤 버튼 및 슬라이더 (START Button & Speed Slider)
    -------------------------------------------------------------- */
 button.start-btn {
-    margin-top: 2vh;
-    width: 30vh;
-    height: 6vh;
-    font-size: 2.8vh;
+    margin-top: clamp(10px, 1.8vh, 22px);
+    width: clamp(220px, 28vh, 360px);
+    height: clamp(46px, 5.8vh, 68px);
+    font-size: clamp(20px, 2.8vh, 32px);
     color: white;
     border-radius: 50px;
     cursor: pointer;
@@ -747,6 +753,7 @@ button.start-btn {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 button.start-btn:disabled {
@@ -779,21 +786,22 @@ button.addon-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 24vh;
-    margin-top: 1vh;
+    width: clamp(180px, 22vh, 280px);
+    margin-top: clamp(6px, 0.8vh, 12px);
     transition: opacity 0.3s;
+    flex-shrink: 0;
 }
 
 .speed-status {
-    font-size: 1.8vh;
+    font-size: clamp(14px, 1.8vh, 20px);
     font-weight: bold;
-    margin-bottom: 0.4vh;
+    margin-bottom: 0.3vh;
     text-shadow: 0 0 5px currentColor;
 }
 
 input[type=range] {
     width: 100%;
-    height: 0.8vh;
+    height: 0.7vh;
     cursor: pointer;
     accent-color: #ff3333;
     transition: 0.3s;
@@ -804,19 +812,19 @@ input[type=range] {
    -------------------------------------------------------------- */
 .bottom-info-area {
     position: absolute;
-    bottom: 1.5vh;
-    right: 2vh;
+    bottom: 1.2vh;
+    right: 1.8vh;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 0.8vh;
+    gap: 0.6vh;
     z-index: 1000;
     user-select: none;
 }
 
 .watermark {
     color: rgba(255, 255, 255, 0.95);
-    font-size: 1.3vh;
+    font-size: clamp(11px, 1.25vh, 15px);
     font-weight: 900;
     text-align: right;
     line-height: 1.4;
@@ -835,8 +843,8 @@ input[type=range] {
     border: 0.2vh solid #8e24aa;
     color: #ce93d8;
     font-weight: bold;
-    font-size: 1.2vh;
-    padding: 0.6vh 1.2vh;
+    font-size: clamp(10px, 1.15vh, 14px);
+    padding: 0.5vh 1.1vh;
     border-radius: 0.4vh;
     cursor: pointer;
     transition: 0.3s;
@@ -954,7 +962,7 @@ input[type=range] {
 
 /* ==============================================================
    7. 📱 모바일 및 세로 화면 반응형 시스템
-   (스마트폰 <= 768px 및 세로 비율 화면 max-aspect-ratio <= 1.05)
+   (스마트폰 <= 768px 및 세로/분할 화면 max-aspect-ratio <= 1.05)
    ============================================================== */
 @media screen and (max-width: 768px), screen and (max-aspect-ratio: 105/100) {
     html,
@@ -1000,9 +1008,9 @@ input[type=range] {
         order: 2;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-        width: min(94vw, 440px);
-        max-width: 440px;
+        gap: clamp(10px, 2vh, 18px);
+        width: min(94vw, 540px);
+        max-width: 540px;
         margin: 0 auto;
         box-sizing: border-box;
     }
@@ -1070,7 +1078,7 @@ input[type=range] {
         height: 34px;
     }
 
-    /* 모바일에서는 START 버튼과 속도 슬라이더가 퍽 카드 바로 아래에 배치되어 즉시 회전 가능 */
+    /* 모바일에서는 START 버튼과 속도 슬라이더가 퍽 카드 바로 아래에 배치 */
     button.start-btn {
         order: 3;
         width: min(85vw, 320px);
@@ -1100,7 +1108,7 @@ input[type=range] {
         order: 5;
         position: static;
         transform: none;
-        width: min(94vw, 440px);
+        width: min(94vw, 540px);
         margin: 16px auto 0 auto;
         display: flex;
         flex-direction: column;
@@ -1203,7 +1211,7 @@ input[type=range] {
     .killer-addon-container {
         order: 2;
         flex-direction: column;
-        width: min(94vw, 440px);
+        width: min(94vw, 540px);
         height: auto;
         padding: 16px;
         border-radius: 18px;
@@ -1254,7 +1262,7 @@ input[type=range] {
 
     .killer-list-panel {
         order: 5;
-        width: min(94vw, 440px);
+        width: min(94vw, 540px);
         height: 280px;
         max-height: 280px;
         margin-top: 15px;
@@ -1272,99 +1280,5 @@ input[type=range] {
         padding: 8px 2px;
         font-size: 12px;
         border-radius: 4px;
-    }
-}
-
-/* --------------------------------------------------------------
-   8. 피벗 세로 모니터 / 태블릿 (800px 이상 세로 화면) 최적화
-   -------------------------------------------------------------- */
-@media screen and (orientation: portrait) and (min-width: 800px),
-       screen and (max-aspect-ratio: 105/100) and (min-width: 800px) {
-    .perk-container {
-        width: min(90vw, 680px);
-        max-width: 680px;
-        gap: 20px;
-    }
-
-    .perk-card {
-        border-radius: 18px;
-        border-width: 5px;
-    }
-
-    .perk-name {
-        font-size: 22px;
-        height: 50px;
-        bottom: 30px;
-    }
-
-    .perk-category {
-        font-size: 15px;
-        bottom: 10px;
-    }
-
-    .tier-icon-container {
-        width: 55px;
-        height: 55px;
-        top: 12px;
-        left: 12px;
-    }
-
-    .lock-btn {
-        width: 48px;
-        height: 48px;
-        top: 12px;
-        right: 12px;
-    }
-
-    .right-panel {
-        width: min(90vw, 680px);
-    }
-
-    button.start-btn {
-        width: 380px;
-        height: 64px;
-        font-size: 28px;
-    }
-
-    .speed-control {
-        width: 320px;
-    }
-
-    .killer-addon-container {
-        width: min(90vw, 680px);
-    }
-
-    .killer-img-container {
-        height: 350px;
-    }
-
-    .main-killer-img,
-    .mainKillerImg {
-        height: 300px;
-    }
-
-    .addon-slot-container {
-        width: 160px;
-    }
-
-    .addon-slot {
-        width: 150px;
-        height: 150px;
-    }
-
-    .addon-name {
-        font-size: 16px;
-        width: 150px;
-    }
-
-    .killer-list-panel {
-        width: min(90vw, 680px);
-        height: 380px;
-        max-height: 380px;
-    }
-
-    .killer-scroll-list {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
     }
 }
