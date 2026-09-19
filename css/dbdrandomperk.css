@@ -68,8 +68,8 @@ h1:hover {
 }
 
 .perk-card {
-    width: clamp(380px, 21vw, 435px);
-    height: clamp(640px, 68vh, 750px);
+    width: clamp(360px, 20.8vw, 560px);
+    height: clamp(580px, 68vh, 1020px);
     background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.95));
     border: 6px solid #333;
     border-radius: 20px;
@@ -82,33 +82,35 @@ h1:hover {
 }
 
 .perk-bg {
-    width: clamp(340px, 19vw, 400px);
-    height: clamp(340px, 19vw, 400px);
+    width: clamp(320px, 34vh, 500px);
+    height: clamp(320px, 34vh, 500px);
+    max-width: 90%;
     position: absolute;
-    top: clamp(22px, 2.5vh, 36px);
+    top: clamp(18px, 2.2vh, 36px);
     opacity: 0.7;
     display: none;
     z-index: 1;
 }
 
 .perk-img {
-    width: clamp(340px, 19vw, 400px);
-    height: clamp(340px, 19vw, 400px);
+    width: clamp(320px, 34vh, 500px);
+    height: clamp(320px, 34vh, 500px);
+    max-width: 90%;
     position: absolute;
-    top: clamp(22px, 2.5vh, 36px);
+    top: clamp(18px, 2.2vh, 36px);
     z-index: 2;
     display: none;
     object-fit: contain;
 }
 
 .perk-name {
-    font-size: clamp(28px, 1.6vw, 35px);
+    font-size: clamp(26px, 2.7vh, 42px);
     font-weight: bold;
     text-align: center;
     color: #ccc;
-    margin-top: clamp(385px, 41vh, 455px);
+    margin-top: clamp(340px, 37.5vh, 550px);
     width: 100%;
-    height: clamp(72px, 8vh, 92px);
+    height: clamp(68px, 6.8vh, 105px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -120,7 +122,7 @@ h1:hover {
 }
 
 .perk-category {
-    font-size: clamp(18px, 1.1vw, 22px);
+    font-size: clamp(17px, 1.8vh, 26px);
     color: #777;
     margin-top: 6px;
     text-align: center;
@@ -129,10 +131,10 @@ h1:hover {
 
 .tier-icon-container {
     position: absolute;
-    top: 16px;
-    left: 16px;
-    width: clamp(90px, 5.2vw, 115px);
-    height: clamp(90px, 5.2vw, 115px);
+    top: clamp(14px, 1.4vh, 22px);
+    left: clamp(14px, 1.4vh, 22px);
+    width: clamp(85px, 8.5vh, 135px);
+    height: clamp(85px, 8.5vh, 135px);
     display: none;
     z-index: 10;
 }
@@ -1566,8 +1568,8 @@ input[type=range] {
 /* --------------------------------------------------------------
    4. 📺 2K QHD (2560x1440) 가로 모드 (16:9 해상도 스케일업)
    -------------------------------------------------------------- */
-@media screen and (min-aspect-ratio: 16/10) and (max-aspect-ratio: 185/100) and (min-width: 2000px),
-       screen and (min-aspect-ratio: 16/10) and (max-aspect-ratio: 185/100) and (min-height: 1100px) {
+@media screen and (min-aspect-ratio: 15/10) and (max-aspect-ratio: 215/100) and (min-width: 2000px),
+       screen and (min-aspect-ratio: 15/10) and (max-aspect-ratio: 215/100) and (min-height: 1100px) {
     body>.wrapper {
         min-height: 100vh;
         min-height: 100dvh;
@@ -2102,7 +2104,8 @@ input[type=range] {
    6. 🖥️ 21:9 & 32:9 울트라와이드 디스플레이 전용 최적화 (3440x1440, 2560x1080, 5120x1440 등)
    가로 폭의 장점을 극대화(5열 킬러 배치)하면서, 세로(1080p~1600p) 화면 잘림/스크롤을 완벽 방지
    ============================================================== */
-@media screen and (min-aspect-ratio: 185/100) and (min-width: 1700px) and (min-height: 650px) {
+@media screen and (min-aspect-ratio: 215/100) and (min-width: 1700px),
+       screen and (min-aspect-ratio: 18/10) and (min-width: 2900px) {
     body > .wrapper {
         min-height: 100vh;
         min-height: 100dvh;
