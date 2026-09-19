@@ -36,10 +36,10 @@ body>.wrapper {
 h1 {
     text-shadow: 0 0 15px currentColor;
     margin-top: 0;
-    margin-bottom: clamp(10px, 1.5vh, 20px);
+    margin-bottom: clamp(14px, 1.8vh, 26px);
     font-style: italic;
-    font-size: clamp(44px, 5.2vh, 68px);
-    letter-spacing: clamp(3px, 0.3vw, 6px);
+    font-size: clamp(48px, 5.5vh, 76px);
+    letter-spacing: clamp(4px, 0.4vw, 8px);
     cursor: pointer;
     transition: 0.3s;
     user-select: none;
@@ -435,13 +435,13 @@ body>.wrapper.mode-survivor .cho-btn.active {
 
 .killer-addon-container {
     background: linear-gradient(145deg, #181818, #0a0a0a);
-    padding: clamp(24px, 2.4vh, 36px) clamp(28px, 2.2vw, 44px);
-    border-radius: 24px;
+    padding: clamp(26px, 2.5vh, 40px) clamp(30px, 2.2vw, 48px);
+    border-radius: 26px;
     border: 5px solid #3a3a3a;
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
-    gap: clamp(28px, 2.2vw, 45px);
+    gap: clamp(30px, 2.2vw, 50px);
     align-items: center;
     width: fit-content;
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.95);
@@ -452,16 +452,16 @@ body>.wrapper.mode-survivor .cho-btn.active {
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    width: clamp(330px, 18vw, 410px);
-    height: clamp(520px, 56vh, 640px);
+    width: clamp(360px, 18vw, 480px);
+    height: clamp(580px, 62vh, 780px);
     flex-shrink: 0;
     position: relative;
-    gap: 14px;
+    gap: 16px;
 }
 
 .main-killer-img, .mainKillerImg {
     width: 100%;
-    height: clamp(440px, 48vh, 550px);
+    height: clamp(480px, 52vh, 670px);
     object-fit: contain;
     filter: drop-shadow(0 0 20px rgba(255, 51, 51, 0.4));
     transition: 0.1s;
@@ -474,13 +474,13 @@ body>.wrapper.mode-survivor .cho-btn.active {
 }
 
 .killer-name-display {
-    font-size: clamp(26px, 2.5vh, 32px);
+    font-size: clamp(28px, 2.8vh, 38px);
     font-weight: 900;
     color: #E040FB;
     text-shadow: 0 0 10px #E040FB, 0 0 20px #E040FB;
     text-align: center;
     width: 100%;
-    min-height: 38px;
+    min-height: 44px;
     transition: 0.1s;
 }
 
@@ -492,7 +492,7 @@ body>.wrapper.mode-survivor .cho-btn.active {
 .addon-slot-area {
     display: flex; 
     flex-direction: row;
-    gap: clamp(22px, 1.8vw, 34px);
+    gap: clamp(24px, 1.8vw, 38px);
     justify-content: center;
     align-items: center;
 }
@@ -503,13 +503,13 @@ body>.wrapper.mode-survivor .cho-btn.active {
     align-items: center;
     position: relative;
     flex-shrink: 0;
-    width: clamp(230px, 12.5vw, 290px);
+    width: clamp(260px, 13vw, 340px);
 }
 
 .addon-slot {
-    width: clamp(220px, 12vw, 280px);
-    height: clamp(220px, 12vw, 280px);
-    border-radius: 20px;
+    width: clamp(250px, 12.5vw, 330px);
+    height: clamp(250px, 12.5vw, 330px);
+    border-radius: 22px;
     position: relative;
     display: flex;
     align-items: center;
@@ -519,7 +519,7 @@ body>.wrapper.mode-survivor .cho-btn.active {
     box-shadow: inset 0 0 30px #000;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
-    margin-bottom: clamp(8px, 1vh, 14px);
+    margin-bottom: clamp(10px, 1vh, 16px);
 }
 
 .addon-img {
@@ -541,14 +541,14 @@ body>.wrapper.mode-survivor .cho-btn.active {
 }
 
 .addon-name {
-    font-size: clamp(18px, 1.8vh, 23px);
+    font-size: clamp(20px, 2vh, 28px);
     font-weight: bold;
     text-align: center;
     color: #aaa;
-    min-height: 48px;
+    min-height: 52px;
     width: 100%;
     line-height: 1.3;
-    margin-top: 6px;
+    margin-top: 8px;
 }
 
 .addon-slot.selected {
@@ -563,17 +563,17 @@ body>.wrapper.mode-survivor .cho-btn.active {
 }
 
 .killer-list-panel {
-    width: clamp(680px, 36vw, 850px);
-    height: clamp(520px, 56vh, 640px);
-    max-height: clamp(520px, 56vh, 640px);
+    width: clamp(750px, 38vw, 1020px);
+    height: clamp(580px, 62vh, 780px);
+    max-height: clamp(580px, 62vh, 780px);
     overflow-y: auto;
     background: #121212;
-    border: 2px solid #333;
-    border-radius: 16px;
+    border: 3px solid #333;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85);
+    padding: 22px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.85);
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: #555 rgba(10, 10, 10, 0.6);
@@ -599,8 +599,8 @@ body>.wrapper.mode-survivor .cho-btn.active {
 
 .killer-list-top-area {
     display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 14px;
 }
 
 .killer-scroll-list {
@@ -614,10 +614,10 @@ body>.wrapper.mode-survivor .cho-btn.active {
     background: rgba(20, 20, 20, 0.9);
     border: 1px solid #333;
     color: #888;
-    padding: 10px 4px;
-    border-radius: 6px;
+    padding: clamp(10px, 1.2vh, 15px) 4px;
+    border-radius: 8px;
     font-weight: bold;
-    font-size: 13px;
+    font-size: clamp(14px, 1.4vh, 18px);
     cursor: pointer;
     transition: 0.2s;
     text-align: center;
@@ -677,9 +677,9 @@ body>.wrapper.mode-survivor .cho-btn.active {
 }
 
 button.start-btn {
-    margin-top: clamp(14px, 2vh, 26px);
-    padding: clamp(12px, 1.6vh, 18px) clamp(60px, 5vw, 90px);
-    font-size: clamp(24px, 2.5vh, 32px);
+    margin-top: clamp(16px, 2vh, 28px);
+    padding: clamp(14px, 1.6vh, 22px) clamp(75px, 6vw, 120px);
+    font-size: clamp(26px, 2.8vh, 38px);
     color: white;
     border-radius: 50px;
     cursor: pointer;
@@ -718,21 +718,23 @@ button.addon-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: clamp(200px, 15vw, 260px);
-    margin-top: clamp(8px, 1.2vh, 14px);
+    width: clamp(240px, 16vw, 340px);
+    margin-top: clamp(8px, 1.2vh, 16px);
     transition: opacity 0.3s;
 }
 
 .speed-status {
-    font-size: clamp(17px, 1.8vh, 22px);
+    font-size: clamp(19px, 2.1vh, 28px);
     font-weight: bold;
-    margin-bottom: 6px;
+    margin-bottom: clamp(6px, 0.8vh, 10px);
     text-shadow: 0 0 5px currentColor;
 }
 
 input[type=range] {
     width: 100%;
+    height: 8px;
     cursor: pointer;
+    accent-color: #ff3333;
     transition: 0.3s;
 }
 
@@ -1575,7 +1577,7 @@ input[type=range] {
         min-height: 100dvh;
         height: 100vh;
         height: 100dvh;
-        padding: clamp(10px, 1.8vh, 24px) clamp(20px, 1.8vw, 36px);
+        padding: clamp(6px, 1.4vh, 18px) clamp(16px, 1.6vw, 32px);
         justify-content: center;
         align-items: center;
         overflow-y: auto;
@@ -1584,9 +1586,9 @@ input[type=range] {
 
     h1 {
         margin-top: 0;
-        margin-bottom: clamp(14px, 1.8vh, 26px);
-        font-size: clamp(48px, 5.2vh, 76px);
-        letter-spacing: clamp(3px, 0.3vw, 6px);
+        margin-bottom: clamp(12px, 1.6vh, 26px);
+        font-size: clamp(58px, 6vh, 86px);
+        letter-spacing: clamp(5px, 0.4vw, 10px);
     }
 
     .perk-wrapper {
@@ -1604,8 +1606,8 @@ input[type=range] {
     }
 
     .perk-card {
-        width: clamp(480px, 21vw, 560px);
-        height: clamp(860px, 68vh, 1020px);
+        width: clamp(470px, 20.5vw, 550px);
+        height: clamp(760px, 65vh, 960px);
         border-width: 7px;
         border-radius: 24px;
         box-shadow: 0 24px 50px rgba(0, 0, 0, 0.95);
@@ -1613,33 +1615,33 @@ input[type=range] {
 
     .perk-bg,
     .perk-img {
-        width: clamp(430px, 34vh, 510px);
-        height: clamp(430px, 34vh, 510px);
-        top: clamp(24px, 2vh, 36px);
+        width: clamp(390px, 32vh, 490px);
+        height: clamp(390px, 32vh, 490px);
+        top: clamp(20px, 1.8vh, 32px);
     }
 
     .perk-name {
-        font-size: clamp(34px, 2.7vh, 42px);
-        margin-top: clamp(470px, 37vh, 550px);
-        height: clamp(80px, 6.5vh, 105px);
+        font-size: clamp(34px, 3vh, 46px);
+        margin-top: clamp(420px, 35vh, 540px);
+        height: clamp(75px, 6.5vh, 100px);
         padding: 0 16px;
     }
 
     .perk-category {
-        font-size: clamp(22px, 1.8vh, 28px);
+        font-size: clamp(23px, 2.1vh, 30px);
         margin-top: 8px;
     }
 
     .tier-icon-container {
-        width: clamp(105px, 8.5vh, 140px);
-        height: clamp(105px, 8.5vh, 140px);
+        width: clamp(120px, 9.5vh, 155px);
+        height: clamp(120px, 9.5vh, 155px);
         top: 20px;
         left: 20px;
     }
 
     .lock-btn {
-        width: clamp(62px, 5vh, 80px);
-        height: clamp(62px, 5vh, 80px);
+        width: clamp(75px, 6vh, 95px);
+        height: clamp(75px, 6vh, 95px);
         top: 24px;
         right: 24px;
     }
@@ -1715,7 +1717,7 @@ input[type=range] {
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        gap: clamp(30px, 2vw, 55px);
+        gap: clamp(32px, 2.2vw, 60px);
         width: 100%;
     }
 
@@ -1723,10 +1725,10 @@ input[type=range] {
         display: flex;
         flex-direction: row;
         align-items: center;
-        padding: clamp(24px, 2vh, 38px) clamp(30px, 2vw, 48px);
+        padding: clamp(24px, 2.2vh, 38px) clamp(30px, 2vw, 48px);
         gap: clamp(30px, 2vw, 48px);
-        border-width: 5px;
-        border-radius: 24px;
+        border-width: 6px;
+        border-radius: 26px;
         background: linear-gradient(145deg, #181818, #0a0a0a);
         box-shadow: 0 24px 50px rgba(0, 0, 0, 0.95);
         box-sizing: border-box;
@@ -1734,39 +1736,39 @@ input[type=range] {
     }
 
     .killer-img-container {
-        width: clamp(370px, 16vw, 470px);
-        height: clamp(580px, 48vh, 720px);
-        gap: 18px;
+        width: clamp(440px, 17.5vw, 560px);
+        height: clamp(720px, 62vh, 900px);
+        gap: 16px;
     }
 
     .main-killer-img, .mainKillerImg {
-        height: clamp(500px, 40vh, 630px);
+        height: clamp(620px, 52vh, 780px);
         width: 100%;
         object-fit: contain;
     }
 
     .killer-name-display {
-        font-size: clamp(28px, 2.4vh, 36px);
-        min-height: clamp(38px, 3.4vh, 48px);
+        font-size: clamp(32px, 3vh, 44px);
+        min-height: clamp(46px, 4.2vh, 60px);
     }
 
     .addon-slot-area {
         display: flex;
         flex-direction: row;
-        gap: clamp(24px, 1.6vw, 40px);
+        gap: clamp(24px, 1.6vw, 42px);
         justify-content: center;
         align-items: center;
     }
 
     .addon-slot-container {
-        width: clamp(290px, 12vw, 370px);
+        width: clamp(290px, 11.5vw, 370px);
     }
 
     .addon-slot {
-        width: clamp(280px, 11.5vw, 360px);
-        height: clamp(280px, 11.5vw, 360px);
-        border-width: 4px;
-        border-radius: 18px;
+        width: clamp(280px, 11vw, 360px);
+        height: clamp(280px, 11vw, 360px);
+        border-width: 5px;
+        border-radius: 22px;
         margin-bottom: clamp(10px, 1vh, 16px);
     }
 
@@ -1776,19 +1778,19 @@ input[type=range] {
     }
 
     .addon-name {
-        font-size: clamp(22px, 1.8vh, 28px);
-        min-height: clamp(52px, 4vh, 64px);
+        font-size: clamp(23px, 2.1vh, 30px);
+        min-height: clamp(55px, 4.8vh, 72px);
         margin-top: 8px;
     }
 
     .killer-list-panel {
-        width: clamp(880px, 36vw, 1100px);
-        height: clamp(680px, 56vh, 830px);
-        max-height: clamp(680px, 56vh, 830px);
+        width: clamp(920px, 36vw, 1180px);
+        height: clamp(720px, 62vh, 900px);
+        max-height: clamp(720px, 62vh, 900px);
         overflow-y: auto;
-        border-width: 3px;
-        border-radius: 18px;
-        padding: clamp(18px, 1.8vh, 26px) clamp(20px, 1.8vw, 28px);
+        border-width: 4px;
+        border-radius: 22px;
+        padding: clamp(20px, 2vh, 30px) clamp(22px, 1.8vw, 32px);
         box-sizing: border-box;
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
         scrollbar-width: thin;
@@ -1796,20 +1798,20 @@ input[type=range] {
     }
 
     .killer-list-top-area {
-        gap: 13px;
+        gap: 14px;
         margin-bottom: 16px;
     }
 
     .killer-scroll-list {
         grid-template-columns: repeat(5, 1fr);
-        gap: clamp(8px, 1vh, 13px);
+        gap: clamp(8px, 1vh, 14px);
     }
 
     .killer-list-btn {
-        padding: clamp(10px, 1.1vh, 14px) clamp(5px, 0.4vw, 10px);
+        padding: clamp(12px, 1.3vh, 16px) clamp(5px, 0.4vw, 10px);
         border-width: 2px;
-        border-radius: 8px;
-        font-size: clamp(14px, 1.3vh, 17px);
+        border-radius: 9px;
+        font-size: clamp(15px, 1.5vh, 19px);
     }
 
     .killer-list-panel::-webkit-scrollbar {
@@ -1831,19 +1833,19 @@ input[type=range] {
     }
 
     button.start-btn {
-        margin-top: clamp(16px, 2vh, 26px);
-        padding: clamp(14px, 1.6vh, 20px) clamp(80px, 6vw, 120px);
-        font-size: clamp(26px, 2.7vh, 36px);
-        border-radius: 54px;
+        margin-top: clamp(14px, 1.6vh, 24px);
+        padding: clamp(14px, 1.6vh, 22px) clamp(85px, 6vw, 135px);
+        font-size: clamp(28px, 3vh, 40px);
+        border-radius: 60px;
     }
 
     .speed-control {
-        width: clamp(200px, 16vw, 270px);
-        margin-top: clamp(8px, 1vh, 14px);
+        width: clamp(250px, 15vw, 360px);
+        margin-top: clamp(6px, 0.8vh, 12px);
     }
 
     .speed-status {
-        font-size: clamp(18px, 1.8vh, 24px);
+        font-size: clamp(20px, 2.1vh, 28px);
         margin-bottom: clamp(6px, 0.8vh, 10px);
     }
 
@@ -1863,6 +1865,7 @@ input[type=range] {
         border-width: 2px;
         border-radius: 5px;
     }
+}
 
 /* --------------------------------------------------------------
    5. 🚀 4K UHD (3840x2160 및 3000px 이상 초대형 디스플레이) 완벽 1.85배 스케일링
@@ -2111,7 +2114,7 @@ input[type=range] {
         min-height: 100dvh;
         height: 100vh;
         height: 100dvh;
-        padding: clamp(8px, 1.6vh, 22px) clamp(20px, 2vw, 40px);
+        padding: clamp(6px, 1.2vh, 16px) clamp(16px, 1.6vw, 36px);
         justify-content: center;
         align-items: center;
         overflow-y: auto;
@@ -2119,10 +2122,10 @@ input[type=range] {
     }
 
     h1 {
-        font-size: clamp(48px, 5.2vh, 74px);
+        font-size: clamp(60px, 6.2vh, 88px);
         margin-top: 0;
-        margin-bottom: clamp(14px, 1.8vh, 26px);
-        letter-spacing: clamp(3px, 0.3vw, 6px);
+        margin-bottom: clamp(12px, 1.5vh, 24px);
+        letter-spacing: clamp(5px, 0.4vw, 10px);
     }
 
     /* --------------------------------------------------
@@ -2143,8 +2146,8 @@ input[type=range] {
     }
 
     .perk-card {
-        height: clamp(860px, 70vh, 1050px);
-        width: clamp(540px, 18.5vw, 680px);
+        height: clamp(760px, 65vh, 980px);
+        width: clamp(520px, 18vw, 650px);
         border-width: 7px;
         border-radius: 24px;
         box-shadow: 0 26px 55px rgba(0, 0, 0, 0.95);
@@ -2152,33 +2155,33 @@ input[type=range] {
 
     .perk-bg,
     .perk-img {
-        width: clamp(450px, 36vh, 560px);
-        height: clamp(450px, 36vh, 560px);
-        top: clamp(24px, 2.2vh, 36px);
+        width: clamp(400px, 33vh, 520px);
+        height: clamp(400px, 33vh, 520px);
+        top: clamp(20px, 1.8vh, 32px);
     }
 
     .perk-name {
-        font-size: clamp(34px, 2.8vh, 44px);
-        margin-top: clamp(480px, 39vh, 580px);
-        height: clamp(80px, 6.8vh, 105px);
+        font-size: clamp(36px, 3.2vh, 48px);
+        margin-top: clamp(430px, 36vh, 550px);
+        height: clamp(75px, 6.5vh, 100px);
         padding: 0 16px;
     }
 
     .perk-category {
-        font-size: clamp(21px, 1.8vh, 27px);
+        font-size: clamp(24px, 2.2vh, 32px);
         margin-top: 8px;
     }
 
     .tier-icon-container {
-        width: clamp(110px, 8.5vh, 140px);
-        height: clamp(110px, 8.5vh, 140px);
+        width: clamp(125px, 9.8vh, 160px);
+        height: clamp(125px, 9.8vh, 160px);
         top: 22px;
         left: 22px;
     }
 
     .lock-btn {
-        width: clamp(65px, 5vh, 85px);
-        height: clamp(65px, 5vh, 85px);
+        width: clamp(75px, 6vh, 95px);
+        height: clamp(75px, 6vh, 95px);
         top: 24px;
         right: 24px;
     }
@@ -2234,7 +2237,7 @@ input[type=range] {
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        gap: clamp(35px, 2.5vw, 60px);
+        gap: clamp(36px, 2.5vw, 70px);
         width: 100%;
     }
 
@@ -2242,50 +2245,50 @@ input[type=range] {
         display: flex;
         flex-direction: row;
         align-items: center;
-        padding: clamp(28px, 2.5vh, 42px) clamp(34px, 2.2vw, 52px);
-        gap: clamp(34px, 2.2vw, 55px);
+        padding: clamp(24px, 2.2vh, 38px) clamp(34px, 2.2vw, 54px);
+        gap: clamp(34px, 2.2vw, 56px);
         background: linear-gradient(145deg, #181818, #0a0a0a);
-        border-radius: 24px;
-        border: 5px solid #3a3a3a;
+        border-radius: 26px;
+        border: 6px solid #3a3a3a;
         box-shadow: 0 26px 55px rgba(0, 0, 0, 0.95);
         box-sizing: border-box;
         width: fit-content;
     }
 
     .killer-img-container {
-        width: clamp(440px, 15vw, 560px);
-        height: clamp(660px, 54vh, 850px);
+        width: clamp(480px, 16vw, 620px);
+        height: clamp(720px, 62vh, 920px);
         gap: 16px;
     }
 
     .main-killer-img, .mainKillerImg {
-        height: clamp(560px, 46vh, 730px);
+        height: clamp(620px, 52vh, 790px);
         width: 100%;
         object-fit: contain;
     }
 
     .killer-name-display {
-        font-size: clamp(30px, 2.8vh, 40px);
-        min-height: clamp(40px, 3.8vh, 52px);
+        font-size: clamp(34px, 3.2vh, 46px);
+        min-height: clamp(48px, 4.4vh, 64px);
     }
 
     .addon-slot-area {
         display: flex;
         flex-direction: row;
-        gap: clamp(24px, 1.6vw, 40px);
+        gap: clamp(26px, 1.8vw, 48px);
         justify-content: center;
         align-items: center;
     }
 
     .addon-slot-container {
-        width: clamp(280px, 9.5vw, 360px);
+        width: clamp(310px, 10.5vw, 400px);
     }
 
     .addon-slot {
-        width: clamp(270px, 9vw, 350px);
-        height: clamp(270px, 9vw, 350px);
-        border-radius: 20px;
-        border: 5px solid #333;
+        width: clamp(300px, 10vw, 390px);
+        height: clamp(300px, 10vw, 390px);
+        border-radius: 22px;
+        border: 6px solid #333;
         margin-bottom: clamp(10px, 1vh, 16px);
     }
 
@@ -2295,21 +2298,21 @@ input[type=range] {
     }
 
     .addon-name {
-        font-size: clamp(20px, 2vh, 26px);
-        min-height: clamp(50px, 4.5vh, 65px);
-        margin-top: 8px;
+        font-size: clamp(24px, 2.2vh, 34px);
+        min-height: clamp(58px, 5vh, 76px);
+        margin-top: 10px;
     }
 
     /* 5열 킬러 목록 패널: 가로 폭을 살리고 높이를 시원하게 확장 */
     .killer-list-panel {
-        width: clamp(920px, 32vw, 1280px);
-        height: clamp(660px, 54vh, 850px);
-        max-height: clamp(660px, 54vh, 850px);
+        width: clamp(1020px, 34vw, 1420px);
+        height: clamp(720px, 62vh, 920px);
+        max-height: clamp(720px, 62vh, 920px);
         overflow-y: auto;
         background: #121212;
-        padding: clamp(22px, 2.2vh, 32px) clamp(24px, 2vw, 36px);
+        padding: clamp(22px, 2vh, 32px) clamp(24px, 1.8vw, 38px);
         border-radius: 22px;
-        border: 4px solid #333;
+        border: 5px solid #333;
         box-sizing: border-box;
         box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
         scrollbar-width: thin;
@@ -2335,45 +2338,45 @@ input[type=range] {
     }
 
     .killer-list-top-area {
-        gap: 12px;
+        gap: 14px;
         margin-bottom: 16px;
     }
 
     .killer-scroll-list {
         grid-template-columns: repeat(5, 1fr);
-        gap: clamp(8px, 1vh, 14px);
+        gap: clamp(10px, 1.1vh, 16px);
     }
 
     .killer-list-btn {
-        padding: clamp(10px, 1.2vh, 15px) clamp(6px, 0.5vw, 12px);
-        font-size: clamp(14px, 1.4vh, 17px);
-        border-radius: 8px;
+        padding: clamp(12px, 1.3vh, 17px) clamp(6px, 0.5vw, 12px);
+        font-size: clamp(16px, 1.6vh, 21px);
+        border-radius: 10px;
     }
 
     .killer-list-btn.all,
     .killer-list-btn.random-btn {
-        font-size: clamp(15px, 1.5vh, 18px);
-        padding: clamp(12px, 1.3vh, 16px);
+        font-size: clamp(17px, 1.7vh, 23px);
+        padding: clamp(14px, 1.4vh, 18px);
     }
 
     /* --------------------------------------------------
        하단 컨트롤 (START 버튼 및 속도 조절 슬라이더)
        -------------------------------------------------- */
     button.start-btn {
-        margin-top: clamp(16px, 2vh, 26px);
-        padding: clamp(12px, 1.5vh, 18px) clamp(70px, 6vw, 110px);
-        font-size: clamp(24px, 2.5vh, 32px);
-        border-radius: 50px;
+        margin-top: clamp(14px, 1.6vh, 24px);
+        padding: clamp(14px, 1.6vh, 22px) clamp(90px, 6vw, 140px);
+        font-size: clamp(30px, 3.2vh, 44px);
+        border-radius: 60px;
     }
 
     .speed-control {
-        margin-top: clamp(8px, 1vh, 14px);
-        width: clamp(180px, 16vw, 240px);
+        margin-top: clamp(6px, 0.8vh, 12px);
+        width: clamp(280px, 14vw, 400px);
     }
 
     .speed-status {
-        font-size: clamp(17px, 1.8vh, 22px);
-        margin-bottom: clamp(5px, 0.7vh, 9px);
+        font-size: clamp(22px, 2.3vh, 32px);
+        margin-bottom: clamp(6px, 0.8vh, 10px);
     }
 
     .bottom-info-area {
