@@ -25,7 +25,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('../images/background.jpg');
+    background-image: url('images/background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -51,7 +51,7 @@ body > .wrapper {
     overflow: hidden; /* 데스크탑 내부 요소 절대 잘림 및 스크롤바 방지 */
     color: #ffffff;
     font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-    background-image: url('../images/background.jpg');
+    background-image: url('images/background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -64,9 +64,9 @@ body > .wrapper {
 h1 {
     text-shadow: 0 0 15px currentColor;
     margin-top: 0;
-    margin-bottom: 1.2vh;
+    margin-bottom: 1.5vh;
     font-style: italic;
-    font-size: 4.8vh;
+    font-size: 5vh;
     letter-spacing: 0.4vh;
     cursor: pointer;
     transition: 0.3s;
@@ -92,14 +92,14 @@ h1:hover {
 
 .perk-container {
     display: flex;
-    gap: 1.8vh;
+    gap: 2vh;
     align-items: center;
     justify-content: center;
 }
 
 .perk-card {
-    width: calc(49vh * 0.68);
-    height: 49vh;
+    width: calc(52vh * 0.68);
+    height: 52vh;
     aspect-ratio: 0.68;
     background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.95));
     border: 0.5vh solid #333;
@@ -113,11 +113,11 @@ h1:hover {
 }
 
 .perk-bg {
-    width: 24.5vh;
-    height: 24.5vh;
+    width: 26vh;
+    height: 26vh;
     max-width: 90%;
     position: absolute;
-    top: 3.2vh;
+    top: 3.5vh;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0.7;
@@ -126,11 +126,11 @@ h1:hover {
 }
 
 .perk-img {
-    width: 24.5vh;
-    height: 24.5vh;
+    width: 26vh;
+    height: 26vh;
     max-width: 90%;
     position: absolute;
-    top: 3.2vh;
+    top: 3.5vh;
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
@@ -139,15 +139,15 @@ h1:hover {
 }
 
 .perk-name {
-    font-size: 2.2vh;
+    font-size: 2.3vh;
     font-weight: bold;
     text-align: center;
     color: #ccc;
     position: absolute;
-    bottom: 4.8vh;
+    bottom: 5vh;
     left: 0;
     width: 100%;
-    height: 5.8vh;
+    height: 6vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -160,10 +160,10 @@ h1:hover {
 }
 
 .perk-category {
-    font-size: 1.35vh;
+    font-size: 1.4vh;
     color: #777;
     position: absolute;
-    bottom: 1.4vh;
+    bottom: 1.5vh;
     left: 0;
     width: 100%;
     text-align: center;
@@ -174,8 +174,8 @@ h1:hover {
     position: absolute;
     top: 1.2vh;
     left: 1.2vh;
-    width: 5.8vh;
-    height: 5.8vh;
+    width: 6vh;
+    height: 6vh;
     display: none;
     z-index: 10;
 }
@@ -237,8 +237,8 @@ h1:hover {
     position: absolute;
     top: 1.5vh;
     right: 1.5vh;
-    width: 4.8vh;
-    height: 4.8vh;
+    width: 5vh;
+    height: 5vh;
     z-index: 20;
     opacity: 0.3;
     transition: 0.3s;
@@ -272,13 +272,13 @@ h1:hover {
    -------------------------------------------------------------- */
 .right-panel {
     position: absolute;
-    right: 1.2vh;
+    right: 1.5vh;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 13vh;
+    width: 14vh;
     flex-shrink: 0;
     z-index: 15;
 }
@@ -296,8 +296,8 @@ h1:hover {
 .filter-tab {
     flex: 1;
     text-align: center;
-    padding: 0.6vh 0;
-    font-size: 1.15vh;
+    padding: 0.7vh 0;
+    font-size: 1.2vh;
     font-weight: bold;
     color: #666;
     cursor: pointer;
@@ -313,12 +313,12 @@ h1:hover {
 .tier-filter-container {
     display: flex;
     flex-direction: column;
-    gap: 0.5vh;
+    gap: 0.6vh;
     width: 100%;
 }
 
 .filter-title {
-    font-size: 1.15vh;
+    font-size: 1.2vh;
     font-weight: bold;
     color: #666;
     margin-bottom: 0.2vh;
@@ -328,12 +328,12 @@ h1:hover {
 }
 
 .tier-btn {
-    padding: 0.85vh 0;
+    padding: 0.9vh 0;
     background: rgba(10, 10, 10, 0.8);
     border: 0.2vh solid #2a2a2a;
     color: #555;
     font-weight: bold;
-    font-size: 1.25vh;
+    font-size: 1.3vh;
     border-radius: 0.4vh;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -374,12 +374,12 @@ body > .wrapper.mode-survivor .tier-btn.active {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.55vh 0;
+    padding: 0.6vh 0;
     background: rgba(10, 10, 10, 0.8);
     border: 0.2vh solid #2a2a2a;
     color: #555;
     font-weight: bold;
-    font-size: 1.05vh;
+    font-size: 1.1vh;
     border-radius: 0.4vh;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -424,30 +424,30 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 .score-container {
-    margin-top: 0.8vh;
+    margin-top: 1vh;
     background: rgba(10, 10, 10, 0.8);
     border: 0.2vh solid #2a2a2a;
     border-radius: 0.4vh;
-    padding: 0.8vh 0.4vh;
+    padding: 1vh 0.4vh;
     text-align: center;
     box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 6vh;
+    min-height: 6.5vh;
 }
 
 .avg-score-title {
-    font-size: 1.15vh;
+    font-size: 1.2vh;
     color: #666;
     font-weight: bold;
-    margin-bottom: 0.2vh;
+    margin-bottom: 0.3vh;
     text-shadow: 1px 1px 2px #000;
 }
 
 .avg-score {
-    font-size: 2.4vh;
+    font-size: 2.6vh;
     font-weight: 900;
     color: #333;
     transition: all 0.3s;
@@ -495,7 +495,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
     align-items: center;
     width: fit-content;
     box-shadow: 0 1.5vh 3.5vh rgba(0, 0, 0, 0.95);
-    height: 49vh;
+    height: 52vh;
 }
 
 .killer-img-container {
@@ -504,7 +504,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
     align-items: center;
     justify-content: flex-end;
     width: 28vh;
-    height: 45vh;
+    height: 48vh;
     flex-shrink: 0;
     position: relative;
     gap: 1vh;
@@ -513,7 +513,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
 .main-killer-img,
 .mainKillerImg {
     width: 100%;
-    height: 38vh;
+    height: 40vh;
     object-fit: contain;
     filter: drop-shadow(0 0 1.5vh rgba(255, 51, 51, 0.4));
     transition: 0.1s;
@@ -557,12 +557,12 @@ body > .wrapper.mode-survivor .cho-btn.active {
     align-items: center;
     position: relative;
     flex-shrink: 0;
-    width: 16vh;
+    width: 17vh;
 }
 
 .addon-slot {
-    width: 15vh;
-    height: 15vh;
+    width: 16vh;
+    height: 16vh;
     border-radius: 1.8vh;
     position: relative;
     display: flex;
@@ -595,7 +595,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 .addon-name {
-    font-size: 1.45vh;
+    font-size: 1.5vh;
     font-weight: bold;
     text-align: center;
     color: #aaa;
@@ -618,8 +618,8 @@ body > .wrapper.mode-survivor .cho-btn.active {
 
 .killer-list-panel {
     width: 36vh;
-    height: 49vh;
-    max-height: 49vh;
+    height: 52vh;
+    max-height: 52vh;
     overflow-y: auto;
     background: #121212;
     border: 0.3vh solid #333;
@@ -734,10 +734,10 @@ body > .wrapper.mode-survivor .cho-btn.active {
    5. 컨트롤 버튼 및 슬라이더 (START Button & Speed Slider)
    -------------------------------------------------------------- */
 button.start-btn {
-    margin-top: 2vh;
-    width: 30vh;
-    height: 6vh;
-    font-size: 2.8vh;
+    margin-top: 1.8vh;
+    width: 32vh;
+    height: 6.2vh;
+    font-size: 3vh;
     color: white;
     border-radius: 50px;
     cursor: pointer;
@@ -779,13 +779,13 @@ button.addon-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 24vh;
-    margin-top: 1vh;
+    width: 25vh;
+    margin-top: 0.8vh;
     transition: opacity 0.3s;
 }
 
 .speed-status {
-    font-size: 1.8vh;
+    font-size: 2vh;
     font-weight: bold;
     margin-bottom: 0.4vh;
     text-shadow: 0 0 5px currentColor;
@@ -979,25 +979,21 @@ input[type=range] {
         padding: 20px 10px 80px 10px;
         justify-content: flex-start;
         align-items: center;
-        display: flex;
-        flex-direction: column;
     }
 
     h1 {
-        order: 1;
         font-size: clamp(26px, 7vw, 42px);
         margin: 5px 0 15px 0;
         letter-spacing: 2px;
     }
 
-    /* 플렉스 컨테이너 평탄화로 모바일 최적 순서 보장 */
     .perk-wrapper {
-        order: 2;
-        display: contents;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
     }
 
     .perk-container {
-        order: 2;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
@@ -1070,34 +1066,7 @@ input[type=range] {
         height: 34px;
     }
 
-    /* 모바일에서는 START 버튼과 속도 슬라이더가 퍽 카드 바로 아래에 배치되어 즉시 회전 가능 */
-    button.start-btn {
-        order: 3;
-        width: min(85vw, 320px);
-        height: 52px;
-        font-size: 22px;
-        border-radius: 50px;
-        margin: 18px auto 10px auto;
-    }
-
-    .speed-control {
-        order: 4;
-        width: min(85vw, 260px);
-        margin: 5px auto;
-    }
-
-    .speed-status {
-        font-size: 16px;
-        margin-bottom: 4px;
-    }
-
-    input[type=range] {
-        height: 8px;
-    }
-
-    /* 필터 및 티어 패널은 조작부 아래에 배치 */
     .right-panel {
-        order: 5;
         position: static;
         transform: none;
         width: min(94vw, 440px);
@@ -1169,8 +1138,29 @@ input[type=range] {
         letter-spacing: 1px;
     }
 
+    button.start-btn {
+        width: min(85vw, 320px);
+        height: 52px;
+        font-size: 22px;
+        border-radius: 50px;
+        margin: 18px auto 10px auto;
+    }
+
+    .speed-control {
+        width: min(85vw, 260px);
+        margin: 5px auto;
+    }
+
+    .speed-status {
+        font-size: 16px;
+        margin-bottom: 4px;
+    }
+
+    input[type=range] {
+        height: 8px;
+    }
+
     .bottom-info-area {
-        order: 6;
         position: static;
         margin-top: 25px;
         align-items: center;
@@ -1191,17 +1181,18 @@ input[type=range] {
 
     /* 애드온 모드 모바일 */
     .addon-wrapper {
-        order: 2;
-        display: contents;
+        min-height: auto;
+        width: 100%;
     }
 
     .addon-area {
-        order: 2;
-        display: contents;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        gap: 15px;
     }
 
     .killer-addon-container {
-        order: 2;
         flex-direction: column;
         width: min(94vw, 440px);
         height: auto;
@@ -1209,7 +1200,6 @@ input[type=range] {
         border-radius: 18px;
         border-width: 3px;
         gap: 15px;
-        box-sizing: border-box;
     }
 
     .killer-img-container {
@@ -1253,11 +1243,10 @@ input[type=range] {
     }
 
     .killer-list-panel {
-        order: 5;
         width: min(94vw, 440px);
         height: 280px;
         max-height: 280px;
-        margin-top: 15px;
+        margin-top: 10px;
         border-radius: 14px;
         border-width: 2px;
         padding: 12px;
@@ -1368,3 +1357,4 @@ input[type=range] {
         gap: 8px;
     }
 }
+
