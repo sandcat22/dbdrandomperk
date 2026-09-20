@@ -30,8 +30,9 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: rgba(0, 0, 0, 0.85);
     background-blend-mode: overlay;
+    background-attachment: fixed;
 }
 
 /* 데스크탑 메인 컨테이너 (울트라와이드 max-width 제한 및 스트리머 max-height 94vh 제한) */
@@ -52,12 +53,7 @@ body > .wrapper {
     overflow: hidden; /* 데스크탑 내부 요소 절대 잘림 및 스크롤바 방지 */
     color: #ffffff;
     font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-    background-image: url('../images/background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: rgba(0, 0, 0, 0.85);
-    background-blend-mode: overlay;
+    background: transparent;
     transition: background-color 0.5s;
 }
 
