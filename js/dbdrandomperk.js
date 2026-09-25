@@ -786,6 +786,7 @@ function stopAddon(idx, item, path) {
     if (el.img) { el.img.src = path + item.file; el.img.style.display = 'block'; }
     if (el.bg && typeof PATHS !== 'undefined' && typeof rarityBgs !== 'undefined') {
         el.bg.src = PATHS.ADDON_BG + rarityBgs[item.rarity];
+        el.bg.style.display = 'block';
     }
     if (el.name) el.name.innerText = item.name;
     if (el.slot) {
