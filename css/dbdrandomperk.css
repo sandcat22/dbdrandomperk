@@ -35,13 +35,12 @@ body {
     background-attachment: fixed;
 }
 
-/* 데스크탑 메인 컨테이너 (울트라와이드 max-width 제한 및 스트리머 max-height 94vh 제한) */
+/* 데스크탑 메인 컨테이너 (화면비에 관계없이 중앙 정렬 및 와이드 수용) */
 body > .wrapper {
     height: 94vh;
     max-height: 94vh;
-    aspect-ratio: 16 / 9;
-    max-width: min(1800px, calc(94vh * 16 / 9));
     width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -49,7 +48,7 @@ body > .wrapper {
     align-items: center;
     position: relative;
     box-sizing: border-box;
-    padding: 1.2vh 1.8vw;
+    padding: 1.2vh 2vw;
     overflow: hidden; /* 데스크탑 내부 요소 절대 잘림 및 스크롤바 방지 */
     color: #ffffff;
     font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
@@ -57,19 +56,20 @@ body > .wrapper {
     transition: background-color 0.5s;
 }
 
-/* 상단 타이틀 */
+/* 상단 타이틀 (킬러퍽 / 생존자퍽 / 킬러애드온 - 카드 대비 글씨 크기 대폭 확대) */
 h1 {
     text-shadow: 0 0 15px currentColor;
     margin-top: 0;
     margin-bottom: clamp(6px, 1.2vh, 14px);
     font-style: italic;
-    font-size: clamp(28px, 4.5vh, 48px);
-    letter-spacing: clamp(2px, 0.35vh, 5px);
+    font-size: clamp(40px, 6vh, 72px);
+    letter-spacing: clamp(3px, 0.45vh, 7px);
     cursor: pointer;
     transition: 0.3s;
     user-select: none;
     line-height: 1.1;
     flex-shrink: 0;
+    text-align: center;
 }
 
 h1:hover {
@@ -77,14 +77,13 @@ h1:hover {
 }
 
 /* --------------------------------------------------------------
-   2. 퍽 모드 (Perk Mode - 중앙 퍽 슬롯과 우측 필터 메뉴 Flex 배치로 겹침 원천 방지)
+   2. 퍽 모드 (4개 카드 센터와 상단 타이틀, START 버튼 센터 완벽 일치)
    -------------------------------------------------------------- */
 .perk-wrapper {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: clamp(14px, 2vh, 32px); /* 퍽 컨테이너와 우측 패널 사이의 안전 간격 */
     width: 100%;
     position: relative;
     flex-shrink: 1;
@@ -95,12 +94,14 @@ h1:hover {
     gap: clamp(10px, 1.5vh, 22px);
     align-items: center;
     justify-content: center;
+    margin: 0 auto;
     flex-shrink: 1;
+    max-width: calc(100% - clamp(280px, 22vw, 380px));
 }
 
 .perk-card {
-    height: clamp(340px, 47vh, 520px);
-    width: calc(clamp(340px, 47vh, 520px) * 0.68);
+    height: clamp(320px, 47vh, 520px);
+    width: calc(clamp(320px, 47vh, 520px) * 0.68);
     aspect-ratio: 0.68;
     background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.95));
     border: 0.45vh solid #333;
@@ -111,7 +112,8 @@ h1:hover {
     position: relative;
     box-shadow: 0 1.2vh 3vh rgba(0, 0, 0, 0.95);
     box-sizing: border-box;
-    flex-shrink: 0;
+    flex-shrink: 1;
+    min-width: 0;
 }
 
 .perk-bg {
@@ -270,14 +272,17 @@ h1:hover {
 }
 
 /* --------------------------------------------------------------
-   3. 우측 필터 메뉴 패널 (Flex 배치로 퍽 카드와 겹침 없이 나란히 정렬)
+   3. 우측 필터 메뉴 패널 (좌우 비율 무관하게 항상 우측 배치 & 퍽 카드 센터 정렬 보장)
    -------------------------------------------------------------- */
 .right-panel {
-    position: relative; /* absolute 제거: 플렉스 컨테이너 안에서 절대 겹치지 않음 */
+    position: absolute;
+    right: clamp(16px, 2.5vw, 48px);
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: clamp(120px, 13vh, 160px);
+    width: clamp(125px, 13.5vh, 170px);
     flex-shrink: 0;
     z-index: 15;
 }
@@ -737,19 +742,24 @@ body > .wrapper.mode-survivor .cho-btn.active {
    -------------------------------------------------------------- */
 button.start-btn {
     margin-top: clamp(10px, 1.8vh, 22px);
-    width: clamp(220px, 28vh, 360px);
-    height: clamp(46px, 5.8vh, 68px);
-    font-size: clamp(20px, 2.8vh, 32px);
+    width: clamp(260px, 34vh, 440px);
+    height: clamp(54px, 6.8vh, 82px);
+    font-size: clamp(26px, 3.6vh, 44px);
+    letter-spacing: clamp(2px, 0.3vh, 4px);
     color: white;
     border-radius: 50px;
     cursor: pointer;
     font-weight: 900;
     transition: all 0.3s;
-    border: 0.3vh solid transparent;
+    border: 0.35vh solid transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+}
+
+button.start-btn:hover:not(:disabled) {
+    transform: scale(1.04);
 }
 
 button.start-btn:disabled {
@@ -782,7 +792,7 @@ button.addon-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: clamp(180px, 22vh, 280px);
+    width: clamp(200px, 25vh, 320px);
     margin-top: clamp(6px, 0.8vh, 12px);
     transition: opacity 0.3s;
     flex-shrink: 0;
@@ -989,7 +999,7 @@ input[type=range] {
 
     h1 {
         order: 1;
-        font-size: clamp(26px, 7vw, 42px);
+        font-size: clamp(30px, 8vw, 48px);
         margin: 5px 0 15px 0;
         letter-spacing: 2px;
     }
@@ -1077,9 +1087,10 @@ input[type=range] {
     /* 모바일에서는 START 버튼과 속도 슬라이더가 퍽 카드 바로 아래에 배치 */
     button.start-btn {
         order: 3;
-        width: min(85vw, 320px);
-        height: 52px;
-        font-size: 22px;
+        width: min(88vw, 360px);
+        height: 56px;
+        font-size: 26px;
+        letter-spacing: 2px;
         border-radius: 50px;
         margin: 18px auto 10px auto;
     }
