@@ -96,7 +96,7 @@ h1:hover {
     justify-content: center;
     margin: 0 auto;
     flex-shrink: 1;
-    max-width: calc(100% - clamp(280px, 22vw, 380px));
+    max-width: 100%;
 }
 
 .perk-card {
@@ -271,27 +271,206 @@ h1:hover {
     box-shadow: 0 0 20px rgba(255, 204, 0, 0.4), inset 0 0 20px rgba(255, 204, 0, 0.2) !important;
 }
 
-/* 데스크탑 기본: 모바일 전용 드로어 헤더, 오버레이, 토글 버튼 숨김 */
-.mobile-filter-toggle-btn,
-.mobile-drawer-overlay,
-.mobile-drawer-header {
-    display: none !important;
+/* --------------------------------------------------------------
+   3. 우측 사이드 드로어 시스템 (오른쪽에서 나오는 패널 & 오버랩 반투명 버튼)
+   -------------------------------------------------------------- */
+.drawer-overlay,
+.mobile-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1490;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* --------------------------------------------------------------
-   3. 우측 필터 메뉴 패널 (좌우 비율 무관하게 항상 우측 배치 & 퍽 카드 센터 정렬 보장)
-   -------------------------------------------------------------- */
+.drawer-overlay.active,
+.mobile-drawer-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.side-drawer-panel,
 .right-panel {
-    position: absolute;
-    right: clamp(16px, 2.5vw, 48px);
-    top: 50%;
-    transform: translateY(-50%);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    height: 100dvh;
+    width: clamp(290px, 22vw, 380px);
+    max-width: 88vw;
+    background: rgba(14, 14, 14, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: none;
+    border-left: 1.5px solid rgba(255, 255, 255, 0.16);
+    box-shadow: -15px 0 45px rgba(0, 0, 0, 0.9);
+    z-index: 1500;
+    transform: translateX(105%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 24px 18px max(24px, env(safe-area-inset-bottom, 24px)) 18px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    width: clamp(125px, 13.5vh, 170px);
+    justify-content: flex-start;
+    overflow-y: auto;
+    margin: 0;
+    scrollbar-width: thin;
+    scrollbar-color: #555 rgba(10, 10, 10, 0.6);
+}
+
+.side-drawer-panel.drawer-open,
+.right-panel.drawer-open,
+.side-drawer-panel.mobile-drawer-open,
+.right-panel.mobile-drawer-open {
+    transform: translateX(0%);
+}
+
+.drawer-header,
+.mobile-drawer-header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 16px;
     flex-shrink: 0;
-    z-index: 15;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding-bottom: 12px;
+}
+
+.drawer-drag-bar {
+    display: none;
+}
+
+.drawer-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.drawer-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.drawer-close-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.drawer-close-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.08);
+}
+
+.drawer-close-btn:active {
+    transform: scale(0.92);
+}
+
+/* 오버랩 반투명 플로팅 필터/살인마 선택 버튼 */
+.filter-toggle-pill-btn,
+.mobile-filter-toggle-btn {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: rgba(20, 20, 20, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid rgba(255, 255, 255, 0.32);
+    border-radius: 30px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 22px rgba(0, 0, 0, 0.75);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.2s,
+                box-shadow 0.2s,
+                border-color 0.2s;
+    font-family: 'Malgun Gothic', sans-serif;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.filter-toggle-pill-btn:hover,
+.mobile-filter-toggle-btn:hover {
+    transform: translateY(-50%) scale(1.06);
+    background: rgba(35, 35, 35, 0.95);
+}
+
+.filter-toggle-pill-btn:active,
+.mobile-filter-toggle-btn:active {
+    transform: translateY(-50%) scale(0.96);
+}
+
+.filter-toggle-pill-btn.killer-toggle,
+.mobile-filter-toggle-btn.killer-toggle,
+body > .wrapper.mode-killer .filter-toggle-pill-btn,
+body > .wrapper.mode-killer .mobile-filter-toggle-btn {
+    border-color: rgba(255, 51, 51, 0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 14px rgba(255, 51, 51, 0.35);
+}
+
+.filter-toggle-pill-btn.killer-toggle:hover,
+.mobile-filter-toggle-btn.killer-toggle:hover {
+    border-color: rgba(255, 51, 51, 0.95);
+    box-shadow: 0 6px 26px rgba(255, 51, 51, 0.6), inset 0 0 12px rgba(255, 51, 51, 0.25);
+}
+
+.filter-toggle-pill-btn.survivor-toggle,
+.mobile-filter-toggle-btn.survivor-toggle,
+body > .wrapper.mode-survivor .filter-toggle-pill-btn,
+body > .wrapper.mode-survivor .mobile-filter-toggle-btn {
+    border-color: rgba(77, 166, 255, 0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 14px rgba(77, 166, 255, 0.35);
+}
+
+.filter-toggle-pill-btn.survivor-toggle:hover,
+.mobile-filter-toggle-btn.survivor-toggle:hover {
+    border-color: rgba(77, 166, 255, 0.95);
+    box-shadow: 0 6px 26px rgba(77, 166, 255, 0.6), inset 0 0 12px rgba(77, 166, 255, 0.25);
+}
+
+.filter-toggle-pill-btn.addon-toggle,
+.mobile-filter-toggle-btn.addon-toggle {
+    border-color: rgba(224, 64, 251, 0.6) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 14px rgba(224, 64, 251, 0.35) !important;
+}
+
+.filter-toggle-pill-btn.addon-toggle:hover,
+.mobile-filter-toggle-btn.addon-toggle:hover {
+    border-color: rgba(224, 64, 251, 0.95) !important;
+    box-shadow: 0 6px 26px rgba(224, 64, 251, 0.6), inset 0 0 12px rgba(224, 64, 251, 0.25) !important;
+}
+
+.filter-toggle-pill-btn.open,
+.mobile-filter-toggle-btn.open {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) scale(0.85);
 }
 
 .filter-tab-container {
@@ -476,7 +655,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 /* --------------------------------------------------------------
-   4. 애드온 모드 (Addon Mode - 살인마 애드온 영역과 우측 목록 패널 Flex 배치)
+   4. 애드온 모드 (왼쪽 살인마 단독 이미지 + 가운데 애드온 룰렛 박스 합쳐서 센터 정렬)
    -------------------------------------------------------------- */
 .addon-wrapper {
     display: flex;
@@ -485,51 +664,39 @@ body > .wrapper.mode-survivor .cho-btn.active {
     width: 100%;
     position: relative;
     flex-shrink: 1;
+    margin: 1.5vh auto;
 }
 
 .addon-area {
     display: flex;
     flex-direction: row;
-    gap: clamp(14px, 2vh, 32px);
+    gap: clamp(24px, 3.5vw, 54px);
     align-items: center;
     justify-content: center;
-    width: 100%;
-}
-
-.killer-addon-container {
-    background: linear-gradient(145deg, #181818, #0a0a0a);
-    padding: 1.8vh 2.5vh;
-    border-radius: 2vh;
-    border: 0.4vh solid #3a3a3a;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    gap: 2.2vh;
-    align-items: center;
     width: fit-content;
-    box-shadow: 0 1.2vh 3vh rgba(0, 0, 0, 0.95);
-    height: clamp(300px, 44vh, 490px);
+    margin: 0 auto;
 }
 
-.killer-img-container {
+/* 1. 왼쪽에 따로 나오는 살인마 그림 및 이름 */
+.killer-standalone-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    width: clamp(180px, 26vh, 280px);
-    height: 43vh;
+    width: clamp(190px, 25vh, 290px);
+    height: clamp(300px, 44vh, 490px);
     flex-shrink: 0;
     position: relative;
-    gap: 0.8vh;
+    gap: 1.2vh;
 }
 
 .main-killer-img,
 .mainKillerImg {
     width: 100%;
-    height: 36vh;
+    height: clamp(230px, 35vh, 390px);
     object-fit: contain;
-    filter: drop-shadow(0 0 1.5vh rgba(255, 51, 51, 0.4));
-    transition: 0.1s;
+    filter: drop-shadow(0 0 24px rgba(224, 64, 251, 0.45));
+    transition: filter 0.2s, transform 0.2s;
 }
 
 .main-killer-img.spinning,
@@ -540,14 +707,16 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 .killer-name-display {
-    font-size: clamp(16px, 2.1vh, 24px);
+    font-size: clamp(17px, 2.3vh, 26px);
     font-weight: 900;
     color: #E040FB;
-    text-shadow: 0 0 1vh #E040FB;
+    text-shadow: 0 0 12px #E040FB;
     text-align: center;
     width: 100%;
-    min-height: 3vh;
+    min-height: 3.5vh;
+    line-height: 1.2;
     transition: 0.1s;
+    letter-spacing: 0.5px;
 }
 
 .main-killer-img.spinning ~ .killer-name-display,
@@ -556,10 +725,27 @@ body > .wrapper.mode-survivor .cho-btn.active {
     opacity: 0.7;
 }
 
+/* 2. 가운데 박스 안에 들어가는 애드온 룰렛 */
+.killer-addon-container {
+    background: linear-gradient(145deg, #181818, #0a0a0a);
+    padding: clamp(20px, 3vh, 36px) clamp(24px, 3.5vh, 44px);
+    border-radius: 2vh;
+    border: 0.4vh solid #3a3a3a;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    box-shadow: 0 1.2vh 3vh rgba(0, 0, 0, 0.95);
+    height: clamp(300px, 44vh, 490px);
+    flex-shrink: 0;
+}
+
 .addon-slot-area {
     display: flex;
     flex-direction: row;
-    gap: 1.8vh;
+    gap: clamp(16px, 2.5vh, 32px);
     justify-content: center;
     align-items: center;
 }
@@ -570,12 +756,12 @@ body > .wrapper.mode-survivor .cho-btn.active {
     align-items: center;
     position: relative;
     flex-shrink: 0;
-    width: clamp(100px, 15vh, 160px);
+    width: clamp(115px, 17vh, 185px);
 }
 
 .addon-slot {
-    width: clamp(95px, 14.5vh, 150px);
-    height: clamp(95px, 14.5vh, 150px);
+    width: clamp(110px, 16vh, 175px);
+    height: clamp(110px, 16vh, 175px);
     border-radius: 1.6vh;
     position: relative;
     display: flex;
@@ -608,11 +794,11 @@ body > .wrapper.mode-survivor .cho-btn.active {
 }
 
 .addon-name {
-    font-size: clamp(11px, 1.4vh, 16px);
+    font-size: clamp(12px, 1.45vh, 17px);
     font-weight: bold;
     text-align: center;
     color: #aaa;
-    min-height: 3.2vh;
+    min-height: 3.5vh;
     width: 100%;
     line-height: 1.25;
     margin-top: 0.3vh;
@@ -629,22 +815,39 @@ body > .wrapper.mode-survivor .cho-btn.active {
     text-shadow: 0 0 10px #E040FB;
 }
 
+/* 3. 오른쪽에서 나오는 살인마 목록 사이드 드로어 */
 .killer-list-panel {
-    width: clamp(240px, 34vh, 380px);
-    height: clamp(300px, 44vh, 490px);
-    max-height: clamp(300px, 44vh, 490px);
-    overflow-y: auto;
-    background: #121212;
-    border: 0.3vh solid #333;
-    border-radius: 1.6vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    height: 100dvh;
+    width: clamp(290px, 24vw, 420px);
+    max-width: 88vw;
+    background: rgba(14, 14, 14, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: none;
+    border-left: 1.5px solid rgba(224, 64, 251, 0.35);
+    box-shadow: -15px 0 45px rgba(0, 0, 0, 0.9);
+    z-index: 1500;
+    transform: translateX(105%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 24px 18px max(24px, env(safe-area-inset-bottom, 24px)) 18px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    padding: 1.2vh;
-    box-shadow: 0 1.2vh 3vh rgba(0, 0, 0, 0.85);
-    box-sizing: border-box;
+    justify-content: flex-start;
+    overflow-y: auto;
+    margin: 0;
     scrollbar-width: thin;
     scrollbar-color: #555 rgba(10, 10, 10, 0.6);
-    flex-shrink: 0;
+}
+
+.killer-list-panel.drawer-open,
+.killer-list-panel.mobile-drawer-open {
+    transform: translateX(0%);
 }
 
 .killer-list-panel::-webkit-scrollbar {
@@ -1138,171 +1341,72 @@ input[type=range] {
         border-radius: 4px;
     }
 
-    /* 모바일 오버랩 반투명 플로팅 필터 버튼 */
-    .mobile-filter-toggle-btn {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        gap: 7px;
-        position: fixed;
-        bottom: max(16px, env(safe-area-inset-bottom, 16px));
-        right: 16px;
-        z-index: 1000;
-        padding: 9px 18px;
-        background: rgba(20, 20, 20, 0.78);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1.5px solid rgba(255, 255, 255, 0.32);
-        border-radius: 30px;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 900;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75);
-        cursor: pointer;
-        transition: all 0.25s ease;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
+    /* 모바일 오버랩 반투명 플로팅 필터 버튼 (우측 하단 배치) */
+    .mobile-filter-toggle-btn,
+    .filter-toggle-pill-btn {
+        top: auto !important;
+        bottom: max(16px, env(safe-area-inset-bottom, 16px)) !important;
+        right: 16px !important;
+        transform: none !important;
+        padding: 9px 16px !important;
+        font-size: 13px !important;
     }
 
-    .mobile-filter-toggle-btn:active {
-        transform: scale(0.93);
-        background: rgba(40, 40, 40, 0.9);
+    .mobile-filter-toggle-btn:hover,
+    .filter-toggle-pill-btn:hover {
+        transform: scale(1.05) !important;
     }
 
-    .mobile-filter-toggle-btn.killer-toggle,
-    body > .wrapper.mode-killer .mobile-filter-toggle-btn {
-        border-color: rgba(255, 51, 51, 0.55);
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75), 0 0 12px rgba(255, 51, 51, 0.35);
+    .mobile-filter-toggle-btn:active,
+    .filter-toggle-pill-btn:active {
+        transform: scale(0.95) !important;
     }
 
-    .mobile-filter-toggle-btn.survivor-toggle,
-    body > .wrapper.mode-survivor .mobile-filter-toggle-btn {
-        border-color: rgba(77, 166, 255, 0.55);
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75), 0 0 12px rgba(77, 166, 255, 0.35);
+    .mobile-filter-toggle-btn.open,
+    .filter-toggle-pill-btn.open {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transform: scale(0.8) !important;
     }
 
-    .mobile-filter-toggle-btn.addon-toggle {
-        border-color: rgba(224, 64, 251, 0.55) !important;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75), 0 0 12px rgba(224, 64, 251, 0.35) !important;
-    }
-
-    .mobile-filter-toggle-btn.open {
-        opacity: 0;
-        pointer-events: none;
-        transform: scale(0.8);
-    }
-
-    /* 모바일 배경 딤드 오버레이 */
-    .mobile-drawer-overlay {
-        display: block !important;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        height: 100dvh;
-        background: rgba(0, 0, 0, 0.65);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        z-index: 1500;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-    }
-
-    .mobile-drawer-overlay.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    /* 모바일 바텀시트 슬라이드 드로어 (우측 패널) */
-    .right-panel {
-        order: unset !important;
+    /* 모바일 우측 사이드 드로어 패널 */
+    .side-drawer-panel,
+    .right-panel,
+    .killer-list-panel {
         position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
         bottom: 0 !important;
-        left: 50% !important;
-        transform: translate(-50%, 105%) !important;
-        width: min(94vw, 480px) !important;
-        max-width: 480px !important;
-        height: auto !important;
-        max-height: 80vh !important;
-        max-height: 80dvh !important;
-        overflow-y: auto !important;
-        background: rgba(16, 16, 16, 0.96) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
-        border: 2px solid rgba(255, 255, 255, 0.2) !important;
-        border-bottom: none !important;
-        border-top-left-radius: 22px !important;
-        border-top-right-radius: 22px !important;
-        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9) !important;
-        padding: 12px 18px max(24px, env(safe-area-inset-bottom, 24px)) 18px !important;
-        z-index: 1501 !important;
-        margin: 0 !important;
-        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        left: auto !important;
+        width: min(88vw, 360px) !important;
+        max-width: 88vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        max-height: 100vh !important;
+        max-height: 100dvh !important;
+        transform: translateX(105%) !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-left: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+        padding: 20px 16px max(24px, env(safe-area-inset-bottom, 24px)) 16px !important;
+        box-shadow: -15px 0 45px rgba(0, 0, 0, 0.9) !important;
         box-sizing: border-box !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-start !important;
+        z-index: 1501 !important;
+        margin: 0 !important;
+        overflow-y: auto !important;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
 
-    .right-panel.mobile-drawer-open {
-        transform: translate(-50%, 0%) !important;
-    }
-
-    .mobile-drawer-header {
-        display: flex !important;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        margin-bottom: 14px;
-        position: relative;
-        flex-shrink: 0;
-        z-index: 10;
-    }
-
-    .drawer-drag-bar {
-        width: 42px;
-        height: 4.5px;
-        background: rgba(255, 255, 255, 0.35);
-        border-radius: 3px;
-        margin-bottom: 8px;
-    }
-
-    .drawer-title-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding: 0 4px;
-    }
-
-    .drawer-title {
-        font-size: 16px;
-        font-weight: 900;
-        color: #ffffff;
-        letter-spacing: 0.5px;
-    }
-
-    .drawer-close-btn {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        color: #fff;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: 0.2s;
-        line-height: 1;
-    }
-
-    .drawer-close-btn:active {
-        background: rgba(255, 255, 255, 0.3);
-        transform: scale(0.92);
+    .side-drawer-panel.drawer-open,
+    .right-panel.drawer-open,
+    .killer-list-panel.drawer-open,
+    .side-drawer-panel.mobile-drawer-open,
+    .right-panel.mobile-drawer-open,
+    .killer-list-panel.mobile-drawer-open {
+        transform: translateX(0%) !important;
     }
 
     .right-panel > *,
@@ -1387,100 +1491,99 @@ input[type=range] {
         letter-spacing: 1px;
     }
 
-    /* 애드온 모드 모바일 */
-    .addon-wrapper {
+    /* 애드온 모드 모바일 (왼쪽 살인마 단독 + 가운데 애드온 룰렛 박스 합쳐서 센터) */
+    .addon-wrapper.hide,
+    .perk-wrapper.hide {
+        display: none !important;
+    }
+
+    .addon-wrapper:not(.hide) {
         order: 2;
-        display: contents;
+        width: 100%;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 6px 0;
     }
 
     .addon-area {
-        order: 2;
-        display: contents;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        width: fit-content !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 auto !important;
+        padding: 0 6px;
     }
 
-    .killer-addon-container {
-        order: 2;
-        flex-direction: column;
-        width: min(94vw, 540px);
-        height: auto;
-        padding: 16px;
-        border-radius: 18px;
-        border-width: 3px;
-        gap: 15px;
-        box-sizing: border-box;
-    }
-
-    .killer-img-container {
-        width: 100%;
-        height: 260px;
-        gap: 8px;
+    /* 1. 왼쪽에 따로 나오는 살인마 그림 */
+    .killer-standalone-container {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        width: clamp(90px, 28vw, 130px) !important;
+        height: auto !important;
+        min-height: 140px !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
     }
 
     .main-killer-img,
     .mainKillerImg {
-        height: 220px;
+        width: 100% !important;
+        height: clamp(110px, 18vh, 160px) !important;
+        object-fit: contain !important;
+        filter: drop-shadow(0 0 14px rgba(224, 64, 251, 0.4)) !important;
     }
 
     .killer-name-display {
-        font-size: 20px;
-        min-height: 30px;
+        font-size: clamp(12px, 3.5vw, 16px) !important;
+        min-height: auto !important;
+        line-height: 1.2 !important;
+    }
+
+    /* 2. 가운데 박스 안에 들어가는 애드온 룰렛 */
+    .killer-addon-container {
+        order: unset !important;
+        flex-direction: column !important;
+        width: auto !important;
+        height: auto !important;
+        padding: 10px 10px !important;
+        border-radius: 12px !important;
+        border: 2px solid #3a3a3a !important;
+        gap: 0 !important;
+        box-sizing: border-box !important;
+        flex-shrink: 0 !important;
     }
 
     .addon-slot-area {
-        flex-direction: row;
-        gap: 12px;
-        justify-content: center;
+        flex-direction: row !important;
+        gap: 8px !important;
+        justify-content: center !important;
     }
 
     .addon-slot-container {
-        width: 110px;
+        width: clamp(72px, 20vw, 92px) !important;
+        gap: 4px !important;
     }
 
     .addon-slot {
-        width: 100px;
-        height: 100px;
-        border-radius: 12px;
-        border-width: 3px;
-        margin-bottom: 6px;
+        width: clamp(72px, 20vw, 92px) !important;
+        height: clamp(72px, 20vw, 92px) !important;
+        border-radius: 8px !important;
+        border-width: 2px !important;
+        margin-bottom: 2px !important;
     }
 
     .addon-name {
-        font-size: 12px;
-        min-height: 32px;
-        width: 100px;
-    }
-
-    .killer-list-panel {
-        order: unset !important;
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 50% !important;
-        transform: translate(-50%, 105%) !important;
-        width: min(94vw, 480px) !important;
-        max-width: 480px !important;
-        height: auto !important;
-        max-height: 80vh !important;
-        max-height: 80dvh !important;
-        overflow-y: auto !important;
-        background: rgba(16, 16, 16, 0.96) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
-        border: 2px solid rgba(224, 64, 251, 0.35) !important;
-        border-bottom: none !important;
-        border-top-left-radius: 22px !important;
-        border-top-right-radius: 22px !important;
-        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9) !important;
-        padding: 12px 18px max(24px, env(safe-area-inset-bottom, 24px)) 18px !important;
-        z-index: 1501 !important;
-        margin: 0 !important;
-        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        box-sizing: border-box !important;
-        display: flex !important;
-        flex-direction: column !important;
-    }
-
-    .killer-list-panel.mobile-drawer-open {
-        transform: translate(-50%, 0%) !important;
+        font-size: 11px !important;
+        min-height: 28px !important;
+        width: clamp(72px, 20vw, 92px) !important;
+        line-height: 1.2 !important;
     }
 
     .killer-scroll-list {

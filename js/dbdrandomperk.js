@@ -1013,7 +1013,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================================================
-// 10. 모바일 전용 슬라이드업 드로어 컨트롤 함수
+// 10. 우측 사이드 드로어 컨트롤 함수 (데스크톱 & 모바일 공용)
 // ============================================================================
 function updateMobileToggle() {
     const btn = DOM.get('btnMobileFilterToggle');
@@ -1024,22 +1024,22 @@ function updateMobileToggle() {
     closeMobileDrawer();
 
     if (dbdBucket.currentMode === 'killer_addon') {
-        btn.className = 'mobile-filter-toggle-btn addon-toggle';
+        btn.className = 'filter-toggle-pill-btn mobile-filter-toggle-btn addon-toggle';
         icon.innerText = '👤';
         text.innerText = '살인마 선택';
     } else if (dbdBucket.currentMode === 'survivor_perk') {
-        btn.className = 'mobile-filter-toggle-btn survivor-toggle';
+        btn.className = 'filter-toggle-pill-btn mobile-filter-toggle-btn survivor-toggle';
         icon.innerText = '⚙️';
         text.innerText = '필터 설정';
     } else {
-        btn.className = 'mobile-filter-toggle-btn killer-toggle';
+        btn.className = 'filter-toggle-pill-btn mobile-filter-toggle-btn killer-toggle';
         icon.innerText = '⚙️';
         text.innerText = '필터 설정';
     }
 }
 
 function openMobileDrawer() {
-    const overlay = DOM.get('mobileDrawerOverlay');
+    const overlay = DOM.get('mobileDrawerOverlay') || DOM.get('drawerOverlay');
     const rightPanel = DOM.get('rightPanel');
     const addonRightPanel = DOM.get('addonRightPanel');
     const btn = DOM.get('btnMobileFilterToggle');
@@ -1048,7 +1048,7 @@ function openMobileDrawer() {
     const targetPanel = isAddon ? addonRightPanel : rightPanel;
 
     if (targetPanel) {
-        targetPanel.classList.add('mobile-drawer-open');
+        targetPanel.classList.add('drawer-open', 'mobile-drawer-open');
     }
     if (overlay) {
         overlay.classList.add('active');
@@ -1059,13 +1059,13 @@ function openMobileDrawer() {
 }
 
 function closeMobileDrawer() {
-    const overlay = DOM.get('mobileDrawerOverlay');
+    const overlay = DOM.get('mobileDrawerOverlay') || DOM.get('drawerOverlay');
     const rightPanel = DOM.get('rightPanel');
     const addonRightPanel = DOM.get('addonRightPanel');
     const btn = DOM.get('btnMobileFilterToggle');
 
-    if (rightPanel) rightPanel.classList.remove('mobile-drawer-open');
-    if (addonRightPanel) addonRightPanel.classList.remove('mobile-drawer-open');
+    if (rightPanel) rightPanel.classList.remove('drawer-open', 'mobile-drawer-open');
+    if (addonRightPanel) addonRightPanel.classList.remove('drawer-open', 'mobile-drawer-open');
     if (overlay) overlay.classList.remove('active');
     if (btn) btn.classList.remove('open');
 }
@@ -1076,9 +1076,13 @@ function toggleMobileDrawer() {
     const isAddon = dbdBucket.currentMode === 'killer_addon';
     const targetPanel = isAddon ? addonRightPanel : rightPanel;
 
-    if (targetPanel && targetPanel.classList.contains('mobile-drawer-open')) {
+    if (targetPanel && (targetPanel.classList.contains('drawer-open') || targetPanel.classList.contains('mobile-drawer-open'))) {
         closeMobileDrawer();
     } else {
         openMobileDrawer();
     }
 }
+
+const openDrawer = openMobileDrawer;
+const closeDrawer = closeMobileDrawer;
+const toggleDrawer = toggleMobileDrawer;

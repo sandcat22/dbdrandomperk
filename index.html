@@ -12,13 +12,13 @@
     <meta property="og:image" content="https://sandcat22.github.io/dbdrandomperk/images/perk_bg.png">
     <meta property="og:image:width" content="800">
     <meta property="og:image:height" content="400">
-    <link rel="stylesheet" type="text/css" href="css/dbdrandomperk.css?v=20260925_v3" />
+    <link rel="stylesheet" type="text/css" href="css/dbdrandomperk.css?v=20260925_v4" />
     <script src="js/library.js"></script>
     <script src="js/updatenotes.js"></script>
 </head>
 <body>
     <div id="Wrapper" class="wrapper mode-killer">
-        <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+        <div class="drawer-overlay mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
         <div class="modal-overlay" id="updateModalOverlay">
             <div class="modal-content" id="updateModalContent">
                 <div class="modal-header">
@@ -61,8 +61,8 @@
                 </div>
             </div>
             
-            <div id="rightPanel" class="right-panel">
-                <div class="mobile-drawer-header">
+            <div id="rightPanel" class="right-panel side-drawer-panel">
+                <div class="drawer-header mobile-drawer-header">
                     <div class="drawer-drag-bar"></div>
                     <div class="drawer-title-row">
                         <span class="drawer-title" id="drawerTitle">⚙️ 필터 설정</span>
@@ -111,12 +111,15 @@
         </div>
 
         <div id="addonWrapper" class="addon-wrapper hide">
-            <div class="addon-area">
+            <div class="addon-area" id="addonArea">
+                <!-- 왼쪽에 따로 나오는 살인마 그림 및 이름 -->
+                <div class="killer-standalone-container" id="killerStandaloneContainer">
+                    <img src="" id="mainKillerImg" class="main-killer-img mainKillerImg" alt="살인마 이미지">
+                    <div id="mainKillerName" class="killer-name-display"></div>
+                </div>
+
+                <!-- 가운데 박스 안에 들어가는 애드온 룰렛 -->
                 <div id="addonContainer" class="killer-addon-container">
-                    <div class="killer-img-container">
-                        <img src="" id="mainKillerImg" class="main-killer-img mainKillerImg">
-                        <div id="mainKillerName" class="killer-name-display"></div>
-                    </div>
                     <div class="addon-slot-area">
                         <div class="addon-slot-container">
                             <div class="addon-slot" id="slot1"><img src="" id="adBg1" class="addon-bg-img"><img src="" id="adImg1" class="addon-img"></div>
@@ -128,24 +131,24 @@
                         </div>
                     </div>
                 </div>
-                
-                <div id="addonRightPanel" class="killer-list-panel">
-                    <div class="mobile-drawer-header">
-                        <div class="drawer-drag-bar"></div>
-                        <div class="drawer-title-row">
-                            <span class="drawer-title">👤 살인마 선택</span>
-                            <button class="drawer-close-btn" id="btnDrawerCloseAddon" type="button" aria-label="닫기">&times;</button>
-                        </div>
+            </div>
+            
+            <div id="addonRightPanel" class="killer-list-panel side-drawer-panel">
+                <div class="drawer-header mobile-drawer-header">
+                    <div class="drawer-drag-bar"></div>
+                    <div class="drawer-title-row">
+                        <span class="drawer-title">👤 살인마 선택</span>
+                        <button class="drawer-close-btn" id="btnDrawerCloseAddon" type="button" aria-label="닫기">&times;</button>
                     </div>
-                    <div id="callKillerList" class="killer-list-panel-call-btn"></div>
-                    <div class="killer-list-top-area">
-                        <button id="btnRandomKiller" class="killer-list-btn random-btn">
-                            <span class="chk-box"></span> 다중 선택
-                        </button>
-                        <button id="btnSelectAllKillers" class="killer-list-btn all">ALL</button>
-                    </div>
-                    <div id="killerListContainer" class="killer-scroll-list"></div>
                 </div>
+                <div id="callKillerList" class="killer-list-panel-call-btn"></div>
+                <div class="killer-list-top-area">
+                    <button id="btnRandomKiller" class="killer-list-btn random-btn">
+                        <span class="chk-box"></span> 다중 선택
+                    </button>
+                    <button id="btnSelectAllKillers" class="killer-list-btn all">ALL</button>
+                </div>
+                <div id="killerListContainer" class="killer-scroll-list"></div>
             </div>
         </div>
 
@@ -156,7 +159,7 @@
             <input type="range" id="speedRange" min="0" max="3" value="2" step="1">
         </div>
 
-        <button id="btnMobileFilterToggle" class="mobile-filter-toggle-btn" type="button" aria-label="필터 메뉴 열기">
+        <button id="btnMobileFilterToggle" class="filter-toggle-pill-btn mobile-filter-toggle-btn killer-toggle" type="button" aria-label="필터/살인마 메뉴 열기">
             <span class="filter-toggle-icon" id="mobileFilterIcon">⚙️</span>
             <span class="filter-toggle-text" id="mobileFilterText">필터 설정</span>
         </button>
