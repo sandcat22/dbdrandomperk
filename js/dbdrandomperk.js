@@ -255,6 +255,10 @@ function updateInterface() {
             bg.src = isKiller ? "images/perk_bg.png" : "images/perk_bg_survivor.png";
         });
     }
+
+    if (typeof updateMobileToggle === 'function') {
+        updateMobileToggle();
+    }
 }
 
 function resetSlots(forceAll = false) {
@@ -973,11 +977,27 @@ window.addEventListener('DOMContentLoaded', () => {
     const callKillerList = DOM.get('callKillerList');
     const addonRightPanel = DOM.get('addonRightPanel');
     if (callKillerList) callKillerList.addEventListener('click', () => {
-        addonRightPanel.classList.contains('active') ? addonRightPanel.classList.remove('active') : addonRightPanel.classList.add('active');
+        toggleMobileDrawer();
     });
+
+    // 9-4. 모바일 반투명 오버랩 필터 토글 & 드로어 연동
+    const btnMobileToggle = DOM.get('btnMobileFilterToggle');
+    if (btnMobileToggle) btnMobileToggle.addEventListener('click', toggleMobileDrawer);
+
+    const mobileDrawerOverlay = DOM.get('mobileDrawerOverlay');
+    if (mobileDrawerOverlay) mobileDrawerOverlay.addEventListener('click', closeMobileDrawer);
+
+    const btnDrawerClose = DOM.get('btnDrawerClose');
+    if (btnDrawerClose) btnDrawerClose.addEventListener('click', closeMobileDrawer);
+
+    const btnDrawerCloseAddon = DOM.get('btnDrawerCloseAddon');
+    if (btnDrawerCloseAddon) btnDrawerCloseAddon.addEventListener('click', closeMobileDrawer);
+
+    updateMobileToggle();
 
     document.addEventListener('keydown', function(event) {
         if (event.key === "Escape") {
+            closeMobileDrawer();
             const modal = DOM.get('updateModalOverlay');
             if (modal && modal.classList.contains('show')) {
                 closeUpdateNotes();
@@ -991,3 +1011,74 @@ window.addEventListener('DOMContentLoaded', () => {
         openUpdateNotes();
     }
 });
+
+// ============================================================================
+// 10. 모바일 전용 슬라이드업 드로어 컨트롤 함수
+// ============================================================================
+function updateMobileToggle() {
+    const btn = DOM.get('btnMobileFilterToggle');
+    const icon = DOM.get('mobileFilterIcon');
+    const text = DOM.get('mobileFilterText');
+    if (!btn || !icon || !text) return;
+
+    closeMobileDrawer();
+
+    if (dbdBucket.currentMode === 'killer_addon') {
+        btn.className = 'mobile-filter-toggle-btn addon-toggle';
+        icon.innerText = '👤';
+        text.innerText = '살인마 선택';
+    } else if (dbdBucket.currentMode === 'survivor_perk') {
+        btn.className = 'mobile-filter-toggle-btn survivor-toggle';
+        icon.innerText = '⚙️';
+        text.innerText = '필터 설정';
+    } else {
+        btn.className = 'mobile-filter-toggle-btn killer-toggle';
+        icon.innerText = '⚙️';
+        text.innerText = '필터 설정';
+    }
+}
+
+function openMobileDrawer() {
+    const overlay = DOM.get('mobileDrawerOverlay');
+    const rightPanel = DOM.get('rightPanel');
+    const addonRightPanel = DOM.get('addonRightPanel');
+    const btn = DOM.get('btnMobileFilterToggle');
+
+    const isAddon = dbdBucket.currentMode === 'killer_addon';
+    const targetPanel = isAddon ? addonRightPanel : rightPanel;
+
+    if (targetPanel) {
+        targetPanel.classList.add('mobile-drawer-open');
+    }
+    if (overlay) {
+        overlay.classList.add('active');
+    }
+    if (btn) {
+        btn.classList.add('open');
+    }
+}
+
+function closeMobileDrawer() {
+    const overlay = DOM.get('mobileDrawerOverlay');
+    const rightPanel = DOM.get('rightPanel');
+    const addonRightPanel = DOM.get('addonRightPanel');
+    const btn = DOM.get('btnMobileFilterToggle');
+
+    if (rightPanel) rightPanel.classList.remove('mobile-drawer-open');
+    if (addonRightPanel) addonRightPanel.classList.remove('mobile-drawer-open');
+    if (overlay) overlay.classList.remove('active');
+    if (btn) btn.classList.remove('open');
+}
+
+function toggleMobileDrawer() {
+    const rightPanel = DOM.get('rightPanel');
+    const addonRightPanel = DOM.get('addonRightPanel');
+    const isAddon = dbdBucket.currentMode === 'killer_addon';
+    const targetPanel = isAddon ? addonRightPanel : rightPanel;
+
+    if (targetPanel && targetPanel.classList.contains('mobile-drawer-open')) {
+        closeMobileDrawer();
+    } else {
+        openMobileDrawer();
+    }
+}

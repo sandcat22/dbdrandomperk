@@ -271,6 +271,13 @@ h1:hover {
     box-shadow: 0 0 20px rgba(255, 204, 0, 0.4), inset 0 0 20px rgba(255, 204, 0, 0.2) !important;
 }
 
+/* 데스크탑 기본: 모바일 전용 드로어 헤더, 오버레이, 토글 버튼 숨김 */
+.mobile-filter-toggle-btn,
+.mobile-drawer-overlay,
+.mobile-drawer-header {
+    display: none !important;
+}
+
 /* --------------------------------------------------------------
    3. 우측 필터 메뉴 패널 (좌우 비율 무관하게 항상 우측 배치 & 퍽 카드 센터 정렬 보장)
    -------------------------------------------------------------- */
@@ -989,8 +996,8 @@ input[type=range] {
         min-height: 100vh;
         min-height: 100dvh;
         overflow-x: hidden;
-        overflow-y: visible;
-        padding: 20px 10px 80px 10px;
+        overflow-y: auto;
+        padding: 10px 8px 16px 8px;
         justify-content: flex-start;
         align-items: center;
         display: flex;
@@ -999,9 +1006,9 @@ input[type=range] {
 
     h1 {
         order: 1;
-        font-size: clamp(30px, 8vw, 48px);
-        margin: 8px 0 20px 0;
-        letter-spacing: 2px;
+        font-size: clamp(26px, 7.5vw, 38px);
+        margin: 4px 0 10px 0;
+        letter-spacing: 1.5px;
     }
 
     /* 플렉스 컨테이너 평탄화로 모바일 최적 순서 보장 */
@@ -1014,9 +1021,9 @@ input[type=range] {
         order: 2;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: clamp(10px, 2vh, 18px);
-        width: min(94vw, 540px);
-        max-width: 540px;
+        gap: clamp(8px, 1.6vh, 12px);
+        width: min(92vw, 440px);
+        max-width: 440px;
         margin: 0 auto;
         box-sizing: border-box;
     }
@@ -1084,52 +1091,248 @@ input[type=range] {
         height: 34px;
     }
 
-    /* 모바일에서는 START 버튼과 속도 슬라이더가 퍽 카드 바로 아래에 배치 */
+    /* 모바일에서는 START 버튼과 속도 슬라이더가 퍽 카드 바로 아래에 컴팩트하게 배치 */
     button.start-btn {
         order: 3;
-        width: min(88vw, 360px);
-        height: 56px;
-        font-size: 26px;
+        width: min(88vw, 340px);
+        height: 50px;
+        font-size: 24px;
         letter-spacing: 2px;
         border-radius: 50px;
-        margin: 22px auto 10px auto;
+        margin: 12px auto 6px auto;
     }
 
     .speed-control {
         order: 4;
-        width: min(85vw, 260px);
-        margin: 5px auto;
+        width: min(85vw, 250px);
+        margin: 3px auto;
     }
 
     .speed-status {
-        font-size: 16px;
-        margin-bottom: 4px;
+        font-size: 15px;
+        margin-bottom: 3px;
     }
 
     input[type=range] {
-        height: 8px;
+        height: 7px;
     }
 
-    /* 필터 및 티어 패널은 조작부 아래에 배치 */
-    .right-panel {
+    .bottom-info-area {
         order: 5;
         position: static;
-        transform: none;
-        width: min(94vw, 540px);
-        margin: 16px auto 0 auto;
-        display: flex;
-        flex-direction: column;
+        margin-top: 8px;
+        align-items: center;
+        width: 100%;
+        gap: 4px;
     }
 
-    .filter-tab-container {
-        margin-bottom: 8px;
+    .watermark {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .update-notes-btn {
+        font-size: 12px;
+        padding: 6px 14px;
         border-width: 2px;
         border-radius: 4px;
     }
 
-    .filter-tab {
-        padding: 8px 0;
+    /* 모바일 오버랩 반투명 플로팅 필터 버튼 */
+    .mobile-filter-toggle-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        position: fixed;
+        bottom: max(16px, env(safe-area-inset-bottom, 16px));
+        right: 16px;
+        z-index: 1000;
+        padding: 9px 18px;
+        background: rgba(20, 20, 20, 0.78);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1.5px solid rgba(255, 255, 255, 0.32);
+        border-radius: 30px;
+        color: #ffffff;
         font-size: 14px;
+        font-weight: 900;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75);
+        cursor: pointer;
+        transition: all 0.25s ease;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-filter-toggle-btn:active {
+        transform: scale(0.93);
+        background: rgba(40, 40, 40, 0.9);
+    }
+
+    .mobile-filter-toggle-btn.killer-toggle,
+    body > .wrapper.mode-killer .mobile-filter-toggle-btn {
+        border-color: rgba(255, 51, 51, 0.55);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75), 0 0 12px rgba(255, 51, 51, 0.35);
+    }
+
+    .mobile-filter-toggle-btn.survivor-toggle,
+    body > .wrapper.mode-survivor .mobile-filter-toggle-btn {
+        border-color: rgba(77, 166, 255, 0.55);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75), 0 0 12px rgba(77, 166, 255, 0.35);
+    }
+
+    .mobile-filter-toggle-btn.addon-toggle {
+        border-color: rgba(224, 64, 251, 0.55) !important;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.75), 0 0 12px rgba(224, 64, 251, 0.35) !important;
+    }
+
+    .mobile-filter-toggle-btn.open {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.8);
+    }
+
+    /* 모바일 배경 딤드 오버레이 */
+    .mobile-drawer-overlay {
+        display: block !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 1500;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .mobile-drawer-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* 모바일 바텀시트 슬라이드 드로어 (우측 패널) */
+    .right-panel {
+        order: unset !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 50% !important;
+        transform: translate(-50%, 105%) !important;
+        width: min(94vw, 480px) !important;
+        max-width: 480px !important;
+        height: auto !important;
+        max-height: 80vh !important;
+        max-height: 80dvh !important;
+        overflow-y: auto !important;
+        background: rgba(16, 16, 16, 0.96) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 2px solid rgba(255, 255, 255, 0.2) !important;
+        border-bottom: none !important;
+        border-top-left-radius: 22px !important;
+        border-top-right-radius: 22px !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9) !important;
+        padding: 12px 18px max(24px, env(safe-area-inset-bottom, 24px)) 18px !important;
+        z-index: 1501 !important;
+        margin: 0 !important;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+    }
+
+    .right-panel.mobile-drawer-open {
+        transform: translate(-50%, 0%) !important;
+    }
+
+    .mobile-drawer-header {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 14px;
+        position: relative;
+        flex-shrink: 0;
+        z-index: 10;
+    }
+
+    .drawer-drag-bar {
+        width: 42px;
+        height: 4.5px;
+        background: rgba(255, 255, 255, 0.35);
+        border-radius: 3px;
+        margin-bottom: 8px;
+    }
+
+    .drawer-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 4px;
+    }
+
+    .drawer-title {
+        font-size: 16px;
+        font-weight: 900;
+        color: #ffffff;
+        letter-spacing: 0.5px;
+    }
+
+    .drawer-close-btn {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #fff;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.2s;
+        line-height: 1;
+    }
+
+    .drawer-close-btn:active {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(0.92);
+    }
+
+    .right-panel > *,
+    .killer-list-panel > * {
+        flex-shrink: 0;
+    }
+
+    .filter-tab-container {
+        flex-shrink: 0;
+        margin-bottom: 12px;
+        border: 2px solid #333333;
+        border-radius: 6px;
+        background: #141414;
+        overflow: hidden;
+    }
+
+    .filter-tab {
+        flex: 1;
+        text-align: center;
+        padding: 9px 0;
+        font-size: 14px;
+        font-weight: bold;
+        color: #888888;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .filter-tab.active {
+        background: #2e2e2e;
+        color: #ffffff;
     }
 
     .tier-filter-container {
@@ -1182,26 +1385,6 @@ input[type=range] {
     .avg-score {
         font-size: 26px;
         letter-spacing: 1px;
-    }
-
-    .bottom-info-area {
-        order: 6;
-        position: static;
-        margin-top: 25px;
-        align-items: center;
-        width: 100%;
-    }
-
-    .watermark {
-        font-size: 13px;
-        text-align: center;
-    }
-
-    .update-notes-btn {
-        font-size: 13px;
-        padding: 8px 16px;
-        border-width: 2px;
-        border-radius: 4px;
     }
 
     /* 애드온 모드 모바일 */
@@ -1268,14 +1451,36 @@ input[type=range] {
     }
 
     .killer-list-panel {
-        order: 5;
-        width: min(94vw, 540px);
-        height: 280px;
-        max-height: 280px;
-        margin-top: 15px;
-        border-radius: 14px;
-        border-width: 2px;
-        padding: 12px;
+        order: unset !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 50% !important;
+        transform: translate(-50%, 105%) !important;
+        width: min(94vw, 480px) !important;
+        max-width: 480px !important;
+        height: auto !important;
+        max-height: 80vh !important;
+        max-height: 80dvh !important;
+        overflow-y: auto !important;
+        background: rgba(16, 16, 16, 0.96) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 2px solid rgba(224, 64, 251, 0.35) !important;
+        border-bottom: none !important;
+        border-top-left-radius: 22px !important;
+        border-top-right-radius: 22px !important;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9) !important;
+        padding: 12px 18px max(24px, env(safe-area-inset-bottom, 24px)) 18px !important;
+        z-index: 1501 !important;
+        margin: 0 !important;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .killer-list-panel.mobile-drawer-open {
+        transform: translate(-50%, 0%) !important;
     }
 
     .killer-scroll-list {
