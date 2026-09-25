@@ -60,7 +60,7 @@ body > .wrapper {
 h1 {
     text-shadow: 0 0 15px currentColor;
     margin-top: 0;
-    margin-bottom: clamp(6px, 1.2vh, 14px);
+    margin-bottom: clamp(20px, 4.5vh, 56px);
     font-style: italic;
     font-size: clamp(40px, 6vh, 72px);
     letter-spacing: clamp(3px, 0.45vh, 7px);
@@ -91,7 +91,7 @@ h1:hover {
 
 .perk-container {
     display: flex;
-    gap: clamp(10px, 1.5vh, 22px);
+    gap: clamp(16px, 2.5vh, 34px);
     align-items: center;
     justify-content: center;
     margin: 0 auto;
@@ -100,8 +100,8 @@ h1:hover {
 }
 
 .perk-card {
-    height: clamp(320px, 47vh, 520px);
-    width: calc(clamp(320px, 47vh, 520px) * 0.68);
+    height: clamp(300px, 44vh, 490px);
+    width: calc(clamp(300px, 44vh, 490px) * 0.68);
     aspect-ratio: 0.68;
     background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(5, 5, 5, 0.95));
     border: 0.45vh solid #333;
@@ -501,7 +501,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
     align-items: center;
     width: fit-content;
     box-shadow: 0 1.2vh 3vh rgba(0, 0, 0, 0.95);
-    height: clamp(340px, 47vh, 520px);
+    height: clamp(300px, 44vh, 490px);
 }
 
 .killer-img-container {
@@ -624,8 +624,8 @@ body > .wrapper.mode-survivor .cho-btn.active {
 
 .killer-list-panel {
     width: clamp(240px, 34vh, 380px);
-    height: clamp(340px, 47vh, 520px);
-    max-height: clamp(340px, 47vh, 520px);
+    height: clamp(300px, 44vh, 490px);
+    max-height: clamp(300px, 44vh, 490px);
     overflow-y: auto;
     background: #121212;
     border: 0.3vh solid #333;
@@ -741,7 +741,7 @@ body > .wrapper.mode-survivor .cho-btn.active {
    5. 컨트롤 버튼 및 슬라이더 (START Button & Speed Slider)
    -------------------------------------------------------------- */
 button.start-btn {
-    margin-top: clamp(10px, 1.8vh, 22px);
+    margin-top: clamp(24px, 4.8vh, 60px);
     width: clamp(260px, 34vh, 440px);
     height: clamp(54px, 6.8vh, 82px);
     font-size: clamp(26px, 3.6vh, 44px);
@@ -793,7 +793,7 @@ button.addon-btn {
     flex-direction: column;
     align-items: center;
     width: clamp(200px, 25vh, 320px);
-    margin-top: clamp(6px, 0.8vh, 12px);
+    margin-top: clamp(8px, 1.4vh, 18px);
     transition: opacity 0.3s;
     flex-shrink: 0;
 }
@@ -1000,7 +1000,7 @@ input[type=range] {
     h1 {
         order: 1;
         font-size: clamp(30px, 8vw, 48px);
-        margin: 5px 0 15px 0;
+        margin: 8px 0 20px 0;
         letter-spacing: 2px;
     }
 
@@ -1092,7 +1092,7 @@ input[type=range] {
         font-size: 26px;
         letter-spacing: 2px;
         border-radius: 50px;
-        margin: 18px auto 10px auto;
+        margin: 22px auto 10px auto;
     }
 
     .speed-control {
