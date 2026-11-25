@@ -476,7 +476,7 @@ function getRandomPerks(data, needed = 4, excludeNames = []) {
         const categories = getNewPerkCategories();
         if (hasNewPerks(data, categories)) {
             return selectPerksWithPriority(data, categories, needed, excludeNames,
-                (pool, count) => selectFilteredPerks(pool, count, [], 'tier'));
+                (pool, count) => selectFilteredPerks(pool, count, []));
         }
     }
     return selectFilteredPerks(data, needed, excludeNames);
