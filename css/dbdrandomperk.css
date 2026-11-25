@@ -1629,3 +1629,12 @@ input[type=range] {
 .un-divider { border: 0; border-top: 1px dashed rgba(255, 255, 255, 0.25); margin: 22px 0; }
 .un-old { opacity: 0.72; }
 .un-old .un-version { font-size: 18px; }
+
+#btnNewPerksOnly {
+    width: 100%;
+}
+
+#btnSelectNewKillers {
+    flex: 1;
+    padding: 0.6vh;
+}

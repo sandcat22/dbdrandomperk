@@ -23,6 +23,7 @@ const dbdBucket = {
     isSpinning: false,
     currentFilterType: 'tier', // 'tier' 또는 'chosung'
     currentTierFilter: 'all',
+    newPerksOnly: false,
     currentChosungFilter: [], // 다중 선택을 위해 빈 배열로 초기화
     currentSpunPerks: [],
     isRandomKiller: false,
@@ -127,7 +128,7 @@ const animationContext = {
 // ============================================================================
 // 5. 이벤트 및 UI 유틸리티
 // ============================================================================
-window.addEventListener('DOMContentLoaded', () => {
+if (typeof window !== 'undefined') window.addEventListener('DOMContentLoaded', () => {
     try {
         if (typeof PATHS === 'undefined') return;
         for (let i = 0; i < 15; i++) {
@@ -162,7 +163,7 @@ function toggleLock(idx) {
 function setTierFilter(val) {
     if (dbdBucket.isSpinning) return;
     dbdBucket.currentTierFilter = val;
-    document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tier-btn[data-tier]').forEach(btn => btn.classList.remove('active'));
     const targetBtn = DOM.get('btnFilter_' + val);
     if (targetBtn) targetBtn.classList.add('active');
 }
@@ -190,7 +191,7 @@ function toggleMode() {
     }
 
     // [3] 티어 버튼 UI 초기화 ('ALL 랜덤'으로 원복)
-    document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tier-btn[data-tier]').forEach(btn => btn.classList.remove('active'));
     const allTierBtn = DOM.get('btnFilter_all');
     if (allTierBtn) allTierBtn.classList.add('active');
 
@@ -240,6 +241,8 @@ function updateInterface() {
         if (rightPanel) rightPanel.classList.add('hide'); 
     } else {
         const isKiller = dbdBucket.currentMode === 'killer_perk';
+        const perkData = isKiller ? killerPerkData : survivorPerkData;
+        DOM.get('btnNewPerksOnly').hidden = !hasNewPerks(perkData, getNewPerkCategories());
         if (h1) {
             h1.innerText = isKiller ? "🩸 KILLER PERK 🩸" : "🔹 SURVIVOR PERK 🔹";
             h1.style.color = isKiller ? "#ff3333" : "#4da6ff";
@@ -320,6 +323,7 @@ function resetSlots(forceAll = false) {
 // 6. 살인마 데이터 조작 및 셔플 필터링 알고리즘
 // ============================================================================
 function renderKillerPicker() {
+    DOM.get('btnSelectNewKillers').hidden = getNewKillers().length === 0;
     const list = DOM.get('killerListContainer');
     if (!list || list.innerHTML !== "") return; 
     if (typeof killers === 'undefined') return;
@@ -353,7 +357,23 @@ function selectAllKillers() {
     if (rndBtn) rndBtn.classList.add('active');
     
     dbdBucket.selectedKillers = killers.map(k => k.id);
-    document.querySelectorAll('.killer-list-btn').forEach(btn => btn.classList.add('active'));
+    document.querySelectorAll('.killer-list-btn:not(#btnSelectNewKillers)').forEach(btn => btn.classList.add('active'));
+}
+
+function getNewKillers() {
+    return killers.filter(killer => (newContent.killers || []).includes(killer.id));
+}
+
+function selectNewKillers() {
+    if (dbdBucket.isSpinning) return;
+    const selectedIds = getNewKillers().map(killer => killer.id);
+    if (selectedIds.length === 0) return;
+
+    dbdBucket.isRandomKiller = true;
+    dbdBucket.selectedKillers = selectedIds;
+    document.querySelectorAll('.killer-list-btn.active').forEach(btn => btn.classList.remove('active'));
+    DOM.get('btnRandomKiller').classList.add('active');
+    selectedIds.forEach(id => DOM.get('kbtn_' + id).classList.add('active'));
 }
 
 function toggleRandomKiller() {
@@ -422,12 +442,52 @@ function shuffleArray(array) {
 // -------------------------------------------------------------
 // 핵심 로직: 다중 초성 필터 배열 검사 반영
 // -------------------------------------------------------------
+function getNewPerkCategories() {
+    const characters = dbdBucket.currentMode === 'killer_perk'
+        ? getNewKillers()
+        : survivors.filter(survivor => (newContent.survivors || []).includes(survivor.id));
+    return new Set(characters.map(character => character.name));
+}
+
+function hasNewPerks(data, categories) {
+    return data.some(perk => categories.has(perk.category));
+}
+
+function selectPerksWithPriority(data, categories, needed, excludeNames, selectGeneralPerks) {
+    const available = [...new Map(data
+        .filter(perk => !excludeNames.includes(perk.name))
+        .map(perk => [perk.name, perk])).values()];
+    const priority = available.filter(perk => categories.has(perk.category));
+    const selected = shuffleArray(priority).slice(0, needed);
+    if (selected.length === needed) return selected;
+
+    const general = available.filter(perk => !categories.has(perk.category));
+    selected.push(...selectGeneralPerks(general, needed - selected.length));
+    if (selected.length < needed) {
+        const selectedNames = new Set(selected.map(perk => perk.name));
+        const remaining = general.filter(perk => !selectedNames.has(perk.name));
+        selected.push(...shuffleArray(remaining).slice(0, needed - selected.length));
+    }
+    return selected;
+}
+
 function getRandomPerks(data, needed = 4, excludeNames = []) {
+    if (dbdBucket.newPerksOnly) {
+        const categories = getNewPerkCategories();
+        if (hasNewPerks(data, categories)) {
+            return selectPerksWithPriority(data, categories, needed, excludeNames,
+                (pool, count) => selectFilteredPerks(pool, count, []));
+        }
+    }
+    return selectFilteredPerks(data, needed, excludeNames);
+}
+
+function selectFilteredPerks(data, needed, excludeNames, filterType = dbdBucket.currentFilterType) {
     let availableData = data.filter(p => !excludeNames.includes(p.name));
     if (!availableData || availableData.length === 0) return [];
     
     // [1] 초성 필터가 켜져있는 경우 (배열에 값이 있을 때만 필터 적용)
-    if (dbdBucket.currentFilterType === 'chosung') {
+    if (filterType === 'chosung') {
         if (dbdBucket.currentChosungFilter.length > 0) {
             availableData = availableData.filter(p => {
                 const cho = getChosung(p.name);
@@ -438,7 +498,7 @@ function getRandomPerks(data, needed = 4, excludeNames = []) {
     }
     
     // [2] 티어 필터가 켜져있는 경우
-    if (dbdBucket.currentFilterType === 'tier' && dbdBucket.currentTierFilter !== 'all') {
+    if (filterType === 'tier' && dbdBucket.currentTierFilter !== 'all') {
         const pools = { 1: [], 2: [], 3: [], 4: [], 5: [] };
         availableData.forEach(p => { if (pools[p.tier]) pools[p.tier].push(p); });
 
@@ -886,28 +946,30 @@ function closeUpdateNotes(event) {
 }
 
 // 진입점 초기화 실행
-try {
-    if (dbdBucket.currentMode === 'killer_addon') {
-        const wrapperP = DOM.get('perkWrapper');
-        const wrapperA = DOM.get('addonWrapper');
-        if (wrapperP) wrapperP.classList.add('hide');
-        if (wrapperA) wrapperA.classList.remove('hide');
-        renderKillerPicker();
-    } else if (dbdBucket.currentMode === 'survivor_perk') {
-        const wrapperP = DOM.get('perkWrapper');
-        const wrapperA = DOM.get('addonWrapper');
-        if (wrapperP) wrapperP.classList.remove('hide');
-        if (wrapperA) wrapperA.classList.add('hide');
+if (typeof document !== 'undefined') {
+    try {
+        if (dbdBucket.currentMode === 'killer_addon') {
+            const wrapperP = DOM.get('perkWrapper');
+            const wrapperA = DOM.get('addonWrapper');
+            if (wrapperP) wrapperP.classList.add('hide');
+            if (wrapperA) wrapperA.classList.remove('hide');
+            renderKillerPicker();
+        } else if (dbdBucket.currentMode === 'survivor_perk') {
+            const wrapperP = DOM.get('perkWrapper');
+            const wrapperA = DOM.get('addonWrapper');
+            if (wrapperP) wrapperP.classList.remove('hide');
+            if (wrapperA) wrapperA.classList.add('hide');
+        }
+        updateInterface();
+    } catch (e) {
+        console.error("UI 초기화 구성 도중 에러가 발견되었습니다:", e);
     }
-    updateInterface();
-} catch (e) {
-    console.error("UI 초기화 구성 도중 에러가 발견되었습니다:", e);
 }
 
 // ============================================================================
 // 9. 동적 DOM 이벤트 핸들링 허브
 // ============================================================================
-window.addEventListener('DOMContentLoaded', () => {
+if (typeof window !== 'undefined') window.addEventListener('DOMContentLoaded', () => {
     // 9-0. 자물쇠(Lock) 동적 리스너 루프 바인딩
     for (let i = 1; i <= 4; i++) {
         const lockBtn = DOM.get(`card${i}`);
@@ -999,6 +1061,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const btnSelectAllKillers = DOM.get('btnSelectAllKillers');
     if (btnSelectAllKillers) btnSelectAllKillers.addEventListener('click', selectAllKillers);
+
+    DOM.get('btnSelectNewKillers').addEventListener('click', selectNewKillers);
+
+    const btnNewPerksOnly = DOM.get('btnNewPerksOnly');
+    btnNewPerksOnly.addEventListener('click', () => {
+        if (dbdBucket.isSpinning) return;
+        dbdBucket.newPerksOnly = !dbdBucket.newPerksOnly;
+        btnNewPerksOnly.classList.toggle('active', dbdBucket.newPerksOnly);
+        btnNewPerksOnly.setAttribute('aria-pressed', String(dbdBucket.newPerksOnly));
+    });
 
     const btnSpin = DOM.get('btnSpin');
     if (btnSpin) btnSpin.addEventListener('click', startSequence);
@@ -1124,3 +1196,5 @@ function toggleMobileDrawer() {
 const openDrawer = openMobileDrawer;
 const closeDrawer = closeMobileDrawer;
 const toggleDrawer = toggleMobileDrawer;
+
+if (typeof module !== 'undefined') module.exports = { selectPerksWithPriority };

@@ -18,6 +18,8 @@ const rarityBgs = {
 };
 
 /* STREAMING_CHUNK:Defining character lists... */
+const newContent = { killers: ["terrifier"], survivors: ["sienna"] };
+
 const killers = [
     { id: "trapper", name: "트래퍼" }, { id: "wraith", name: "레이스" }, { id: "hillbilly", name: "힐빌리" }, { id: "nurse", name: "너스" },
     { id: "shape", name: "쉐이프" }, { id: "hag", name: "해그" }, { id: "doctor", name: "닥터" }, { id: "huntress", name: "헌트리스" },
