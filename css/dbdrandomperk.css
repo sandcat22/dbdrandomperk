@@ -1103,7 +1103,7 @@ input[type=range] {
 .modal-content {
     background: linear-gradient(145deg, #151515, #0a0a0a);
     border: 3px solid #8e24aa;
-    width: min(92vw, 700px);
+    width: min(92vw, 860px);
     max-height: 85vh;
     max-height: 85dvh;
     border-radius: 12px;
@@ -1154,9 +1154,8 @@ input[type=range] {
     padding: 25px;
     overflow-y: auto;
     color: #ddd;
-    font-size: 15px;
-    line-height: 1.8;
-    white-space: pre-wrap;
+    font-size: 17px;
+    line-height: 1.7;
     font-family: 'Malgun Gothic', sans-serif;
 }
 
@@ -1612,3 +1611,21 @@ input[type=range] {
         border-radius: 4px;
     }
 }
+
+/* 업데이트 노트 본문 구성 */
+.un-version {
+    font-size: 21px;
+    font-weight: bold;
+    color: #ea80fc;
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(234, 128, 252, 0.35);
+}
+.un-section { font-weight: bold; color: #fff; margin: 16px 0 4px; }
+.un-item { padding-left: 1.3em; text-indent: -0.9em; color: #ddd; }
+.un-item::before { content: "\2022"; color: #ea80fc; margin-right: 0.45em; }
+.un-line { color: #ccc; margin: 4px 0; }
+.un-note { color: #ffb74d; margin-top: 14px; font-size: 0.95em; }
+.un-divider { border: 0; border-top: 1px dashed rgba(255, 255, 255, 0.25); margin: 22px 0; }
+.un-old { opacity: 0.72; }
+.un-old .un-version { font-size: 18px; }

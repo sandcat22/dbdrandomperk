@@ -827,6 +827,43 @@ function updateSpeedText() {
     status.innerText = texts[val] || "보통";
 }
 
+// 업데이트 노트 글을 보기 좋게 구성한다 ([ 버전 ] 제목 / 번호 항목 / - 목록 / ==== 구분선 / ※ 참고)
+// 모든 글자는 textContent 로만 넣어 HTML 이 해석되지 않는다.
+function renderUpdateNotes(container, text) {
+    container.textContent = '';
+    let group = document.createElement('div');
+    group.className = 'un-group un-latest';
+    container.appendChild(group);
+    const add = (cls, line) => {
+        const el = document.createElement('div');
+        el.className = cls;
+        el.textContent = line;
+        group.appendChild(el);
+    };
+    String(text).split(/\r?\n/).forEach(raw => {
+        const line = raw.trim();
+        if (!line) return;
+        if (/^={5,}$/.test(line)) {
+            const hr = document.createElement('hr');
+            hr.className = 'un-divider';
+            container.appendChild(hr);
+            group = document.createElement('div');
+            group.className = 'un-group un-old';
+            container.appendChild(group);
+        } else if (/^\[.+\]$/.test(line)) {
+            add('un-version', line.replace(/^\[\s*|\s*\]$/g, ''));
+        } else if (/^\d+\.\s/.test(line)) {
+            add('un-section', line);
+        } else if (/^-\s/.test(line)) {
+            add('un-item', line.replace(/^-\s*/, ''));
+        } else if (/^※/.test(line)) {
+            add('un-note', line);
+        } else {
+            add('un-line', line);
+        }
+    });
+}
+
 function openUpdateNotes() {
     const modal = DOM.get('updateModalOverlay');
     if (modal) modal.classList.add('show');
@@ -834,7 +871,7 @@ function openUpdateNotes() {
     const modalBody = DOM.get('updateModalBody');
     if (modalBody) {
         if (typeof updateNotesText !== 'undefined') {
-            modalBody.innerText = updateNotesText;
+            renderUpdateNotes(modalBody, updateNotesText);
         } else {
             modalBody.innerText = "업데이트 노트를 불러올 수 없습니다.\n(js/updatenotes.js 파일이 연결되지 않았습니다.)";
         }
